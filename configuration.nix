@@ -6,11 +6,11 @@
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {
-    trustedUsers = ["@admin"];
+    trustedUsers = [ "@admin" ];
     extraOptions = ''
-    auto-optimise-store = true
-    experimental-features = nix-command flakes
-  '';
+      auto-optimise-store = true
+      experimental-features = nix-command flakes
+    '';
   };
 
   programs = {

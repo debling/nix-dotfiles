@@ -3,27 +3,82 @@
 {
 
   home.packages = with pkgs; [
-    neovim
+    nixpkgs-fmt
+
+    # Editors/IDEs
+    emacs-nox
+    jetbrains.idea-ultimate
+    jetbrains.datagrip
+
     # cli utils
     tree
   ];
 
   programs = {
+    neovim = {
+      enable = true;
+      viAlias = true;
+      vimAlias = true;
+      vimdiffAlias = true;
+      plugins = with pkgs.vimPlugins; [
+        syntastic
+        vim-multiple-cursors
+        vim-nix
+        commentary
+        polyglot
+        gruvbox
+        vim-terraform
+        vim-terraform-completion
+        ctrlp
+        neomake
+      ];
+      extraConfig = ''
+        set number relativenumber
+        set autoindent
+        set smartindent
+        set hlsearch
+        set smartcase
+        set clipboard+=unnamedplus
+        set scrolloff=5
+        set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+        let g:gruvbox_contrast_dark='hard'
+        colorscheme gruvbox
+
+        if filereadable(expand('~/.config/nvim/init.vim'))
+          source ~/.config/nvim/init.vim
+        endif
+      '';
+    };
+
+    zsh = {
+      enable = true;
+      enableAutosuggestions = true;
+      enableSyntaxHighlighting = true;
+      autocd = true;
+      enableCompletion = true;
+      shellAliases = {
+        ni = "nix profile install";
+        ns = "nix-shell --pure";
+        nsp = "nix-shell -p";
+      };
+    };
+
     tmux = {
       enable = true;
       extraConfig = ''
-      # Terminal config for TrueColor support
-      set -g default-terminal "screen-256color"
-      set -ga terminal-overrides ",xterm-256color:Tc"
+        # Terminal config for TrueColor support
+        set -g default-terminal "screen-256color"
+        set -ga terminal-overrides ",xterm-256color:Tc"
 
-      # So that escapes register immidiately in vim
-      set -sg escape-time 1
-      set -g focus-events on
+        # So that escapes register immidiately in vim
+        set -sg escape-time 1
+        set -g focus-events on
 
-      set -g mouse on
+        set -g mouse on
 
-      # extend scrollback
-      set-option -g history-limit 5000
+        # extend scrollback
+        set-option -g history-limit 5000
       '';
     };
   };

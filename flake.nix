@@ -22,23 +22,24 @@
         config = { allowUnfree = true; };
       };
     in
-      {
-        # My `nix-darwin` configs
-        darwinConfigurations."phpmb44" = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
-          modules = [
-            # Main `nix-darwin` config
-            ./configuration.nix
+    {
+      # My `nix-darwin` configs
+      darwinConfigurations."phpmb44" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          # Main `nix-darwin` config
+          ./configuration.nix
 
-            # `home-manager` module
-            home-manager.darwinModules.home-manager {
-              nixpkgs = nixpkgsConfig;
-              # `home-manager` config
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.debling = import ./home.nix;
-            }
-          ];
-        };
+          # `home-manager` module
+          home-manager.darwinModules.home-manager
+          {
+            nixpkgs = nixpkgsConfig;
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.debling = import ./home.nix;
+          }
+        ];
       };
+    };
 }
