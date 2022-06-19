@@ -21,6 +21,8 @@
       nixpkgsConfig = {
         config = { allowUnfree = true; };
       };
+
+      username = "debling";
     in
     {
       # My `nix-darwin` configs
@@ -35,10 +37,11 @@
 
           {
             nixpkgs = nixpkgsConfig;
+            users.users.${username}.home = "/Users/${username}";
             # `home-manager` config
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.debling = import ./home.nix;
+            home-manager.users.${username} = import ./home.nix;
           }
         ];
       };
