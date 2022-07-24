@@ -9,14 +9,18 @@
 
       ### Langs related
       clojure # Lisp language with sane concurrency
-      # idris2 # A language with dependent types, compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
+      python310Packages.python
+      python310Packages.ipython
+      # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
       nodejs
       pipenv
+      poetry
       ## Linters
       shellcheck
 
       ### CLI utils
-      # awscli2  # Requires pyopenssl, which is marked as broken for now https://github.com/NixOS/nixpkgs/issues/175875
+      awscli2
+      #bitwarden-cli
       cloc
       entr # Run commands when files change
       htop
@@ -41,7 +45,6 @@
       ni = "nix profile install";
       ns = "nix-shell --pure";
       nsp = "nix-shell -p";
-      aws = "docker run --rm -it -e AWS_PROFILE=$AWS_PROFILE -v ~/.aws/:/root/.aws/:ro amazon/aws-cli";
     };
   };
 
@@ -68,7 +71,42 @@
     # JSON query tool, but its mainly used for pretty-printing
     jq.enable = true;
 
-    ssh.enable = true;
+    ssh = {
+      enable = true;
+      compression = true;
+      controlMaster = "auto";
+      controlPersist = "15m";
+      matchBlocks = {
+        "cvm1" = {
+          hostname = "rstudio-machado-php.cvm.ncsu.edu";
+          user = "debling";
+        };
+
+        "pdsa.aws" = {
+          hostname = "ec2-54-232-138-185.sa-east-1.compute.amazonaws.com";
+          user = "centos";
+          identityFile = "~/.ssh/identities/pdsa-aws.pem";
+        };
+
+        "pdsa.review" = {
+          hostname = "200.18.45.230";
+          user = "admin";
+          port = 222;
+        };
+
+        "pdsa.dev" = {
+          hostname = "200.18.45.231";
+          user = "admin";
+          port = 222;
+        };
+
+        "pdsa.xen" = {
+          hostname = "200.18.45.229";
+          user = "admin";
+          port = 222;
+        };
+      };
+    };
 
     gpg.enable = true;
 
@@ -84,12 +122,12 @@
       vimAlias = true;
       vimdiffAlias = true;
       plugins = with pkgs.vimPlugins; [
+        gruvbox-nvim
         syntastic
         vim-multiple-cursors
         vim-nix
         commentary
         polyglot
-        gruvbox
         vim-terraform
         vim-terraform-completion
         ctrlp
@@ -104,9 +142,6 @@
         set clipboard+=unnamedplus
         set scrolloff=5
         set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
-
-        let g:gruvbox_contrast_dark='hard'
-        colorscheme gruvbox
       '';
     };
 
