@@ -46,6 +46,8 @@
       ns = "nix-shell --pure";
       nsp = "nix-shell -p";
     };
+
+    file.".ideavimrc".source = ./config/.ideavimrc;
   };
 
   programs = {
@@ -122,7 +124,7 @@
       vimAlias = true;
       vimdiffAlias = true;
       plugins = with pkgs.vimPlugins; [
-        gruvbox-nvim
+        gruvbox
         syntastic
         vim-multiple-cursors
         vim-nix
@@ -142,6 +144,11 @@
         set clipboard+=unnamedplus
         set scrolloff=5
         set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+
+        set termguicolors
+        set bg=dark
+        let g:gruvbox_contrast_dark = 'hard'
+        colorscheme gruvbox
       '';
     };
 
