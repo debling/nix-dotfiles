@@ -6,11 +6,14 @@
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {
-    trustedUsers = [ "@admin" ];
+    trustedUsers = [ "debling" "@admin" ];
     extraOptions = ''
       auto-optimise-store = true
       experimental-features = nix-command flakes
+      build-users-group = nixbld
+      extra-platforms = x86_64-darwin aarch64-darwin
     '';
+    useDaemon = true;
   };
 
   programs = {
