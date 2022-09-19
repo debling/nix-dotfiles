@@ -22,10 +22,10 @@ in
       # haskell-language-server
       jdtls # java language server
       # nodePackages.bash-language-server
-      # nodePackages.pyright
+      nodePackages.pyright
       nodePackages.typescript-language-server
       # shellcheck
-      # terraform-ls
+      terraform-ls
     ];
     programs.neovim = {
       enable = true;
@@ -33,14 +33,10 @@ in
       vimAlias = true;
       vimdiffAlias = true;
       plugins = with pkgs.vimPlugins; [
-        {
-          plugin = dracula-vim;
-          type = "lua";
-          config = builtins.readFile ../../config/nvim/colorscheme.lua;
-        }
+        dracula-vim
+
         vim-multiple-cursors
         commentary
-        vim-terraform-completion
 
         telescope-nvim
         telescope-fzf-native-nvim
@@ -48,26 +44,13 @@ in
         plantuml-syntax
 
         nvim-treesitter-refactor
-        {
-          plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
-          type = "lua";
-          config = builtins.readFile ../../config/nvim/treesitter.lua;
-        }
+        (nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
+
         nvim-lspconfig
       ];
 
       extraConfig = ''
-        """ Basic config
-        set number relativenumber
-        set autoindent
-        set smartindent
-        set hlsearch
-        set smartcase
-        set clipboard+=unnamedplus
-        set scrolloff=5
-        set tabstop=2 softtabstop=0 expandtab shiftwidth=2 smarttab
-        let mapleader=" "
-        lua require "initconfig"
+        lua require "init_config"
       '';
     };
 

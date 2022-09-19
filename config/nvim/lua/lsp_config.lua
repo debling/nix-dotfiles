@@ -36,11 +36,86 @@ end
 local lsp = require('lspconfig')
 
 vim.lsp.set_log_level('debug')
-lsp.angularls.setup { on_attach = on_attach, }
-lsp.bashls.setup { }
-lsp.ccls.setup { }
-lsp.gopls.setup { }
-lsp.jdtls.setup { on_attach = on_attach, cmd = { 'jdt-language-server' }, }
-lsp.pyright.setup { on_attach = on_attach, }
-lsp.terraformls.setup { }
-lsp.tsserver.setup { on_attach = on_attach, }
+
+-- Angular templates
+lsp.angularls.setup {
+  on_attach = on_attach,
+}
+
+-- Bash/sh
+lsp.bashls.setup {
+  on_attach = on_attach,
+}
+
+-- C/C++
+lsp.ccls.setup {
+  on_attach = on_attach,
+}
+
+-- GO
+lsp.gopls.setup {
+  on_attach = on_attach,
+}
+
+-- Java
+local util = require 'lspconfig.util'
+local handlers = require 'vim.lsp.handlers'
+
+local env = {
+  HOME = vim.loop.os_homedir(),
+  XDG_CACHE_HOME = os.getenv 'XDG_CACHE_HOME',
+  JDTLS_JVM_ARGS = os.getenv 'JDTLS_JVM_ARGS',
+}
+
+local function get_cache_dir()
+  return env.XDG_CACHE_HOME and env.XDG_CACHE_HOME or util.path.join(env.HOME, '.cache')
+end
+
+local function get_jdtls_cache_dir()
+  return util.path.join(get_cache_dir(), 'jdtls')
+end
+
+local function get_jdtls_config_dir()
+  return util.path.join(get_jdtls_cache_dir(), 'config')
+end
+
+local function get_jdtls_workspace_dir()
+  return util.path.join(get_jdtls_cache_dir(), 'workspace')
+end
+
+local function get_jdtls_jvm_args()
+  local args = {}
+  for a in string.gmatch((env.JDTLS_JVM_ARGS or ''), '%S+') do
+    local arg = string.format('--jvm-arg=%s', a)
+    table.insert(args, arg)
+  end
+  return unpack(args)
+end
+
+
+lsp.jdtls.setup {
+  on_attach = on_attach,
+  cmd = {
+    'jdt-language-server',
+    '-configuration',
+    get_jdtls_config_dir(),
+    '-data',
+    get_jdtls_workspace_dir(),
+    get_jdtls_jvm_args(),
+  },
+} 
+
+-- Python
+lsp.pyright.setup {
+  on_attach = on_attach,
+}
+
+-- Terraform
+lsp.terraformls.setup {
+  on_attach = on_attach,
+}
+
+-- Typescript
+lsp.tsserver.setup {
+  on_attach = on_attach,
+}
