@@ -8,6 +8,8 @@ set ideajoin
 
 set sidescrolloff=10
 
+set NERDTree
+
 noremap <space>y "*y
 noremap <space>Y "*Y
 noremap <space>p "*p
