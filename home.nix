@@ -13,34 +13,46 @@
       jetbrains.idea-ultimate
 
       ### Langs related
-      clojure # Lisp language with sane concurrency
-      python310Packages.python
-      python310Packages.ipython
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
+      # ansible
+      clojure # Lisp language with sane concurrency
       nodejs
       pipenv
       poetry
+      python310Packages.ipython
+      python310Packages.python
       ## Linters
       shellcheck
 
       ### CLI utils
-      awscli2
       #bitwarden-cli
+      awscli2
       cloc
+      coreutils
       entr # Run commands when files change
+      graphviz
       htop
       jq
       nixfmt # Formmater for the nix lang
+      pandoc
+      python310Packages.editorconfig
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
       silver-searcher # A faster and more convenient grep. Executable is called `ag`
       sshfs # Mount remote file systems using SSH
       terraform
       tree
 
+      hledger
+      hledger-ui
+      hledger-web
+
+      cachix
+
       # required by doom-emacs
       ripgrep
       fd
-      python310Packages.isort
+    ] ++ lib.optionals stdenv.isDarwin [
+      m-cli # useful macOS CLI commands
     ];
 
     shellAliases = {
@@ -52,10 +64,28 @@
       nsp = "nix-shell -p";
     };
 
-    file.".ideavimrc".source = ./config/.ideavimrc;
+    file = {
+      ".ideavimrc".source = ./config/.ideavimrc;
+      # Install MacOS applications to the user environment if the targetPlatform is Darwin
+      "Applications/Home Manager Apps".source =
+        let
+          apps = pkgs.buildEnv {
+            name = "home-manager-applications";
+            paths = config.home.packages;
+            pathsToLink = "/Applications";
+          };
+        in
+        "${apps}/Applications";
+    };
+
   };
 
   programs = {
+    taskwarrior = {
+      enable = true;
+      colorTheme = "solarized-dark-256";
+    };
+
     # Used to have custom environment per project.
     # Very useful  to automaticly activate nix-shell when cd'ing to a
     # project folder.
@@ -85,7 +115,12 @@
       controlPersist = "15m";
       matchBlocks = {
         "cvm1" = {
-          hostname = "rstudio-machado-php.cvm.ncsu.edu";
+          hostname = "rabapp.cvm.ncsu.edu";
+          user = "debling";
+        };
+
+        "cvm2" = {
+          hostname = "rabapp-test.cvm.ncsu.edu";
           user = "debling";
         };
 
@@ -110,7 +145,6 @@
         "pdsa.xen" = {
           hostname = "200.18.45.229";
           user = "admin";
-          port = 222;
         };
       };
     };
@@ -121,40 +155,6 @@
     emacs = {
       enable = true;
       package = pkgs.emacs28NativeComp;
-    };
-
-    neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-      plugins = with pkgs.vimPlugins; [
-        gruvbox
-        syntastic
-        vim-multiple-cursors
-        vim-nix
-        commentary
-        polyglot
-        vim-terraform
-        vim-terraform-completion
-        ctrlp
-        neomake
-      ];
-      extraConfig = ''
-        set number relativenumber
-        set autoindent
-        set smartindent
-        set hlsearch
-        set smartcase
-        set clipboard+=unnamedplus
-        set scrolloff=5
-        set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
-
-        set termguicolors
-        set bg=dark
-        let g:gruvbox_contrast_dark = 'hard'
-        colorscheme gruvbox
-      '';
     };
 
     zsh = {

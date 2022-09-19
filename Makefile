@@ -3,5 +3,5 @@
 update:
 	nix flake update
 
-switch: update
+switch:
 	 darwin-rebuild switch --flake .

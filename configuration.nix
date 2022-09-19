@@ -1,12 +1,11 @@
 { pkgs, lib, ... }:
 {
-  # Nix configuration ------------------------------------------------------------------------------
-  users.nix.configureBuildUsers = true;
-
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {
-    trustedUsers = [ "debling" "@admin" ];
+    package = pkgs.nixUnstable;
+    configureBuildUsers = true;
+    settings.trusted-users = [ "debling" "@admin" ];
     extraOptions = ''
       auto-optimise-store = true
       experimental-features = nix-command flakes
