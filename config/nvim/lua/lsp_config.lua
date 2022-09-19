@@ -102,6 +102,9 @@ lsp.jdtls.setup {
     '-data',
     get_jdtls_workspace_dir(),
     get_jdtls_jvm_args(),
+    -- Lombok setup
+    '-Xbootclasspath/a:/Users/debling/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar',
+    '-javaagent:/Users/debling/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar',
   },
 } 
 
