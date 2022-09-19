@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ./modules/editors/neovim.nix
+  ];
+
+  modules.editors.neovim.enable = true;
   home = {
     packages = with pkgs; [
       ### Editors/IDEs
