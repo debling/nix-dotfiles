@@ -37,24 +37,32 @@ local lsp = require('lspconfig')
 
 vim.lsp.set_log_level('debug')
 
+-- Add additional capabilities supported by nvim-cmp
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+
 -- Angular templates
 lsp.angularls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- Bash/sh
 lsp.bashls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- C/C++
 lsp.ccls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- GO
 lsp.gopls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- Java
@@ -95,6 +103,7 @@ end
 
 lsp.jdtls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
   cmd = {
     'jdt-language-server',
     '-configuration',
@@ -103,22 +112,85 @@ lsp.jdtls.setup {
     get_jdtls_workspace_dir(),
     get_jdtls_jvm_args(),
     -- Lombok setup
-    '-Xbootclasspath/a:/Users/debling/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar',
-    '-javaagent:/Users/debling/.m2/repository/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar',
+    '-Xbootclasspath/a:/Users/debling/Downloads/lombok.jar',
+    '-javaagent:/Users/debling/Downloads/lombok.jar',
   },
 } 
 
 -- Python
 lsp.pyright.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- Terraform
 lsp.terraformls.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
 }
 
 -- Typescript
 lsp.tsserver.setup {
   on_attach = on_attach,
+  capabilities = capabilities,
+}
+
+-- luasnip setup
+local luasnip = require 'luasnip'
+
+local lspkind = require 'lspkind'
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+
+cmp.setup {
+
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end,
+  },
+
+  mapping = cmp.mapping.preset.insert({
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+    ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+  }),
+
+  sources = {
+    { name = "nvim_lua" },
+    { name = "orgmode" },
+    { name = 'nvim_lsp' },
+    { name = "path" },
+    { name = 'luasnip' },
+    { name = "buffer", keyword_length = 5 },
+  },
+
+ formatting = {
+    -- Youtube: How to set up nice formatting for your sources.
+    format = lspkind.cmp_format {
+      with_text = true,
+      menu = {
+        buffer = "[buf]",
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[api]",
+        path = "[path]",
+        luasnip = "[snip]",
+      },
+    },
+  },
+
+    view = {
+        entries = 'native',
+    },
+
+  experimental = {
+    ghost_text = true,
+  },
 }

@@ -19,8 +19,9 @@
       nodejs
       pipenv
       poetry
-      python310Packages.ipython
-      python310Packages.python
+      #python310Packages.ipython
+      #python310Packages.python
+      (python310.withPackages (ps: with ps; [pandas numpy ipython]))
       ## Linters
       shellcheck
 

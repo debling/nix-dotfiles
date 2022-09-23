@@ -9,9 +9,9 @@ vim.wo.number = true
 vim.wo.relativenumber = true
 
 -- Indent options
-vim.o.tabstop = 2
+vim.o.tabstop = 4
 vim.o.shiftwidth = 0
-vim.o.softtabstop = 2
+vim.o.softtabstop = 4
 vim.o.expandtab = true
 vim.o.smartindent = true
 vim.o.autoindent = true
@@ -21,7 +21,6 @@ vim.o.showmatch = true
 vim.o.showbreak = '+++'
 vim.o.textwidth = 120
 vim.o.scrolloff = 5
-vim.wo.linebreak = true
 vim.wo.colorcolumn = '90'
 
 -- Set clipboard to work with system copy/paste
@@ -47,3 +46,5 @@ require 'lsp_config'
 require 'telescope_config'
 
 require 'treesitter_config'
+
+require 'orgmode_config'

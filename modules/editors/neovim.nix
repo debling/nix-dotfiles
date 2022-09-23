@@ -21,10 +21,10 @@ in
       # gopls
       # haskell-language-server
       jdtls # java language server
-      # nodePackages.bash-language-server
+      nodePackages.bash-language-server
       nodePackages.pyright
       nodePackages.typescript-language-server
-      # shellcheck
+      shellcheck
       terraform-ls
     ];
     programs.neovim = {
@@ -41,12 +41,32 @@ in
         telescope-nvim
         telescope-fzf-native-nvim
 
-        plantuml-syntax
-
-        nvim-treesitter-refactor
+        # General plugins
+        ## Sintax hilighting
         (nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
+        nvim-treesitter-refactor
+        nvim-treesitter-context
 
         nvim-lspconfig
+
+        ## Snippets
+        luasnip
+
+        ## Completion
+        nvim-cmp
+        cmp-buffer
+        cmp-nvim-lsp
+        cmp_luasnip
+        cmp-path
+
+        lspkind-nvim
+
+        # Language specific
+        plantuml-syntax
+
+        orgmode
+
+        markdown-preview-nvim
       ];
 
       extraConfig = ''
