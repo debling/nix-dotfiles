@@ -27,13 +27,13 @@ vim.wo.colorcolumn = '90'
 vim.opt.clipboard = 'unnamedplus'
 
 -- Move swapfiles and backupfiles to ~/.cache
-vim.o.directory = os.getenv('HOME') .. '/.cache/nvim'
+vim.o.directory = os.getenv 'HOME' .. '/.cache/nvim'
 vim.o.backup = true
-vim.o.backupdir = os.getenv('HOME') .. '/.cache/nvim'
+vim.o.backupdir = os.getenv 'HOME' .. '/.cache/nvim'
 
 -- Enable undo features, even after closing vim
 vim.o.undofile = true
-vim.o.undodir = os.getenv('HOME') .. '/.cache/nvim'
+vim.o.undodir = os.getenv 'HOME' .. '/.cache/nvim'
 vim.o.undolevels = 10000
 
 -- Map leader key to <space>
@@ -41,7 +41,7 @@ vim.g.mapleader = ' '
 
 require 'colorscheme_config'
 
-require 'neodev'.setup{ }
+require('neodev').setup {}
 
 require 'lsp_config'
 
@@ -52,6 +52,7 @@ require 'treesitter_config'
 require 'orgmode_config'
 
 local neogit = require 'neogit'
-neogit.setup { }
-vim.keymap.set('n', '<leader>gg', function () neogit.open() end, { noremap = true })
-
+neogit.setup {}
+vim.keymap.set('n', '<leader>gg', function()
+  neogit.open()
+end, { noremap = true })
