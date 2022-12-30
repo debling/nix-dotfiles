@@ -45,7 +45,7 @@ vim.lsp.set_log_level('debug')
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+capabilities = require 'cmp_nvim_lsp'.default_capabilities(capabilities)
 
 -- Angular templates
 lsp.angularls.setup {
@@ -165,6 +165,11 @@ local function get_jdtls_jvm_args()
 end
 
 lsp.jdtls.setup {
+    init_options = {
+        extendedClientCapabilities = {
+            progressReportProvider = false,
+        },
+    },
     on_attach = on_attach,
     capabilities = capabilities,
     cmd = {
@@ -236,15 +241,9 @@ cmp.setup {
 
     formatting = {
         format = lspkind.cmp_format {
-            with_text = true,
-            menu = {
-                buffer = "[buf]",
-                nvim_lsp = "[LSP]",
-                nvim_lua = "[api]",
-                path = "[path]",
-                luasnip = "[snip]",
-                copilot = "[copilot]",
-            },
+            symbol_map = {
+                Copilot = '',
+            }
         },
     },
 
@@ -274,3 +273,6 @@ null_ls.setup({
         null_ls.builtins.completion.spell,
     },
 })
+
+-- Show lsp sever status/progress in the botton right corner
+require 'fidget'.setup {}

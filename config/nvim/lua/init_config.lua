@@ -41,6 +41,8 @@ vim.g.mapleader = ' '
 
 require 'colorscheme_config'
 
+require 'neodev'.setup{ }
+
 require 'lsp_config'
 
 require 'telescope_config'

@@ -33,6 +33,8 @@ in
         sumneko-lua-language-server
         terraform-ls
         texlab
+
+        stylua
       ];
       sessionVariables = {
         EDITOR = "nvim";
@@ -62,9 +64,10 @@ in
 
         nvim-tree-lua
 
+        ## LSP
         nvim-lspconfig
-        
         null-ls-nvim
+        fidget-nvim # Show lsp server's status
 
         vim-table-mode
 
@@ -76,9 +79,10 @@ in
         ## Completion
         nvim-cmp
         cmp-buffer
+        cmp-copilot
         cmp-nvim-lsp
-        cmp_luasnip
         cmp-path
+        cmp_luasnip
 
         lspkind-nvim
 
@@ -91,7 +95,7 @@ in
 
         neogit
 
-        cmp-copilot
+        neodev-nvim
       ];
 
       extraConfig = ''

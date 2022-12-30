@@ -31,6 +31,7 @@
     fontDir.enable = true;
     fonts = with pkgs; [
       jetbrains-mono
+      nerdfonts
     ];
   };
 
