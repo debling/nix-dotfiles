@@ -5,7 +5,9 @@
   nix = {
     package = pkgs.nixUnstable;
     configureBuildUsers = true;
-    settings.trusted-users = [ "debling" "@admin" ];
+    settings = {
+        trusted-users = [ "debling" "@admin" ];
+    };
     extraOptions = ''
       auto-optimise-store = true
       experimental-features = nix-command flakes

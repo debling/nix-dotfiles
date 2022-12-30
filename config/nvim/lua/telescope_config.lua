@@ -1,14 +1,15 @@
 local tel_builtin = require 'telescope.builtin'
 
 local km = vim.keymap
--- nnoremap <leader>ff <cmd>Telescope find_files<cr>
+
 km.set('n', '<Leader>ff', tel_builtin.find_files)
--- nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 km.set('n', '<Leader>fg', tel_builtin.live_grep)
--- nnoremap <leader>fb <cmd>Telescope buffers<cr>
 km.set('n', '<Leader>fb', tel_builtin.buffers)
--- nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+km.set('n', '<Leader>fd', tel_builtin.diagnostics)
 km.set('n', '<Leader>fh', tel_builtin.help_tags)
+km.set('n', '<Leader>fs', tel_builtin.lsp_dynamic_workspace_symbols)
+
+km.set('n', 'z=', tel_builtin.spell_suggest)
 
 local tel = require 'telescope'
 tel.setup {
@@ -25,3 +26,4 @@ tel.setup {
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 tel.load_extension('fzf')
+tel.load_extension('ui-select')

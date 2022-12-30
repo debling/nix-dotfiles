@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  customScriptsDir = ".local/bin";
+in
 {
   imports = [
     ./modules/editors/neovim.nix
@@ -8,6 +11,7 @@
   modules.editors.neovim.enable = true;
   home = {
     packages = with pkgs; [
+      maven
       ### Editors/IDEs
       jetbrains.datagrip
       jetbrains.idea-ultimate
@@ -18,10 +22,18 @@
       clojure # Lisp language with sane concurrency
       nodejs
       pipenv
-      poetry
+
+      #poetry
       #python310Packages.ipython
       #python310Packages.python
-      (python310.withPackages (ps: with ps; [pandas numpy ipython]))
+      (python310.withPackages (ps: with ps; [
+        pandas
+        numpy
+        ipython
+        matplotlib
+        /* seaborn */
+        jupyterlab
+      ]))
       ## Linters
       shellcheck
 
@@ -39,7 +51,6 @@
       python310Packages.editorconfig
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
       silver-searcher # A faster and more convenient grep. Executable is called `ag`
-      sshfs # Mount remote file systems using SSH
       terraform
       tree
 
@@ -52,6 +63,11 @@
       # required by doom-emacs
       ripgrep
       fd
+
+      wget
+      unrar
+
+      renameutils # adds qmv, and qmc utils for bulk move and copy
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -65,7 +81,14 @@
       nsp = "nix-shell -p";
     };
 
+    sessionPath = [ "$HOME/${customScriptsDir}" ];
+
     file = {
+      ${customScriptsDir} = {
+        source = ./scripts;
+        recursive = true;
+      };
+
       ".ideavimrc".source = ./config/.ideavimrc;
       # Install MacOS applications to the user environment if the targetPlatform is Darwin
       "Applications/Home Manager Apps".source =

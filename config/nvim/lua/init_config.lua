@@ -19,7 +19,7 @@ vim.o.autoindent = true
 -- Line options
 vim.o.showmatch = true
 vim.o.showbreak = '+++'
-vim.o.textwidth = 120
+vim.o.textwidth = 79
 vim.o.scrolloff = 5
 vim.wo.colorcolumn = '90'
 
@@ -48,3 +48,8 @@ require 'telescope_config'
 require 'treesitter_config'
 
 require 'orgmode_config'
+
+local neogit = require 'neogit'
+neogit.setup { }
+vim.keymap.set('n', '<leader>gg', function () neogit.open() end, { noremap = true })
+

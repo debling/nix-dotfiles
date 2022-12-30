@@ -10,23 +10,35 @@ in
   options.modules.editors.neovim = {
     enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Enable neovim module";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      # ccls
-      # gopls
-      # haskell-language-server
-      jdtls # java language server
-      nodePackages.bash-language-server
-      nodePackages.pyright
-      nodePackages.typescript-language-server
-      shellcheck
-      terraform-ls
-    ];
+    home = {
+      packages = with pkgs; [
+        # language servers
+        /* haskell-language-server */
+        ccls
+        gopls
+        jdtls # java language server
+        nodePackages.bash-language-server
+        nodePackages.dockerfile-language-server-nodejs
+        nodePackages.pyright
+        nodePackages.typescript-language-server
+        nodePackages.yaml-language-server
+        rnix-lsp
+        shellcheck
+        sumneko-lua-language-server
+        terraform-ls
+        texlab
+      ];
+      sessionVariables = {
+        EDITOR = "nvim";
+        LOMBOK_JAR_PATH = "${pkgs.lombok}/share/java/lombok.jar";
+      };
+    };
     programs.neovim = {
       enable = true;
       viAlias = true;
@@ -40,14 +52,23 @@ in
 
         telescope-nvim
         telescope-fzf-native-nvim
+        telescope-ui-select-nvim
 
         # General plugins
         ## Sintax hilighting
-        (nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
+        nvim-treesitter.withAllGrammars
         nvim-treesitter-refactor
         nvim-treesitter-context
 
+        nvim-tree-lua
+
         nvim-lspconfig
+        
+        null-ls-nvim
+
+        vim-table-mode
+
+        editorconfig-nvim
 
         ## Snippets
         luasnip
@@ -67,6 +88,10 @@ in
         orgmode
 
         markdown-preview-nvim
+
+        neogit
+
+        cmp-copilot
       ];
 
       extraConfig = ''
@@ -80,6 +105,5 @@ in
         recursive = true;
       };
     };
-
   };
 }
