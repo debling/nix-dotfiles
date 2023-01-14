@@ -18,24 +18,21 @@ in
 
       ### Langs related
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
-      # ansible
+      ansible
       clojure # Lisp language with sane concurrency
       nodejs
       pipenv
+      poetry
 
-      #poetry
-      #python310Packages.ipython
-      #python310Packages.python
       (python310.withPackages (ps: with ps; [
         pandas
         numpy
         ipython
         matplotlib
-        /* seaborn */
+        # seaborn
         jupyterlab
+        pudb
       ]))
-      ## Linters
-      shellcheck
 
       ### CLI utils
       #bitwarden-cli
@@ -54,6 +51,8 @@ in
       terraform
       tree
 
+      ranger
+
       hledger
       hledger-ui
       hledger-web
@@ -66,6 +65,8 @@ in
 
       wget
       unrar
+      postgresql
+      comma
 
       renameutils # adds qmv, and qmc utils for bulk move and copy
     ] ++ lib.optionals stdenv.isDarwin [
@@ -105,6 +106,12 @@ in
   };
 
   programs = {
+    vscode = {
+      enable = true;
+      enableUpdateCheck = false;
+      mutableExtensionsDir = true;
+    };
+
     taskwarrior = {
       enable = true;
       colorTheme = "solarized-dark-256";
@@ -184,9 +191,11 @@ in
     zsh = {
       enable = true;
       enableAutosuggestions = true;
-      enableSyntaxHighlighting = true;
-      autocd = true;
       enableCompletion = true;
+      enableSyntaxHighlighting = true;
+      enableVteIntegration = true;
+      autocd = true;
+      history.size = 100000;
     };
 
     tmux = {
@@ -203,11 +212,15 @@ in
         set -g focus-events on
 
         set -g mouse on
+
+        set -g set-titles on
+        set -g set-titles-string "#S / #W"
       '';
     };
 
     git = {
       enable = true;
+      delta.enable = true;
       userName = "Denilson dos Santos Ebling";
       userEmail = "d.ebling8@gmail.com";
       lfs.enable = true;

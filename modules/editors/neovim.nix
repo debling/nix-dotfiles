@@ -19,7 +19,7 @@ in
     home = {
       packages = with pkgs; [
         # language servers
-        /* haskell-language-server */
+        # haskell-language-server
         ccls
         gopls
         jdtls # java language server
@@ -33,75 +33,99 @@ in
         sumneko-lua-language-server
         terraform-ls
         texlab
-
         stylua
+        kotlin-language-server
+        ltex-ls
       ];
       sessionVariables = {
         EDITOR = "nvim";
         LOMBOK_JAR_PATH = "${pkgs.lombok}/share/java/lombok.jar";
       };
     };
-    programs.neovim = {
-      enable = true;
-      viAlias = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-      plugins = with pkgs.vimPlugins; [
-        dracula-vim
+    programs.neovim =
+      let
+        ltex-extra-nvim = pkgs.vimUtils.buildVimPluginFrom2Nix {
+          name = "ltex-extra-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "barreiroleo";
+            repo = "ltex_extra.nvim";
+            rev = "c5046a6eabfee378f781029323efd941fcc53483";
+            hash = "sha256-gTbtjqB6ozoTAkxp0PZUjD/kndxf2eJrXWlkZdj7+OQ=";
+          };
+        };
+      in
+      {
+        enable = true;
+        viAlias = true;
+        vimAlias = true;
+        vimdiffAlias = true;
+        plugins = with pkgs.vimPlugins; [
+          dracula-vim
 
-        vim-multiple-cursors
-        commentary
+          vim-multiple-cursors
+          comment-nvim
 
-        telescope-nvim
-        telescope-fzf-native-nvim
-        telescope-ui-select-nvim
+          telescope-nvim
+          telescope-fzf-native-nvim
+          telescope-ui-select-nvim
 
-        # General plugins
-        ## Sintax hilighting
-        nvim-treesitter.withAllGrammars
-        nvim-treesitter-refactor
-        nvim-treesitter-context
+          # General plugins
+          vim-sleuth
+          indent-blankline-nvim
 
-        nvim-tree-lua
+          ## Sintax hilighting
+          nvim-treesitter.withAllGrammars
+          nvim-treesitter-refactor
+          nvim-treesitter-context
 
-        ## LSP
-        nvim-lspconfig
-        null-ls-nvim
-        fidget-nvim # Show lsp server's status
+          nvim-tree-lua
 
-        vim-table-mode
+          ## LSP
+          nvim-lspconfig
+          null-ls-nvim
+          fidget-nvim # Show lsp server's status
 
-        editorconfig-nvim
+          vim-table-mode
 
-        ## Snippets
-        luasnip
+          editorconfig-nvim
 
-        ## Completion
-        nvim-cmp
-        cmp-buffer
-        cmp-copilot
-        cmp-nvim-lsp
-        cmp-path
-        cmp_luasnip
+          ## Snippets
+          luasnip
+          friendly-snippets
 
-        lspkind-nvim
+          ## Completion
+          nvim-cmp
+          cmp-buffer
+          cmp-copilot
+          cmp-nvim-lsp
+          cmp-path
+          cmp_luasnip
 
-        # Language specific
-        plantuml-syntax
+          lspkind-nvim
 
-        orgmode
+          # Language specific
+          plantuml-syntax
 
-        markdown-preview-nvim
+          kotlin-vim
 
-        neogit
+          orgmode
 
-        neodev-nvim
-      ];
+          markdown-preview-nvim
 
-      extraConfig = ''
-        lua require "init_config"
-      '';
-    };
+          neogit
+
+          neodev-nvim
+
+          ltex-extra-nvim
+
+          ## UI
+          lualine-nvim
+        ];
+
+        extraConfig = ''
+          lua require "init_config"
+        '';
+      };
 
     xdg.configFile = {
       nvim = {

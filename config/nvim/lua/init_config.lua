@@ -51,6 +51,17 @@ require 'treesitter_config'
 
 require 'orgmode_config'
 
+
+require('lualine').setup {
+  options = {
+    icons_enabled = false,
+    component_separators = '|',
+    section_separators = '',
+  },
+}
+
+require('Comment').setup()
+
 local neogit = require 'neogit'
 neogit.setup {}
 vim.keymap.set('n', '<leader>gg', function()
