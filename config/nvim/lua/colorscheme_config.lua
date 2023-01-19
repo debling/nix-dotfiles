@@ -1,3 +1,3 @@
 vim.opt.termguicolors = true
-vim.opt.background = 'dark'
-vim.cmd [[ colorscheme dracula ]]
+vim.o.background = 'dark' -- or "light" for light mode
+vim.cmd 'colorscheme gruvbox'

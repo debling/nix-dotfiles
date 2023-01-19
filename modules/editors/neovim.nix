@@ -28,14 +28,18 @@ in
         nodePackages.pyright
         nodePackages.typescript-language-server
         nodePackages.yaml-language-server
-        rnix-lsp
         shellcheck
         sumneko-lua-language-server
         terraform-ls
         texlab
         stylua
-        kotlin-language-server
         ltex-ls
+        
+        kotlin-language-server
+
+        ### nix
+        nil # language server
+        statix #  static analysis
       ];
       sessionVariables = {
         EDITOR = "nvim";
@@ -60,7 +64,7 @@ in
         vimAlias = true;
         vimdiffAlias = true;
         plugins = with pkgs.vimPlugins; [
-          dracula-vim
+          gruvbox-nvim
 
           vim-multiple-cursors
           comment-nvim
