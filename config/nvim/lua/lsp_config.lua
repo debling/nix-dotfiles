@@ -52,49 +52,27 @@ vim.lsp.set_log_level 'debug'
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Angular templates
-lsp.angularls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
+local simple_servers = {
+    'angularls',
+    'bashls',
+    'ccls',
+    'gopls',
+    'lemminx',
+    'texlab',
+    'nil_ls',
+    'dockerls',
+    'pyright',
+    'terraformls',
+    'tsserver',
+    'kotlin_language_server',
 }
 
--- Bash/sh
-lsp.bashls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
--- C/C++
-lsp.ccls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
--- GO
-lsp.gopls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
-lsp.lemminx.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
-lsp.texlab.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
-lsp.rnix.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
-lsp.dockerls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
+for _, server in pairs(simple_servers) do
+    lsp[server].setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+    }
+end
 
 lsp.yamlls.setup {
     on_attach = on_attach,
@@ -183,30 +161,6 @@ lsp.jdtls.setup {
         get_jdtls_jvm_args(),
         -- get_lombok_arg(),
     },
-}
-
--- Python
-lsp.pyright.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
--- Terraform
-lsp.terraformls.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
--- Typescript
-lsp.tsserver.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
-
--- kotlin
-lsp.kotlin_language_server.setup {
-    on_attach = on_attach,
-    capabilities = capabilities,
 }
 
 lsp.ltex.setup {
@@ -314,6 +268,10 @@ null_ls.setup {
 
         null_ls.builtins.formatting.black,
         null_ls.builtins.diagnostics.flake8,
+
+        -- nix
+        null_ls.builtins.code_actions.statix,
+        null_ls.builtins.diagnostics.statix,
     },
 }
 
