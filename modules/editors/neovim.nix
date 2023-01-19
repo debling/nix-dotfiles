@@ -2,9 +2,6 @@
 
 let
   cfg = config.modules.editors.neovim;
-  jdtls = pkgs.jdt-language-server.overrideAttrs (old: {
-    buildInputs = old.buildInputs ++ lib.optionals pkgs.stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [ Cocoa ]);
-  });
 in
 {
   options.modules.editors.neovim = {
@@ -22,7 +19,6 @@ in
         # haskell-language-server
         ccls
         gopls
-        jdtls # java language server
         nodePackages.bash-language-server
         nodePackages.dockerfile-language-server-nodejs
         nodePackages.pyright
@@ -43,7 +39,6 @@ in
       ];
       sessionVariables = {
         EDITOR = "nvim";
-        LOMBOK_JAR_PATH = "${pkgs.lombok}/share/java/lombok.jar";
       };
     };
     programs.neovim =
@@ -92,6 +87,8 @@ in
           vim-table-mode
 
           editorconfig-nvim
+
+          lsp-colors-nvim
 
           ## Snippets
           luasnip
