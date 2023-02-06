@@ -3,13 +3,13 @@
 
   inputs = {
     # Package sets
-    nixpkgs.url = "github:nixos/nixpkgs/22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    /* nixpkgs-unstable.url = "github:NixOS/nixpkgs/22.05"; */
 
     # Environment/system management
-    darwin.url = "github:lnl7/nix-darwin/master";
+    darwin.url = "github:lnl7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
@@ -18,10 +18,14 @@
 
   outputs = { self, darwin, nixpkgs, home-manager, flake-utils, ... }:
     let
-      /* overlays = [ (_: _: { }) ]; */
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
-        config = { allowUnfree = true; allowBroken = true; };
+        config = { allowUnfree = true; };
+        overlays = [
+          (final: prev: {
+            snitch = prev.callPackage overlays/snitch/default.nix { };
+          })
+        ];
       };
 
       username = "debling";
@@ -50,5 +54,4 @@
 
       formatter = flake-utils.lib.eachDefaultSystemMap (sys: nixpkgs.legacyPackages.${sys}.nixpkgs-fmt);
     };
-
 }

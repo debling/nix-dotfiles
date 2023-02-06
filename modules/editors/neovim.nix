@@ -30,7 +30,7 @@ in
         texlab
         stylua
         ltex-ls
-        
+
         kotlin-language-server
 
         ### nix
@@ -71,6 +71,7 @@ in
           # General plugins
           vim-sleuth
           indent-blankline-nvim
+          vimwiki
 
           ## Sintax hilighting
           nvim-treesitter.withAllGrammars

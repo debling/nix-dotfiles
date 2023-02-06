@@ -67,3 +67,16 @@ neogit.setup {}
 vim.keymap.set('n', '<leader>gg', function()
   neogit.open()
 end, { noremap = true })
+
+
+-- vimwiki configurations
+vim.g.vimwiki_list = {
+  {
+    path = '~/workspace/debling/personal-wiki',
+    syntax = 'markdown',
+    ext = '.md',
+    index = 'README',
+  },
+}
+-- Treat only markdown files inside the path above, as vimwiki files
+vim.g.vimwiki_global_ext = 0

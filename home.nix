@@ -11,6 +11,7 @@ in
   modules.editors.neovim.enable = true;
   home = {
     packages = with pkgs; [
+      snitch
       maven
       ### Editors/IDEs
       jetbrains.datagrip
@@ -18,20 +19,20 @@ in
 
       ### Langs related
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
-      ansible
+      # ansible
       clojure # Lisp language with sane concurrency
       nodejs
       pipenv
       poetry
 
-      (python310.withPackages (ps: with ps; [
+      (python311.withPackages (ps: with ps; [
         pandas
         numpy
         ipython
         matplotlib
         # seaborn
-        jupyterlab
-        pudb
+        # jupyterlab
+        # pudb
       ]))
 
       ### CLI utils
@@ -69,6 +70,8 @@ in
       comma
 
       renameutils # adds qmv, and qmc utils for bulk move and copy
+
+      taskwarrior-tui
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -114,7 +117,7 @@ in
 
     taskwarrior = {
       enable = true;
-      colorTheme = "solarized-dark-256";
+      colorTheme = "dark-256";
     };
 
     # Used to have custom environment per project.
@@ -220,7 +223,6 @@ in
 
     git = {
       enable = true;
-      delta.enable = true;
       userName = "Denilson dos Santos Ebling";
       userEmail = "d.ebling8@gmail.com";
       lfs.enable = true;

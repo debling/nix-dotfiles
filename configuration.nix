@@ -6,7 +6,7 @@
     package = pkgs.nixUnstable;
     configureBuildUsers = true;
     settings = {
-        trusted-users = [ "debling" "@admin" ];
+      trusted-users = [ "debling" "@admin" ];
     };
     extraOptions = ''
       auto-optimise-store = true
