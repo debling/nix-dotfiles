@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nix-index-database, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -6,9 +6,11 @@ in
 {
   imports = [
     ./modules/editors/neovim.nix
+    nix-index-database.hmModules.nix-index
   ];
 
-  modules.editors.neovim.enable = true;
+  myModules.editors.neovim.enable = true;
+
   home = {
     packages = with pkgs; [
       snitch
@@ -108,7 +110,16 @@ in
 
   };
 
+  xdg.configFile = {
+    snitch = {
+      source = ./config/snitch;
+      recursive = true;
+    };
+  };
+
   programs = {
+    nix-index.enable = true;
+
     vscode = {
       enable = true;
       enableUpdateCheck = false;
@@ -134,8 +145,22 @@ in
       enableAliases = true;
     };
 
+    # A modern replacement for cat, with sintax hilghting
+    bat = {
+      enable = true;
+      config = {
+        theme = "gruvbox-dark";
+      };
+    };
+
     # Terminal fuzzy finder
-    fzf.enable = true;
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+      changeDirWidgetOptions = [ "--preview 'tree -C {} | head -n 100'" ];
+      fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
+      fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
+    };
 
     java.enable = true;
 
@@ -208,16 +233,26 @@ in
       terminal = "screen-256color";
       extraConfig = ''
         # Terminal config for TrueColor support
-        set -ga terminal-overrides ",xterm-256color:Tc"
+        set -ga terminal-overrides ",xterm-256color:RGB"
 
-        # So that escapes register immidiately in vim
-        set -sg escape-time 1
         set -g focus-events on
 
         set -g mouse on
 
         set -g set-titles on
         set -g set-titles-string "#S / #W"
+
+        set -g status-style "none,bg=default"
+        set -g status-justify centre
+        set -g status-bg colour236
+        set -g status-right '%d/%m %H:%M'
+
+        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
+        setw -g window-status-format '#[fg=colour250]#I:#W#F'
+
+        # Open new splits in the same directory as the current pane
+        bind  %  split-window -h -c "#{pane_current_path}"
+        bind '"' split-window -v -c "#{pane_current_path}"
       '';
     };
 

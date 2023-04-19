@@ -1,10 +1,10 @@
 { config, options, lib, pkgs, ... }:
 
 let
-  cfg = config.modules.editors.neovim;
+  cfg = config.myModules.editors.neovim;
 in
 {
-  options.modules.editors.neovim = {
+  options.myModules.editors.neovim = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -31,11 +31,18 @@ in
         stylua
         ltex-ls
 
+        ### SQL
+        sqls
+
+        ### Kotlin
         kotlin-language-server
 
         ### nix
         nil # language server
         statix #  static analysis
+
+        nodePackages.eslint_d
+        nodePackages.prettier_d_slim
       ];
       sessionVariables = {
         EDITOR = "nvim";
@@ -50,6 +57,26 @@ in
             repo = "ltex_extra.nvim";
             rev = "c5046a6eabfee378f781029323efd941fcc53483";
             hash = "sha256-gTbtjqB6ozoTAkxp0PZUjD/kndxf2eJrXWlkZdj7+OQ=";
+          };
+        };
+
+        sqls-nvim = pkgs.vimUtils.buildVimPluginFrom2Nix {
+          name = "sqls-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "nanotee";
+            repo = "sqls.nvim";
+            rev = "a0048b7018c99b68456f91b4aa42ce288f0c0774";
+            hash = "sha256-tatUEAI8EVXDYQPAAZ5+38YOPWb8Ei9VHCzHp+AyRjc=";
+          };
+        };
+
+        iron-nvim = pkgs.vimUtils.buildVimPluginFrom2Nix {
+          name = "iron-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "Vigemus";
+            repo = "iron.nvim";
+            rev = "792dd11752c4699ea52c737b5e932d6f21b25834";
+            hash = "sha256-tatUEAI8EVXDYQPAAZ5+38YOPWb8Ei9VHCzHp+AyRjc=";
           };
         };
       in
@@ -84,6 +111,8 @@ in
           nvim-lspconfig
           null-ls-nvim
           fidget-nvim # Show lsp server's status
+
+          sqls-nvim
 
           vim-table-mode
 
@@ -122,6 +151,9 @@ in
 
           ## UI
           lualine-nvim
+          which-key-nvim
+
+          iron-nvim
         ];
 
         extraConfig = ''

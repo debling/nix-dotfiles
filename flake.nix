@@ -14,9 +14,12 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, darwin, nixpkgs, home-manager, flake-utils, ... }:
+  outputs = { self, darwin, nixpkgs, home-manager, flake-utils, nix-index-database, ... }:
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -32,7 +35,7 @@
     in
     {
       # My `nix-darwin` configs
-      darwinConfigurations."phpmb44" = darwin.lib.darwinSystem {
+      darwinConfigurations.phpmb44 = darwin.lib.darwinSystem {
         system = flake-utils.lib.system.aarch64-darwin;
         modules = [
           # Main `nix-darwin` config
@@ -45,9 +48,14 @@
             nixpkgs = nixpkgsConfig;
             users.users.${username}.home = "/Users/${username}";
             # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.${username} = import ./home.nix;
+            home-manager= {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.${username} = import ./home.nix;
+              extraSpecialArgs = {
+                inherit nix-index-database;
+              };
+            };
           }
         ];
       };

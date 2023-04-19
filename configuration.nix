@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 {
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
@@ -20,11 +20,7 @@
   programs = {
     # Create /etc/bashrc that loads the nix-darwin environment.
     zsh.enable = true;
-    nix-index.enable = true;
   };
-
-  # Apps
-  environment.systemPackages = with pkgs; [ ];
 
   # Fonts
   fonts = {

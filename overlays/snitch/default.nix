@@ -16,6 +16,9 @@ buildGoModule {
     sha256 = "M3FZs4GL0AXXUFH+VHFTI12aZx12RfgOWJltU6sOMfw=";
   };
 
+  patches = [
+    ./patches/0001-Adding-support-for-gitlab-groups-and-subgroups.patch
+  ];
   vendorSha256 = "fGmoD4aEWNKs2OxlXA3xvUbC4ZxwtcoK9lUrWN5Gs5k=";
   proxyVendor = true;
 

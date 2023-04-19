@@ -1,0 +1,25 @@
+From 239abfcf319488b6090736108560b5c851d0e0c5 Mon Sep 17 00:00:00 2001
+From: Denilson dos Santos Ebling <d.ebling8@gmail.com>
+Date: Mon, 6 Feb 2023 08:46:51 -0500
+Subject: [PATCH] Adding support for gitlab groups and subgroups
+
+---
+ main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/main.go b/main.go
+index 45ca71e..d491319 100644
+--- a/main.go
++++ b/main.go
+@@ -293,7 +293,7 @@ func getRepo(directory string, remote string) (string, IssueAPI, error) {
+ 	}
+ 
+ 	for _, creds := range credentials {
+-		s := creds.getHost() + "[:/]([-\\.\\w]+)\\/([-\\.\\w]+)"
++		s := creds.getHost() + "[:/]([-\\.\\w/]+)\\/([-\\.\\w]+)"
+ 		hostRegex := regexp.MustCompile(s)
+ 
+ 		groups := hostRegex.FindStringSubmatch(strings.TrimSuffix(urlString, ".git"))
+-- 
+2.39.0
+
