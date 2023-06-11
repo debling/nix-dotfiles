@@ -1,3 +1,9 @@
+# TODO: separate linux and darwin stuff
+# TODO: check programs.dircolors
+# TODO: check programs.hstr
+# TODO: check programs.lf
+# TODO: check programs.topgrade
+# TODO: setup plantuml
 { config, pkgs, nix-index-database, ... }:
 
 let
@@ -9,12 +15,26 @@ in
     nix-index-database.hmModules.nix-index
   ];
 
+  news.display = "show";
+
+  nix = {
+    checkConfig = true;
+    settings = {
+      experimental-features = "nix-command flakes";
+      extra-platforms = "x86_64-darwin aarch64-darwin";
+    };
+  };
+
   myModules.editors.neovim.enable = true;
 
   home = {
+    enableNixpkgsReleaseCheck = true;
+
     packages = with pkgs; [
+      gnumake
       snitch
       maven
+
       ### Editors/IDEs
       jetbrains.datagrip
       jetbrains.idea-ultimate
@@ -22,19 +42,19 @@ in
       ### Langs related
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
       # ansible
-      clojure # Lisp language with sane concurrency
+      # clojure # Lisp language with sane concurrency
       nodejs
+      nodePackages.pnpm
       pipenv
-      poetry
 
       (python311.withPackages (ps: with ps; [
         pandas
         numpy
         ipython
         matplotlib
-        # seaborn
-        # jupyterlab
-        # pudb
+        seaborn
+        jupyterlab
+        pudb
       ]))
 
       ### CLI utils
@@ -44,7 +64,6 @@ in
       coreutils
       entr # Run commands when files change
       graphviz
-      htop
       jq
       nixfmt # Formmater for the nix lang
       pandoc
@@ -56,9 +75,9 @@ in
 
       ranger
 
-      hledger
-      hledger-ui
-      hledger-web
+      # hledger
+      # hledger-ui
+      # hledger-web
 
       cachix
 
@@ -74,6 +93,11 @@ in
       renameutils # adds qmv, and qmc utils for bulk move and copy
 
       taskwarrior-tui
+
+      vagrant
+      ouch # https://github.com/ouch-org/ouch
+      # https://github.com/mic92/nix-update
+      # https://github.com/nix-community/nurl
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -118,6 +142,10 @@ in
   };
 
   programs = {
+    man = {
+      enable = true;
+      generateCaches = true;
+    };
     nix-index.enable = true;
 
     vscode = {
@@ -125,6 +153,8 @@ in
       enableUpdateCheck = false;
       mutableExtensionsDir = true;
     };
+
+    htop.enable = true;
 
     taskwarrior = {
       enable = true;
@@ -143,6 +173,7 @@ in
     exa = {
       enable = true;
       enableAliases = true;
+      git = true;
     };
 
     # A modern replacement for cat, with sintax hilghting
@@ -161,6 +192,9 @@ in
       fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
       fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
     };
+
+    # GitHub's cli tool
+    gh.enable = true;
 
     java.enable = true;
 
@@ -230,10 +264,10 @@ in
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "screen-256color";
+      terminal = "xterm-256color";
       extraConfig = ''
         # Terminal config for TrueColor support
-        set -ga terminal-overrides ",xterm-256color:RGB"
+        set -sg terminal-overrides ",*:RGB"
 
         set -g focus-events on
 

@@ -63,6 +63,12 @@ local simple_servers = {
   'terraformls',
   'tsserver',
   'kotlin_language_server',
+  'tailwindcss',
+
+  -- vscode-langservers-extracted
+  'html',
+  'eslint',
+  'cssls',
 }
 
 for _, server in pairs(simple_servers) do
@@ -72,15 +78,31 @@ for _, server in pairs(simple_servers) do
   }
 end
 
+local schemaStore = require('schemastore')
+
+-- from vscode-langservers-extracted
+lsp.jsonls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    json = {
+      schemas = schemaStore.json.schemas(),
+      validate = { enable = true },
+    },
+  },
+}
+
 lsp.yamlls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
     yaml = {
-      schemas = {
-        ['https://json.schemastore.org/github-workflow.json'] = '/.github/workflows/*',
-        ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] = 'docker-compose*.yml',
+      schemaStore = {
+        -- You must disable built-in schemaStore support if you want to use
+        -- this plugin and its advanced options like `ignore`.
+        enable = false,
       },
+      schemas = schemaStore.yaml.schemas(),
     },
   },
 }
@@ -186,14 +208,6 @@ lsp.ltex.setup {
   },
 }
 
-lsp.sqls.setup {
-  capabilities = capabilities,
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    require('sqls').on_attach(client, bufnr)
-  end,
-}
-
 -- lsp.hls.setup {
 --   filetypes = { 'haskell', 'lhaskell', 'cabal' },
 --   on_attach = on_attach,
@@ -257,21 +271,20 @@ cmp.setup {
     ['<C-p>'] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
   },
 
-  sources = {
+  sources = cmp.config.sources({
     { name = 'nvim_lua' },
     { name = 'copilot' },
-    { name = 'orgmode' },
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'luasnip' },
+  }, {
     { name = 'buffer', keyword_length = 5 },
-  },
+  }),
 
   formatting = {
     format = lspkind.cmp_format {
-      symbol_map = {
-        Copilot = '',
-      },
+      mode = 'symbol',
+      maxwidth = 50,
     },
   },
 
@@ -293,8 +306,8 @@ null_ls.setup {
     null_ls.builtins.hover.printenv,
     null_ls.builtins.formatting.stylua,
 
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.diagnostics.eslint_d,
+    -- null_ls.builtins.code_actions.eslint_d,
+    -- null_ls.builtins.diagnostics.eslint_d,
 
     null_ls.builtins.formatting.prettier_d_slim,
 
@@ -302,10 +315,15 @@ null_ls.setup {
 
     null_ls.builtins.completion.spell,
 
+    -- -- Python
+    -- liting
+    null_ls.builtins.diagnostics.ruff,
+    -- code formatting
     null_ls.builtins.formatting.black,
-    null_ls.builtins.diagnostics.flake8,
+    -- import sortint
+    null_ls.builtins.formatting.isort,
 
-    -- nix
+    -- -- nix
     null_ls.builtins.code_actions.statix,
     null_ls.builtins.diagnostics.statix,
   },

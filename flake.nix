@@ -35,7 +35,7 @@
     in
     {
       # My `nix-darwin` configs
-      darwinConfigurations.phpmb44 = darwin.lib.darwinSystem {
+      darwinConfigurations."air-m1" = darwin.lib.darwinSystem {
         system = flake-utils.lib.system.aarch64-darwin;
         modules = [
           # Main `nix-darwin` config
@@ -45,10 +45,11 @@
           home-manager.darwinModules.home-manager
 
           {
+            networking.hostName = "air-m1";
             nixpkgs = nixpkgsConfig;
             users.users.${username}.home = "/Users/${username}";
             # `home-manager` config
-            home-manager= {
+            home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${username} = import ./home.nix;
