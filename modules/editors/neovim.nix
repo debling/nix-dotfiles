@@ -64,17 +64,6 @@ in
       };
     };
     programs.neovim =
-      let
-        iron-nvim = pkgs.vimUtils.buildVimPluginFrom2Nix {
-          name = "iron-nvim";
-          src = pkgs.fetchFromGitHub {
-            owner = "Vigemus";
-            repo = "iron.nvim";
-            rev = "9017061849e543d8e94b79d2a94b95e856ab6a10";
-            hash = "sha256-XJXi3i7wpBWDd5sny90Gw6ucOlnn1m8sYSVcUh/3Ufk=";
-          };
-        };
-      in
       {
         enable = true;
         viAlias = true;
@@ -132,8 +121,6 @@ in
 
           kotlin-vim
 
-          orgmode
-
           markdown-preview-nvim
 
           ltex_extra-nvim
@@ -160,10 +147,12 @@ in
           SchemaStore-nvim
           oil-nvim
 
+          ## Remember last place on files
           nvim-lastplace
 
           nvim-web-devicons
 
+          # Plugin to interact with SQL databases
           vim-dadbod
           vim-dadbod-ui
           vim-dadbod-completion

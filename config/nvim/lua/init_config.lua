@@ -54,8 +54,6 @@ require('telescope_config')
 
 require('treesitter_config')
 
-require('orgmode_config')
-
 require('vcs_config')
 
 require('Comment').setup({
