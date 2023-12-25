@@ -185,18 +185,18 @@ in
       enableUpdateCheck = false;
       mutableExtensionsDir = true;
       userSettings = {
-        "files.autoSave"= "afterDelay";
+        "files.autoSave" = "afterDelay";
         "vim.enableNeovim" = true;
-        "editor.fontFamily"= "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
+        "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
         "editor.fontSize" = 14;
         "editor.fontLigatures" = true;
         "workbench.colorTheme" = "Solarized Light";
-        "vim.easymotion"= true;
-        "vim.incsearch"= true;
-        "vim.useSystemClipboard"= true;
-        "vim.useCtrlKeys"= true;
-        "vim.hlsearch"= true;
-        "vim.leader"= "<space>";
+        "vim.easymotion" = true;
+        "vim.incsearch" = true;
+        "vim.useSystemClipboard" = true;
+        "vim.useCtrlKeys" = true;
+        "vim.hlsearch" = true;
+        "vim.leader" = "<space>";
         "extensions.experimental.affinity" = {
           "vscodevim.vim" = 1;
         };

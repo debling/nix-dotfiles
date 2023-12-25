@@ -73,6 +73,7 @@ in
           gruvbox-nvim
 
           vim-multiple-cursors
+
           comment-nvim
           nvim-ts-context-commentstring
 
@@ -95,12 +96,11 @@ in
           nvim-lspconfig
           null-ls-nvim
           fidget-nvim # Show lsp server's status
+          lsp-colors-nvim
 
           vim-table-mode
 
           editorconfig-nvim
-
-          lsp-colors-nvim
 
           ## Snippets
           luasnip
@@ -121,6 +121,8 @@ in
 
           kotlin-vim
 
+          ### Markdown
+          # Preview Markdown in real-time, on the browser
           markdown-preview-nvim
 
           ltex_extra-nvim
@@ -138,8 +140,6 @@ in
           indent-blankline-nvim
 
           vim-slime
-
-          rest-nvim
 
           vim-test
           hurl
