@@ -82,7 +82,6 @@ in
           telescope-ui-select-nvim
 
           # General plugins
-          vim-sleuth
 
           ## Sintax hilighting
           nvim-treesitter.withAllGrammars
