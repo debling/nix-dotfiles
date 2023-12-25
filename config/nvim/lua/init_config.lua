@@ -3,7 +3,6 @@ require('basic_options')
 require('ui_config')
 
 require('neodev').setup()
-require('neoconf').setup()
 
 require('lsp_config')
 

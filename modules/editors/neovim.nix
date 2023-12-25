@@ -132,7 +132,6 @@ in
           neogit
 
           neodev-nvim
-          neoconf-nvim
 
           ## UI
           lualine-nvim
