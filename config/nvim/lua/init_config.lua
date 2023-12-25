@@ -1,3 +1,7 @@
+-- disable netrw at the very start of your init.lua, recomended for nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -- Search options
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -39,9 +43,10 @@ vim.o.undolevels = 10000
 -- Map leader key to <space>
 vim.g.mapleader = ' '
 
-require('colorscheme_config')
+require('ui_config')
 
-require('neodev').setup({})
+require('neodev').setup()
+require('neoconf').setup()
 
 require('lsp_config')
 
@@ -51,131 +56,120 @@ require('treesitter_config')
 
 require('orgmode_config')
 
-require('lualine').setup({
-  options = {
-    icons_enabled = false,
-    component_separators = '|',
-    section_separators = '',
-  },
+require('vcs_config')
+
+require('Comment').setup({
+    pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 })
-
-require('Comment').setup()
-
-local neogit = require('neogit')
-neogit.setup({})
-vim.keymap.set('n', '<leader>gg', function()
-  neogit.open()
-end, { noremap = true })
-
--- vimwiki configurations
-vim.g.vimwiki_list = {
-  {
-    path = '~/workspace/debling/personal-wiki',
-    syntax = 'markdown',
-    ext = '.md',
-    index = 'README',
-  },
-}
--- Treat only markdown files inside the path above, as vimwiki files
-vim.g.vimwiki_global_ext = 0
 
 -- command! LocalTerm let s:term_dir=expand('%:p:h') | below new | call termopen([&shell], {'cwd': s:term_dir })
 vim.keymap.set('n', '<leader>tn', function()
-  local fileDir = vim.fn.expand('%:p:h')
-  vim.cmd('below new | call termopen([&shell], {"cwd": "' .. fileDir .. '"})')
+    local fileDir = vim.fn.expand('%:p:h')
+    vim.cmd('below new | call termopen([&shell], {"cwd": "' .. fileDir .. '"})')
 end, { noremap = true })
 
 vim.o.timeout = true
 vim.o.timeoutlen = 300
+
 require('which-key').setup({})
 
-local iron = require('iron.core')
+-- slime
+vim.g.slime_target = 'tmux'
+vim.g.slime_default_config = {
+    socket_name = vim.split(os.getenv('TMUX') or '', ',')[1],
+    target_pane = '{bottom-right}',
+}
 
-iron.setup({
-  config = {
-    -- Whether a repl should be discarded or not
-    scratch_repl = true,
-    -- Your repl definitions come here
-    repl_definition = {
-      sh = {
-        -- Can be a table or a function that
-        -- returns a table (see below)
-        command = { 'zsh' },
-      },
+local nmap = function(key, effect, desc)
+    vim.keymap.set('n', key, effect, { silent = true, noremap = true, desc = desc })
+end
 
-      python = {
-        -- Can be a table or a function that
-        -- returns a table (see below)
-        command = { 'ipython' },
-      },
-    },
-    -- How the repl window will be displayed
-    -- See below for more information
-    repl_open_cmd = require('iron.view').bottom(40),
-  },
-  -- Iron doesn't set keymaps by default anymore.
-  -- You can set them here or manually add keymaps to the functions in iron.core
-  keymaps = {
-    send_motion = '<space>sc',
-    visual_send = '<space>sc',
-    send_file = '<space>sf',
-    send_line = '<space>sl',
-    send_mark = '<space>sm',
-    mark_motion = '<space>mc',
-    mark_visual = '<space>mc',
-    remove_mark = '<space>md',
-    cr = '<space>s<cr>',
-    interrupt = '<space>s<space>',
-    exit = '<space>sq',
-    clear = '<space>cl',
-  },
-  -- If the highlight is on, you can change how it looks
-  -- For the available options, check nvim_set_hl
-  highlight = {
-    italic = true,
-  },
-  ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
-})
+local vmap = function(key, effect, desc)
+    vim.keymap.set('v', key, effect, { silent = true, noremap = true, desc = desc })
+end
 
--- iron also has a list of commands, see :h iron-commands for all available commands
-vim.keymap.set('n', '<space>rs', '<cmd>IronRepl<cr>')
-vim.keymap.set('n', '<space>rr', '<cmd>IronRestart<cr>')
-vim.keymap.set('n', '<space>rf', '<cmd>IronFocus<cr>')
-vim.keymap.set('n', '<space>rh', '<cmd>IronHide<cr>')
+local imap = function(key, effect, desc)
+    local opts = { silent = true, noremap = true, desc = desc }
+    vim.keymap.set('i', key, effect, opts)
+end
 
 require('rest-nvim').setup({
-  -- Open request results in a horizontal split
-  result_split_horizontal = false,
-  -- Keep the http file buffer above|left when split horizontal|vertical
-  result_split_in_place = false,
-  -- Skip SSL verification, useful for unknown certificates
-  skip_ssl_verification = false,
-  -- Encode URL before making request
-  encode_url = true,
-  -- Highlight request on run
-  highlight = {
-    enabled = true,
-    timeout = 150,
-  },
-  result = {
-    -- toggle showing URL, HTTP info, headers at top the of result window
-    show_url = true,
-    show_http_info = true,
-    show_headers = true,
-    -- executables or functions for formatting response body [optional]
-    -- set them to false if you want to disable them
-    formatters = {
-      json = 'jq',
-      html = function(body)
-        return vim.fn.system({ 'tidy', '-i', '-q', '-' }, body)
-      end,
+    -- Open request results in a horizontal split
+    result_split_horizontal = false,
+    -- Keep the http file buffer above|left when split horizontal|vertical
+    result_split_in_place = false,
+    -- Skip SSL verification, useful for unknown certificates
+    skip_ssl_verification = false,
+    -- Encode URL before making request
+    encode_url = true,
+    -- Highlight request on run
+    highlight = {
+        enabled = true,
+        timeout = 150,
     },
-  },
-  -- Jump to request line on run
-  jump_to_request = false,
-  env_file = '.env',
-  custom_dynamic_variables = {},
-  yank_dry_run = true,
+    result = {
+        -- toggle showing URL, HTTP info, headers at top the of result window
+        show_url = true,
+        show_http_info = true,
+        show_headers = true,
+        -- executables or functions for formatting response body [optional]
+        -- set them to false if you want to disable them
+        formatters = {
+            json = 'jq',
+            html = function(body)
+                return vim.fn.system({ 'tidy', '-i', '-q', '-' }, body)
+            end,
+        },
+    },
+    -- Jump to request line on run
+    jump_to_request = false,
+    env_file = '.env',
+    custom_dynamic_variables = {},
+    yank_dry_run = true,
 })
 
 require('oil').setup()
+
+require('nvim-lastplace').setup()
+
+-- trouble.nvim
+local trouble = require('trouble')
+
+-- Lua
+nmap('<leader>xx', function()
+    trouble.open()
+end)
+nmap('<leader>xw', function()
+    trouble.open('workspace_diagnostics')
+end)
+nmap('<leader>xd', function()
+    trouble.open('document_diagnostics')
+end)
+nmap('<leader>xq', function()
+    trouble.open('quickfix')
+end)
+nmap('<leader>xl', function()
+    trouble.open('loclist')
+end)
+nmap('gR', function()
+    trouble.open('lsp_references')
+end)
+
+
+require('nvim-tree').setup({
+    sort = {
+        sorter = 'case_sensitive',
+    },
+    renderer = {
+        group_empty = true,
+    },
+    filters = {
+        dotfiles = true,
+    },
+})
+
+nmap('<leader>ft', require('nvim-tree.api').tree.toggle, 'Toggle nvim-tree')
+
+vim.g.db_ui_env_variable_url = 'DATABASE_URL'
+vim.g.db_ui_use_nerd_fonts = 1
+vim.g.db_ui_execute_on_save = 0

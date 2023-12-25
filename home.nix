@@ -1,13 +1,11 @@
 # TODO: separate linux and darwin stuff
-# TODO: check programs.dircolors
-# TODO: check programs.hstr
 # TODO: check programs.lf
-# TODO: check programs.topgrade
 # TODO: setup plantuml
 { config, pkgs, nix-index-database, ... }:
 
 let
   customScriptsDir = ".local/bin";
+  globalNodePackagesDir = ".local/share/node_packages";
 in
 {
   imports = [
@@ -31,6 +29,8 @@ in
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
+      gh
+
       gnumake
       snitch
       maven
@@ -38,27 +38,33 @@ in
       ### Editors/IDEs
       jetbrains.datagrip
       jetbrains.idea-ultimate
+      visualvm
 
       ### Langs related
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
       # ansible
       # clojure # Lisp language with sane concurrency
+      cargo
       nodejs
       nodePackages.pnpm
       pipenv
 
-      (python311.withPackages (ps: with ps; [
-        pandas
-        numpy
-        ipython
-        matplotlib
-        seaborn
-        jupyterlab
-        pudb
-      ]))
+      # (python311.withPackages (ps: with ps; [
+      #   pandas
+      #   numpy
+      #   ipython
+      #   # matplotlib
+      #   # seaborn
+      #   # jupyterlab
+      #   # pudb
+      #   # torch
+      #   # scikit-learn
+      # ]))
+
+      poetry
 
       ### CLI utils
-      #bitwarden-cli
+      bitwarden-cli
       awscli2
       cloc
       coreutils
@@ -87,17 +93,22 @@ in
 
       wget
       unrar
-      postgresql
-      comma
+      postgresql_15
 
       renameutils # adds qmv, and qmc utils for bulk move and copy
 
       taskwarrior-tui
 
-      vagrant
-      ouch # https://github.com/ouch-org/ouch
+      # vagrant
+      # ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
       # https://github.com/mic92/nix-update
-      # https://github.com/nix-community/nurl
+      nurl # https://github.com/nix-community/nurl
+      nix-init # https://github.com/nix-community/nix-init
+      oha # HTTP load generator https://github.com/hatoo/oha
+
+      trivy
+      cht-sh # https://github.com/chubin/cheat.sh
+      # nix-du
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -111,13 +122,25 @@ in
       nsp = "nix-shell -p";
     };
 
-    sessionPath = [ "$HOME/${customScriptsDir}" ];
+    sessionPath = [
+      "$HOME/${customScriptsDir}"
+      "$HOME/${globalNodePackagesDir}/bin"
+    ];
+
+    sessionVariables = {
+      GRAALVM_HOME = pkgs.graalvm-ce.home;
+    };
 
     file = {
       ${customScriptsDir} = {
         source = ./scripts;
         recursive = true;
       };
+
+      ".npmrc".text = ''
+        prefix=~/${globalNodePackagesDir}
+        global-bin-dir=~/${globalNodePackagesDir}
+      '';
 
       ".ideavimrc".source = ./config/.ideavimrc;
       # Install MacOS applications to the user environment if the targetPlatform is Darwin
@@ -130,6 +153,13 @@ in
           };
         in
         "${apps}/Applications";
+
+      # Stable SDK symlinks
+      "SDKs/Java/21".source = pkgs.jdk21.home;
+      "SDKs/Java/17".source = pkgs.jdk17.home;
+      "SDKs/Java/11".source = pkgs.jdk11.home;
+      "SDKs/Java/8".source = pkgs.jdk8.home;
+      "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };
 
   };
@@ -142,16 +172,36 @@ in
   };
 
   programs = {
-    man = {
-      enable = true;
-      generateCaches = true;
-    };
+    zoxide.enable = true;
+
+    dircolors.enable = true;
+
+    nix-index-database.comma.enable = true;
+
     nix-index.enable = true;
 
     vscode = {
       enable = true;
       enableUpdateCheck = false;
       mutableExtensionsDir = true;
+      userSettings = {
+        "files.autoSave"= "afterDelay";
+        "vim.enableNeovim" = true;
+        "editor.fontFamily"= "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
+        "editor.fontSize" = 14;
+        "editor.fontLigatures" = true;
+        "workbench.colorTheme" = "Solarized Light";
+        "vim.easymotion"= true;
+        "vim.incsearch"= true;
+        "vim.useSystemClipboard"= true;
+        "vim.useCtrlKeys"= true;
+        "vim.hlsearch"= true;
+        "vim.leader"= "<space>";
+        "extensions.experimental.affinity" = {
+          "vscodevim.vim" = 1;
+        };
+
+      };
     };
 
     htop.enable = true;
@@ -170,7 +220,7 @@ in
     };
 
     # A modern replacement for ls.
-    exa = {
+    eza = {
       enable = true;
       enableAliases = true;
       git = true;
@@ -194,7 +244,7 @@ in
     };
 
     # GitHub's cli tool
-    gh.enable = true;
+    # gh.enable = true;
 
     java.enable = true;
 
@@ -245,26 +295,80 @@ in
     gpg.enable = true;
 
     # The true OS
-    emacs = {
-      enable = true;
-      package = pkgs.emacs28NativeComp;
-    };
+    # emacs = {
+    #   enable = true;
+    #   package = pkgs.emacs28NativeComp;
+    # };
 
     zsh = {
       enable = true;
       enableAutosuggestions = true;
       enableCompletion = true;
-      enableSyntaxHighlighting = true;
+      syntaxHighlighting = {
+        enable = true;
+      };
       enableVteIntegration = true;
       autocd = true;
       history.size = 100000;
+      localVariables = {
+        TYPEWRITTEN_ARROW_SYMBOL = "➜";
+        TYPEWRITTEN_RELATIVE_PATH = "adaptive";
+        TYPEWRITTEN_SYMBOL = "$";
+      };
+      plugins = [
+        {
+          name = "typewritten";
+          src = pkgs.fetchFromGitHub {
+            owner = "reobin";
+            repo = "typewritten";
+            rev = "v1.5.1";
+            sha256 = "07zk6lvdwy9n0nlvg9z9h941ijqhc5vvfpbr98g8p95gp4hvh85a";
+          };
+        }
+        { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
+      ];
+      initExtraBeforeCompInit = ''
+        if type brew &>/dev/null
+        then
+            fpath+="$(brew --prefix)/share/zsh/site-functions"
+        fi
+      '';
+      initExtra = ''
+        # Enable editing of the command line in an editor with Ctrl-X Ctrl-E
+        autoload -z edit-command-line
+        zle -N edit-command-line
+        bindkey "^X^E" edit-command-line
+
+        # load module for list-style selection
+        # zmodload zsh/complist
+
+        # use the module above for autocomplete selection
+        # zstyle ':completion:*' menu yes select
+
+        # now we can define keybindings for complist module
+        # you want to trigger search on autocomplete items
+        # so we'll bind some key to trigger history-incremental-search-forward function
+        # bindkey -M menuselect '?' history-incremental-search-forward
+
+        #### zfzf-tab config
+        # disable sort when completing `git checkout`
+        zstyle ':completion:*:git-checkout:*' sort false
+        # set descriptions format to enable group support
+        zstyle ':completion:*:descriptions' format '[%d]'
+        # set list-colors to enable filename colorizing
+        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+        # preview directory's content with exa when completing cd
+        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+        # switch group using `,` and `.`
+        zstyle ':fzf-tab:*' switch-group ',' '.'
+      '';
     };
 
     tmux = {
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "xterm-256color";
+      terminal = "screen-256color";
       extraConfig = ''
         # Terminal config for TrueColor support
         set -sg terminal-overrides ",*:RGB"
@@ -279,6 +383,7 @@ in
         set -g status-style "none,bg=default"
         set -g status-justify centre
         set -g status-bg colour236
+        set -g status-left-length 25
         set -g status-right '%d/%m %H:%M'
 
         setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
@@ -287,13 +392,24 @@ in
         # Open new splits in the same directory as the current pane
         bind  %  split-window -h -c "#{pane_current_path}"
         bind '"' split-window -v -c "#{pane_current_path}"
+
+        bind-key -r f run-shell "tmux neww tmux-sessionizer"
       '';
     };
+
+    gh-dash.enable = true;
+    lazygit.enable = true;
 
     git = {
       enable = true;
       userName = "Denilson dos Santos Ebling";
       userEmail = "d.ebling8@gmail.com";
+      delta = {
+        enable = true;
+        options = {
+          syntax-theme = "gruvbox-dark";
+        };
+      };
       lfs.enable = true;
       signing = {
         key = "CCBC8AA1AF062142";
@@ -309,17 +425,11 @@ in
       ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
       extraConfig = {
         pull = { rebase = true; };
+        push = { autoSetupRemote = true; };
       };
     };
   };
 
-  # services = { emacs service does not support darwin
-  #   emacs = {
-  #     enable = true;
-  #     client.enable = true;
-  #     defaultEditor = true;
-  #   };
-  # };
 
   ####
   #### The section bellow is auto-generated by home-manager

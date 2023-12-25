@@ -1,0 +1,17 @@
+#!/bin/sh
+
+CONTAINER_NAME='run-postgres'
+DEFAULT_PASSWORD='1'
+POSTGRES_IMG='postgres:14'
+
+# Check if container is running, if its running print its connection string, if not create new instance
+if ! [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+    echo "Container is not running" >&2
+    docker run -P -it --rm --name $CONTAINER_NAME -e POSTGRES_PASSWORD=$DEFAULT_PASSWORD -d $POSTGRES_IMG >&2
+else
+   echo "Container is running" >&2
+fi
+
+# Grab container port number
+PORT=$(docker port $CONTAINER_NAME 5432 | cut -d':' -f2)
+echo "DATABASE_URL=postgres://postgres:$DEFAULT_PASSWORD@localhost:${PORT}/postgres"

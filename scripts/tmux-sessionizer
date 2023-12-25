@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # Copied from:
-# https://github.com/ThePrimeagen/.dotfiles/blob/1f207bf4049402b50fdc871b979e850de0371f73/bin/.local/scripts/tmux-sessionizer
-
-set -ex
+#https://github.com/ThePrimeagen/.dotfiles/blob/602019e902634188ab06ea31251c01c1a43d1621/bin/.local/scripts/tmux-sessionizer
 
 if [[ $# -eq 1 ]]; then
     selected=$1
@@ -15,16 +13,15 @@ if [[ -z $selected ]]; then
 fi
 
 selected_name=$(basename "$selected" | tr . _)
-# tmux_running=$(pgrep tmux)
+tmux_running=$(pgrep tmux)
 
-# if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-if [[ -z $TMUX ]]; then
-    tmux new-session -s $selected_name -c $selected
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s "$selected_name" -c "$selected"
     exit 0
 fi
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+if ! tmux has-session -t="$selected_name" 2> /dev/null; then
+    tmux new-session -ds "$selected_name" -c "$selected"
 fi
 
-tmux attach-session -t $selected_name
+tmux switch-client -t "$selected_name"

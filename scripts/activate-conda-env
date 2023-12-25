@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Define the name of your Conda environment
+CONDA_ENV_NAME="torch_env"
+
+SHELL_NAME="zsh"
+
+eval "$(conda "shell.$(basename "${SHELL}")" hook)"
+
+# Check if the Conda environment exists
+if conda info --envs | grep -q "$CONDA_ENV_NAME"; then
+    # Activate the Conda environment in a new shell
+    conda activate $CONDA_ENV_NAME
+    echo "Conda environment '$CONDA_ENV_NAME' activated."
+    exec $SHELL_NAME
+else
+    echo "Conda environment '$CONDA_ENV_NAME' does not exist."
+fi

@@ -14,11 +14,11 @@ local on_attach = function(_, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
   local bindings = {
-    { 'gD', vim.lsp.buf.declaration },
-    { 'gd', vim.lsp.buf.definition },
-    { 'K', vim.lsp.buf.hover },
-    { 'gi', vim.lsp.buf.implementation },
-    { '<C-k>', vim.lsp.buf.signature_help },
+    { 'gD',        vim.lsp.buf.declaration },
+    { 'gd',        vim.lsp.buf.definition },
+    { 'K',         vim.lsp.buf.hover },
+    { 'gi',        vim.lsp.buf.implementation },
+    { '<C-k>',     vim.lsp.buf.signature_help },
     { '<space>wa', vim.lsp.buf.add_workspace_folder },
     { '<space>wr', vim.lsp.buf.remove_workspace_folder },
     {
@@ -27,14 +27,14 @@ local on_attach = function(_, bufnr)
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end,
     },
-    { '<space>D', vim.lsp.buf.type_definition },
+    { '<space>D',  vim.lsp.buf.type_definition },
     { '<space>rn', vim.lsp.buf.rename },
     { '<space>ca', vim.lsp.buf.code_action },
-    { 'gr', vim.lsp.buf.references },
+    { 'gr',        vim.lsp.buf.references },
     {
       '<space>f',
       function()
-        vim.lsp.buf.format { async = true }
+        vim.lsp.buf.format({ async = true })
       end,
     },
   }
@@ -42,9 +42,11 @@ local on_attach = function(_, bufnr)
   for _, binding in ipairs(bindings) do
     km.set('n', binding[1], binding[2], bufopts)
   end
+
+  km.set('v', '<space>f', vim.lsp.buf.format, bufopts)
 end
 
-local lsp = require 'lspconfig'
+local lsp = require('lspconfig')
 
 -- Add additional capabilities supported by nvim-cmp
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -65,23 +67,25 @@ local simple_servers = {
   'kotlin_language_server',
   'tailwindcss',
 
+  'arduino_language_server',
+
   -- vscode-langservers-extracted
   'html',
-  'eslint',
+  -- 'eslint',
   'cssls',
 }
 
 for _, server in pairs(simple_servers) do
-  lsp[server].setup {
+  lsp[server].setup({
     on_attach = on_attach,
     capabilities = capabilities,
-  }
+  })
 end
 
 local schemaStore = require('schemastore')
 
 -- from vscode-langservers-extracted
-lsp.jsonls.setup {
+lsp.jsonls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -90,9 +94,9 @@ lsp.jsonls.setup {
       validate = { enable = true },
     },
   },
-}
+})
 
-lsp.yamlls.setup {
+lsp.yamlls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -101,42 +105,40 @@ lsp.yamlls.setup {
         -- You must disable built-in schemaStore support if you want to use
         -- this plugin and its advanced options like `ignore`.
         enable = false,
+        -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+        url = '',
       },
-      schemas = schemaStore.yaml.schemas(),
+      schemas = schemaStore.yaml.schemas({
+        extra = {
+          {
+            description = 'Open Api Schema',
+            fileMatch = { 'openapi*.yml', 'openapi*.yaml' },
+            name = 'OpenAPI Spec',
+            url = 'https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.yaml',
+          },
+        },
+      }),
     },
   },
-}
+})
 
-lsp.lua_ls.setup {
+lsp.lua_ls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
     Lua = {
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT',
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { 'vim' },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file('', true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = {
         enable = false,
       },
     },
   },
-}
+})
 
 -- Java
-local util = require 'lspconfig.util'
+local util = require('lspconfig.util')
 
 -- intalled via https://github.com/eruizc-dev/jdtls-launcher
-lsp.jdtls.setup {
+lsp.jdtls.setup({
   on_attach = on_attach,
   capabilities = capabilities,
   cmd = {
@@ -150,63 +152,31 @@ lsp.jdtls.setup {
           profile = 'GoogleStyle',
         },
       },
-      signatureHelp = { enabled = true },
-      configuration = {
-        updateBuildConfiguration = 'interactive',
-      },
-      eclipse = {
-        downloadSources = true,
-      },
-      maven = {
-        downloadSources = true,
-      },
-      implementationsCodeLens = {
-        enabled = true,
-      },
-      referencesCodeLens = {
-        enabled = true,
-      },
-      references = {
-        includeDecompiledSources = true,
-      },
-      inlayHints = {
-        parameterNames = {
-          enabled = 'all', -- literals, all, none
-        },
-      },
-      completion = {
-        favoriteStaticMembers = {
-          'org.hamcrest.MatcherAssert.assertThat',
-          'org.hamcrest.Matchers.*',
-          'org.hamcrest.CoreMatchers.*',
-          'org.junit.jupiter.api.Assertions.*',
-          'java.util.Objects.requireNonNull',
-          'java.util.Objects.requireNonNullElse',
-          'org.mockito.Mockito.*',
-        },
-      },
     },
   },
-}
+})
 
-lsp.ltex.setup {
+lsp.ltex.setup({
   capabilities = capabilities,
   on_attach = function(client, bufnr)
     on_attach(client, bufnr)
     -- your other on_attach functions.
-    require('ltex_extra').setup {
+    require('ltex_extra').setup({
       load_langs = { 'en-US', 'pt-BR' }, -- table <string> : languages for witch dictionaries will be loaded
-      init_check = true, -- boolean : whether to load dictionaries on startup
-    }
+      init_check = true,                 -- boolean : whether to load dictionaries on startup
+    })
   end,
   settings = {
     ltex = {
       additionalRules = {
+        motherTongue = 'pt-BR',
         enablePickyRules = true,
       },
+      completionEnabled = true,
+      checkFrequency = 'save',
     },
   },
-}
+})
 
 -- lsp.hls.setup {
 --   filetypes = { 'haskell', 'lhaskell', 'cabal' },
@@ -215,7 +185,7 @@ lsp.ltex.setup {
 -- }
 
 -- luasnip setup
-local luasnip = require 'luasnip'
+local luasnip = require('luasnip')
 
 -- Expand snippert with or run the normal c-k action
 km.set({ 'i', 's' }, '<c-k>', function()
@@ -244,32 +214,31 @@ km.set({ 'i', 's' }, '<c-l>', function()
   end
 end, { silent = true, noremap = false })
 
-local lspkind = require 'lspkind'
+local lspkind = require('lspkind')
 
 require('luasnip.loaders.from_vscode').lazy_load()
 
 -- nvim-cmp setup
-local cmp = require 'cmp'
+local cmp = require('cmp')
 
-cmp.setup {
-
+cmp.setup({
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
     end,
   },
 
-  mapping = cmp.mapping.preset.insert {
+  mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-y>'] = cmp.mapping.confirm {
+    ['<C-y>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
-    },
-    ['<C-n>'] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
-    ['<C-p>'] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
-  },
+    }),
+    ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+    ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+  }),
 
   sources = cmp.config.sources({
     { name = 'nvim_lua' },
@@ -282,10 +251,10 @@ cmp.setup {
   }),
 
   formatting = {
-    format = lspkind.cmp_format {
+    format = lspkind.cmp_format({
       mode = 'symbol',
       maxwidth = 50,
-    },
+    }),
   },
 
   view = {
@@ -295,25 +264,31 @@ cmp.setup {
   experimental = {
     ghost_text = true,
   },
-}
+})
 
-local null_ls = require 'null-ls'
+local null_ls = require('null-ls')
 
-null_ls.setup {
+null_ls.setup({
   sources = {
     null_ls.builtins.formatting.trim_newlines,
+
     null_ls.builtins.hover.dictionary,
     null_ls.builtins.hover.printenv,
     null_ls.builtins.formatting.stylua,
 
-    -- null_ls.builtins.code_actions.eslint_d,
-    -- null_ls.builtins.diagnostics.eslint_d,
-
+    -- Javascript
+    null_ls.builtins.code_actions.eslint_d,
+    null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.formatting.prettier_d_slim,
 
+    -- Shell
     null_ls.builtins.code_actions.shellcheck,
 
+    -- General text
     null_ls.builtins.completion.spell,
+
+    -- -- Terraform
+    null_ls.builtins.diagnostics.tfsec,
 
     -- -- Python
     -- liting
@@ -326,10 +301,25 @@ null_ls.setup {
     -- -- nix
     null_ls.builtins.code_actions.statix,
     null_ls.builtins.diagnostics.statix,
+
+    -- dockerifle linting
+    null_ls.builtins.diagnostics.hadolint,
   },
-}
+})
 
 -- Show lsp sever status/progress in the botton right corner
-require('fidget').setup {}
+require('fidget').setup({})
 
-require('indent_blankline').setup {}
+cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
+  }, {
+    { name = 'buffer' },
+  }),
+})
+
+cmp.setup.filetype({'sql', 'mysql', 'plsql'}, {
+  sources = cmp.config.sources({
+    { name = 'vim-dadbod-completion' },
+  }),
+})

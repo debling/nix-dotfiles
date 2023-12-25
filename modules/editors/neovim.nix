@@ -15,10 +15,12 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
+        arduino-language-server
+        arduino-cli
         # language servers
         # haskell-language-server
-        ccls
         gopls
+        ccls
         nodePackages.bash-language-server
         nodePackages.dockerfile-language-server-nodejs
         nodePackages.pyright
@@ -53,6 +55,9 @@ in
         nodePackages."@tailwindcss/language-server"
 
         hurl
+
+        ### Dockerfile
+        hadolint
       ];
       sessionVariables = {
         EDITOR = "nvim";
@@ -65,8 +70,8 @@ in
           src = pkgs.fetchFromGitHub {
             owner = "Vigemus";
             repo = "iron.nvim";
-            rev = "792dd11752c4699ea52c737b5e932d6f21b25834";
-            hash = "sha256-aNDZSAjEwTx72DFjxHG2RYbfGNUQe86SFpOAnlZItm0=";
+            rev = "9017061849e543d8e94b79d2a94b95e856ab6a10";
+            hash = "sha256-XJXi3i7wpBWDd5sny90Gw6ucOlnn1m8sYSVcUh/3Ufk=";
           };
         };
       in
@@ -80,6 +85,7 @@ in
 
           vim-multiple-cursors
           comment-nvim
+          nvim-ts-context-commentstring
 
           telescope-nvim
           telescope-fzf-native-nvim
@@ -87,8 +93,6 @@ in
 
           # General plugins
           vim-sleuth
-          indent-blankline-nvim
-          vimwiki
 
           ## Sintax hilighting
           nvim-treesitter.withAllGrammars
@@ -98,6 +102,7 @@ in
           nvim-tree-lua
 
           ## LSP
+          trouble-nvim
           nvim-lspconfig
           null-ls-nvim
           fidget-nvim # Show lsp server's status
@@ -133,15 +138,19 @@ in
 
           ltex_extra-nvim
 
+          ## Git
+          gitsigns-nvim
           neogit
 
           neodev-nvim
+          neoconf-nvim
 
           ## UI
           lualine-nvim
           which-key-nvim
+          indent-blankline-nvim
 
-          iron-nvim
+          vim-slime
 
           rest-nvim
 
@@ -150,11 +159,17 @@ in
 
           SchemaStore-nvim
           oil-nvim
+
+          nvim-lastplace
+
+          nvim-web-devicons
+
+          vim-dadbod
+          vim-dadbod-ui
+          vim-dadbod-completion
         ];
 
-        extraConfig = ''
-          lua require "init_config"
-        '';
+        extraConfig = "lua require('init_config')";
       };
 
     xdg.configFile = {

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+CMD="$*"
+
+$CMD
+
+osascript -e "display notification \"Finished: ${CMD}\" with title \"Command Finished running\""

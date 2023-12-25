@@ -19,7 +19,6 @@
   programs = {
     # Create /etc/bashrc that loads the nix-darwin environment.
     zsh.enable = true;
-    man.enable = true;
   };
 
   # Fonts
@@ -74,5 +73,17 @@
 
   homebrew = {
     enable = true;
+    casks = [
+      "anydesk"
+      "bitwarden"
+      "docker"
+      "gimp"
+      "iterm2"
+      "loom"
+      "obsidian"
+      "slack"
+      "spotify"
+      "miniconda"
+    ];
   };
 }
