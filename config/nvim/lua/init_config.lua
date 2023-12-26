@@ -40,29 +40,6 @@ require('oil').setup()
 
 require('nvim-lastplace').setup()
 
--- trouble.nvim
-local trouble = require('trouble')
-
--- Lua
-nmap('<leader>xx', function()
-    trouble.open()
-end)
-nmap('<leader>xw', function()
-    trouble.open('workspace_diagnostics')
-end)
-nmap('<leader>xd', function()
-    trouble.open('document_diagnostics')
-end)
-nmap('<leader>xq', function()
-    trouble.open('quickfix')
-end)
-nmap('<leader>xl', function()
-    trouble.open('loclist')
-end)
-nmap('gR', function()
-    trouble.open('lsp_references')
-end)
-
 require('nvim-tree').setup({
     sort = {
         sorter = 'case_sensitive',

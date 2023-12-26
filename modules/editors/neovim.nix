@@ -28,9 +28,11 @@ in
         nodePackages.yaml-language-server
         nodePackages.vscode-langservers-extracted
         shellcheck
-        sumneko-lua-language-server
         terraform-ls
         texlab
+
+        ### Lua
+        sumneko-lua-language-server
         stylua
 
         ltex-ls
@@ -43,6 +45,7 @@ in
         ### nix
         nil # language server
         statix #  static analysis
+        nixpkgs-fmt
 
         nodePackages.eslint_d
         nodePackages.prettier_d_slim
@@ -91,11 +94,15 @@ in
           nvim-tree-lua
 
           ## LSP
-          trouble-nvim
           nvim-lspconfig
           null-ls-nvim
           fidget-nvim # Show lsp server's status
           lsp-colors-nvim
+
+          nvim-dap
+          # nvim-dap-ui
+
+          nvim-jdtls
 
           vim-table-mode
 

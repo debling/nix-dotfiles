@@ -71,7 +71,6 @@ in
       entr # Run commands when files change
       graphviz
       jq
-      nixfmt # Formmater for the nix lang
       pandoc
       python310Packages.editorconfig
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
