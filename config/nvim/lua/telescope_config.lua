@@ -26,3 +26,33 @@ tel.setup({
 -- load_extension, somewhere after setup function:
 tel.load_extension('fzf')
 tel.load_extension('ui-select')
+
+
+-- remember the last place you were editing a file
+require('nvim-lastplace').setup()
+
+-- a pretty good file explorer
+require('oil').setup()
+
+-- Intellij style file tree, rarely used, so lazy load
+local nvim_tree = nil
+utils.nmap('<leader>ft',
+    function()
+        if nvim_tree == nil then
+            nvim_tree = require('nvim-tree')
+            nvim_tree.setup({
+                sort = {
+                    sorter = 'case_sensitive',
+                },
+                renderer = {
+                    group_empty = true,
+                },
+                filters = {
+                    dotfiles = true,
+                },
+            })
+        end
+
+        require('nvim-tree.api').tree.toggle()
+    end
+)

@@ -8,7 +8,7 @@ require('lsp_config')
 
 require('telescope_config')
 
-require('treesitter_config')
+require('file_navigation_config')
 
 require('vcs_config')
 
@@ -22,37 +22,6 @@ vim.g.slime_default_config = {
     socket_name = vim.split(os.getenv('TMUX') or '', ',')[1],
     target_pane = '{bottom-right}',
 }
-
-local nmap = function(key, effect, desc)
-    vim.keymap.set('n', key, effect, { silent = true, noremap = true, desc = desc })
-end
-
-local vmap = function(key, effect, desc)
-    vim.keymap.set('v', key, effect, { silent = true, noremap = true, desc = desc })
-end
-
-local imap = function(key, effect, desc)
-    local opts = { silent = true, noremap = true, desc = desc }
-    vim.keymap.set('i', key, effect, opts)
-end
-
-require('oil').setup()
-
-require('nvim-lastplace').setup()
-
-require('nvim-tree').setup({
-    sort = {
-        sorter = 'case_sensitive',
-    },
-    renderer = {
-        group_empty = true,
-    },
-    filters = {
-        dotfiles = true,
-    },
-})
-
-nmap('<leader>ft', require('nvim-tree.api').tree.toggle, 'Toggle nvim-tree')
 
 -- vim-dadbod setup
 vim.g.db_ui_env_variable_url = 'DATABASE_URL'
