@@ -1,10 +1,5 @@
 vim.opt.termguicolors = true
 vim.o.background = 'dark' -- or "light" for light mode
---
--- -- require('gruvbox').setup({
--- --   contrast = 'hard',
--- --   transparent_mode = true,
--- -- })
 
 vim.cmd('colorscheme gruvbox')
 
@@ -19,3 +14,6 @@ require('lualine').setup({
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 require('ibl').setup()
+
+-- Show lsp sever status/progress in the botton right corner
+require('fidget').setup()

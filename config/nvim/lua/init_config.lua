@@ -6,6 +6,8 @@ require('neodev').setup()
 
 require('lsp_config')
 
+require('completion_config')
+
 require('telescope_config')
 
 require('file_navigation_config')
