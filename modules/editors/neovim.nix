@@ -91,8 +91,6 @@ in
           nvim-treesitter-refactor
           nvim-treesitter-context
 
-          nvim-tree-lua
-
           ## LSP
           nvim-lspconfig
           null-ls-nvim
@@ -141,12 +139,10 @@ in
 
           ## UI
           lualine-nvim
-          which-key-nvim
           indent-blankline-nvim
 
           vim-slime
 
-          vim-test
           hurl
 
           SchemaStore-nvim
