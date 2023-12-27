@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 require('basic_options')
 
 require('ui_config')
