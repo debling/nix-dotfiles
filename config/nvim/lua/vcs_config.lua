@@ -1,7 +1,18 @@
-local neogit = require('neogit')
-neogit.setup({})
-vim.keymap.set('n', '<leader>gg', function()
-  neogit.open()
-end, { noremap = true, silent = true })
+local utils = require('config_utils')
+
+local neogit = utils.lazy_require(function()
+    local mod = require('neogit')
+    mod.setup()
+    return mod
+end)
+
+utils.nmap('<leader>gg', function()
+    if neogit == nil then
+        neogit = require('neogit')
+        neogit.setup()
+    end
+
+    neogit.open()
+end)
 
 require('gitsigns').setup()

@@ -59,6 +59,7 @@ cmp.setup({
         format = lspkind.cmp_format({
             mode = 'symbol',
             maxwidth = 50,
+            symbol_map = { Copilot = "" }
         }),
     },
 
@@ -106,3 +107,12 @@ cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
 --         { name = 'cmdline' },
 --     }),
 -- })
+
+vim.defer_fn(function()
+    require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+    })
+
+    require("copilot_cmp").setup()
+end, 0)

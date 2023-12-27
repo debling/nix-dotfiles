@@ -73,6 +73,7 @@ in
         vimAlias = true;
         vimdiffAlias = true;
         plugins = with pkgs.vimPlugins; [
+          vim-startuptime
           gruvbox-nvim
 
           vim-multiple-cursors
@@ -93,7 +94,7 @@ in
 
           ## LSP
           nvim-lspconfig
-          null-ls-nvim
+          none-ls-nvim
           fidget-nvim # Show lsp server's status
           lsp-colors-nvim
 
@@ -113,12 +114,14 @@ in
           ## Completion
           nvim-cmp
           cmp-buffer
-          cmp-copilot
           cmp-nvim-lsp
           cmp-path
           cmp_luasnip
 
           lspkind-nvim
+
+          copilot-lua
+          copilot-cmp
 
           # Language specific
           plantuml-syntax

@@ -8,7 +8,13 @@ lsp.nil_ls.setup({
     settings = {
         ['nil'] = {
             formatting = {
-                command = 'nixpkgs-fmt',
+                command = { 'nixpkgs-fmt' },
+            },
+            nix = {
+                flake = {
+                    autoArchive = true,
+                    autoEvalInputs = true,
+                },
             },
         },
     },
