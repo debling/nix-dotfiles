@@ -62,19 +62,34 @@ in
         ### Dockerfile
         hadolint
       ];
+
       sessionVariables = {
         EDITOR = "nvim";
       };
     };
+
     programs.neovim =
+      let
+        arduino-nvim = pkgs.vimUtils.buildVimPlugin {
+          name = "arduino-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "edKotinsky";
+            repo = "Arduino.nvim";
+            rev = "38559b12dee24e8680565f669e6abac8d11f705d";
+            hash = "sha256-4z8aL+ZyS8yeFdRY4+J+CHK2C0+2bJJeaEF+G840COU=";
+          };
+        };
+      in
       {
         enable = true;
         viAlias = true;
         vimAlias = true;
         vimdiffAlias = true;
         plugins = with pkgs.vimPlugins; [
+          arduino-nvim
           vim-startuptime
-          gruvbox-nvim
+          # gruvbox-nvim
+          catppuccin-nvim
 
           vim-multiple-cursors
 
@@ -91,6 +106,7 @@ in
           nvim-treesitter.withAllGrammars
           nvim-treesitter-refactor
           nvim-treesitter-context
+          playground
 
           ## LSP
           nvim-lspconfig
@@ -145,6 +161,7 @@ in
           indent-blankline-nvim
 
           vim-slime
+          vim-sleuth
 
           hurl
 

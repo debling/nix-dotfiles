@@ -61,7 +61,7 @@ in
       #   # scikit-learn
       # ]))
 
-      poetry
+      # poetry
 
       ### CLI utils
       bitwarden-cli
@@ -71,6 +71,7 @@ in
       entr # Run commands when files change
       graphviz
       jq
+      texlive.combined.scheme-basic
       pandoc
       python310Packages.editorconfig
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
@@ -80,13 +81,14 @@ in
 
       ranger
 
-      # hledger
-      # hledger-ui
-      # hledger-web
+      hledger
+      hledger-ui
+      hledger-web
+      hledger-interest
 
       cachix
 
-      # required by doom-emacs
+      # required by telescope.nvim  
       ripgrep
       fd
 
@@ -99,7 +101,7 @@ in
       taskwarrior-tui
 
       # vagrant
-      # ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
+      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
       # https://github.com/mic92/nix-update
       nurl # https://github.com/nix-community/nurl
       nix-init # https://github.com/nix-community/nix-init
@@ -124,10 +126,16 @@ in
     sessionPath = [
       "$HOME/${customScriptsDir}"
       "$HOME/${globalNodePackagesDir}/bin"
+
+      # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
+      "$HOME/Library/Android/sdk/platform-tools"
+      "$HOME/Library/Android/sdk/build-tools/33.0.0"
     ];
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
+      # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
+      ANDROID_HOME = "$HOME/Library/Android/sdk/";
     };
 
     file = {
@@ -229,7 +237,7 @@ in
     bat = {
       enable = true;
       config = {
-        theme = "gruvbox-dark";
+        theme = "ansi";
       };
     };
 
@@ -368,6 +376,35 @@ in
       escapeTime = 0;
       historyLimit = 10000;
       terminal = "screen-256color";
+      plugins = with pkgs; [
+        {
+          plugin = tmuxPlugins.catppuccin;
+          extraConfig = ''
+            set -g @catppuccin_flavour 'mocha'
+
+            set -g @catppuccin_window_left_separator ""
+            set -g @catppuccin_window_right_separator " "
+            set -g @catppuccin_window_middle_separator " █"
+            set -g @catppuccin_window_number_position "right"
+            
+            set -g @catppuccin_window_default_fill "number"
+            set -g @catppuccin_window_default_text "#W"
+            
+            set -g @catppuccin_window_current_fill "number"
+            set -g @catppuccin_window_current_text "#W"
+            
+            set -g @catppuccin_status_modules "directory"
+            set -g @catppuccin_status_modules_right "directory"
+            set -g @catppuccin_status_left_separator  " "
+            set -g @catppuccin_status_right_separator ""
+            set -g @catppuccin_status_right_separator_inverse "no"
+            set -g @catppuccin_status_fill "icon"
+            set -g @catppuccin_status_connect_separator "no"
+            
+            set -g @catppuccin_directory_text "#( echo \#{pane_current_path} | sed \"s|$HOME|~|\" )"
+          '';
+        }
+      ];
       extraConfig = ''
         # Terminal config for TrueColor support
         set -sg terminal-overrides ",*:RGB"
@@ -379,14 +416,14 @@ in
         set -g set-titles on
         set -g set-titles-string "#S / #W"
 
-        set -g status-style "none,bg=default"
-        set -g status-justify centre
-        set -g status-bg colour236
-        set -g status-left-length 25
-        set -g status-right '%d/%m %H:%M'
+        # set -g status-style "none,bg=default"
+        # set -g status-justify centre
+        # set -g status-bg colour236
+        # set -g status-left-length 25
+        # set -g status-right '%d/%m %H:%M'
 
-        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
-        setw -g window-status-format '#[fg=colour250]#I:#W#F'
+        #setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
+        #setw -g window-status-format '#[fg=colour250]#I:#W#F'
 
         # Open new splits in the same directory as the current pane
         bind  %  split-window -h -c "#{pane_current_path}"
@@ -406,7 +443,7 @@ in
       delta = {
         enable = true;
         options = {
-          syntax-theme = "gruvbox-dark";
+          syntax-theme = "ansi";
         };
       };
       lfs.enable = true;

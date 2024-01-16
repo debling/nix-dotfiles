@@ -74,14 +74,15 @@
   homebrew = {
     enable = true;
     casks = [
+      "android-studio"
       "anydesk"
       "bitwarden"
       "docker"
       "iterm2"
+      "miniconda"
       "obsidian"
       "slack"
       "spotify"
-      "miniconda"
     ];
   };
 }

@@ -1,3 +1,4 @@
+local utils = require('config_utils')
 local lsp_setup = require('lsp_server_setup')
 local jdtls = require('jdtls')
 
@@ -37,7 +38,7 @@ local bundles = {
 vim.list_extend(
     bundles,
     vim.split(
-        -- FIXME: hardcoded, use nix to build
+    -- FIXME: hardcoded, use nix to build
         vim.fn.glob('/Users/debling/Workspace/probe/vscode-java-test/server/*.jar', true),
         '\n'
     )
@@ -48,7 +49,15 @@ local config = {
         -- FIXME: hardcoded, use nix to build
         vim.fs.normalize('~/.local/bin/jdtls'),
     },
-    on_attach = lsp_setup.on_attach,
+    on_attach = function(_, bufnr)
+        lsp_setup.on_attach(_, bufnr)
+
+        local opts = { buffer = bufnr }
+        -- If using nvim-dap
+        -- This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
+        utils.nmap('<leader>tc', jdtls.test_class, opts)
+        utils.nmap('<leader>tm', jdtls.test_nearest_method, opts)
+    end,
     capabilities = lsp_setup.capabilities,
     init_options = {
         bundles = bundles,

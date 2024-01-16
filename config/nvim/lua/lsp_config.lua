@@ -13,7 +13,7 @@ utils.nmap('<space>q', vim.diagnostic.setloclist)
 local simple_servers = {
     'angularls',
     'bashls',
-    'ccls',
+    'clangd',
     'gopls',
     'lemminx',
     'texlab',

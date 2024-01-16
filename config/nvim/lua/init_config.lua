@@ -17,14 +17,14 @@ require('file_navigation_config')
 require('vcs_config')
 
 require('Comment').setup({
-    pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 })
 
 -- vim-slime setup, default to tmux, using the pane in the bottom right
 vim.g.slime_target = 'tmux'
 vim.g.slime_default_config = {
-    socket_name = vim.split(os.getenv('TMUX') or '', ',')[1],
-    target_pane = '{bottom-right}',
+  socket_name = vim.split(os.getenv('TMUX') or '', ',')[1],
+  target_pane = '{bottom-right}',
 }
 
 -- vim-dadbod setup

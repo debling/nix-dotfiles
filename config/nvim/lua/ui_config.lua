@@ -1,11 +1,23 @@
 vim.opt.termguicolors = true
 vim.o.background = 'dark' -- or "light" for light mode
 
-vim.cmd('colorscheme gruvbox')
+-- vim.cmd('colorscheme gruvbox')
+
+require('catppuccin').setup({
+  flavour = 'mocha',              -- latte, frappe, macchiato, mocha
+  transparent_background = false, -- disables setting the background color.
+  integrations = {
+    fidget = true,
+    -- harpoon = true,
+  },
+})
+
+vim.cmd('colorscheme catppuccin')
 
 require('lualine').setup({
   options = {
-    theme = 'gruvbox',
+    -- theme = 'gruvbox',
+    theme = "catppuccin",
     component_separators = '|',
     section_separators = ' ',
     globalstatus = true,
@@ -16,4 +28,10 @@ require('lualine').setup({
 require('ibl').setup()
 
 -- Show lsp sever status/progress in the botton right corner
-require('fidget').setup()
+require('fidget').setup({
+  notification = {
+    window = {
+      winblend = 0,
+    },
+  },
+})
