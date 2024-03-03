@@ -27,8 +27,10 @@ local simple_servers = {
 
     -- vscode-langservers-extracted
     'html',
-    -- 'eslint',
+    'eslint',
     'cssls',
+    'astro',
+    'emmet_ls',
 }
 
 for _, server in pairs(simple_servers) do
@@ -110,9 +112,9 @@ null_ls.setup({
         null_ls.builtins.hover.printenv,
 
         -- Javascript
-        null_ls.builtins.code_actions.eslint_d,
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.formatting.prettier_d_slim,
+        -- null_ls.builtins.code_actions.eslint_d,
+        -- null_ls.builtins.diagnostics.eslint_d,
+        null_ls.builtins.formatting.prettier,
 
         -- Shell
         null_ls.builtins.code_actions.shellcheck,

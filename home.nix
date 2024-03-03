@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, pkgs, nix-index-database, ... }:
+{ config, pkgs, nix-index-database, android-nixpkgs, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -11,6 +11,7 @@ in
   imports = [
     ./modules/editors/neovim.nix
     nix-index-database.hmModules.nix-index
+    android-nixpkgs.hmModule
   ];
 
   news.display = "show";
@@ -24,6 +25,22 @@ in
   };
 
   myModules.editors.neovim.enable = true;
+
+  android-sdk = {
+    enable = true;
+
+    path = "${config.home.homeDirectory}/.local/share/android";
+
+    packages = sdk: with sdk; [
+      build-tools-34-0-0
+      cmdline-tools-latest
+      emulator
+      platforms-android-34
+      platform-tools
+      sources-android-34
+      ndk-23-1-7779620
+    ];
+  };
 
   home = {
     enableNixpkgsReleaseCheck = true;
@@ -110,6 +127,11 @@ in
       trivy
       cht-sh # https://github.com/chubin/cheat.sh
       # nix-du
+
+      # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
+      magic-wormhole # Send files over the network
+
+      glow
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -128,14 +150,14 @@ in
       "$HOME/${globalNodePackagesDir}/bin"
 
       # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
-      "$HOME/Library/Android/sdk/platform-tools"
-      "$HOME/Library/Android/sdk/build-tools/33.0.0"
+      # "$HOME/Library/Android/sdk/platform-tools"
+      # "$HOME/Library/Android/sdk/build-tools/33.0.0"
     ];
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
       # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
-      ANDROID_HOME = "$HOME/Library/Android/sdk/";
+      # ANDROID_HOME = "$HOME/Library/Android/sdk/";
     };
 
     file = {
@@ -162,11 +184,11 @@ in
         "${apps}/Applications";
 
       # Stable SDK symlinks
+      "SDKs/Java/current".source = pkgs.jdk.home;
       "SDKs/Java/21".source = pkgs.jdk21.home;
-      "SDKs/Java/17".source = pkgs.jdk17.home;
       "SDKs/Java/11".source = pkgs.jdk11.home;
       "SDKs/Java/8".source = pkgs.jdk8.home;
-      "SDKs/graalvm".source = pkgs.graalvm-ce.home;
+      # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };
 
   };
@@ -236,8 +258,19 @@ in
     # A modern replacement for cat, with sintax hilghting
     bat = {
       enable = true;
+      themes = {
+        catppuccin = {
+          src = pkgs.fetchFromGitHub {
+            owner = "catppuccin";
+            repo = "bat";
+            rev = "ba4d16880d63e656acced2b7d4e034e4a93f74b1";
+            hash = "sha256-6WVKQErGdaqb++oaXnY3i6/GuH2FhTgK0v4TN4Y0Wbw=";
+          };
+          file = "Catppuccin-mocha.tmTheme";
+        };
+      };
       config = {
-        theme = "ansi";
+        theme = "catppuccin";
       };
     };
 
@@ -386,13 +419,13 @@ in
             set -g @catppuccin_window_right_separator " "
             set -g @catppuccin_window_middle_separator " █"
             set -g @catppuccin_window_number_position "right"
-            
+
             set -g @catppuccin_window_default_fill "number"
             set -g @catppuccin_window_default_text "#W"
-            
+
             set -g @catppuccin_window_current_fill "number"
             set -g @catppuccin_window_current_text "#W"
-            
+
             set -g @catppuccin_status_modules "directory"
             set -g @catppuccin_status_modules_right "directory"
             set -g @catppuccin_status_left_separator  " "
@@ -400,7 +433,7 @@ in
             set -g @catppuccin_status_right_separator_inverse "no"
             set -g @catppuccin_status_fill "icon"
             set -g @catppuccin_status_connect_separator "no"
-            
+
             set -g @catppuccin_directory_text "#( echo \#{pane_current_path} | sed \"s|$HOME|~|\" )"
           '';
         }
@@ -434,7 +467,15 @@ in
     };
 
     gh-dash.enable = true;
-    lazygit.enable = true;
+    lazygit = {
+      enable = true;
+      settings = {
+        git.paging = {
+          colorArg = "always";
+          pager = "delta --dark --paging=never";
+        };
+      };
+    };
 
     git = {
       enable = true;
@@ -443,7 +484,8 @@ in
       delta = {
         enable = true;
         options = {
-          syntax-theme = "ansi";
+          syntax-theme = "catppuccin";
+          true-color = "always";
         };
       };
       lfs.enable = true;
@@ -462,6 +504,8 @@ in
       extraConfig = {
         pull = { rebase = true; };
         push = { autoSetupRemote = true; };
+        rerere = { enabled = true; };
+        branch = { sort = "-committerdate"; };
       };
     };
   };

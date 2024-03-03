@@ -27,7 +27,3 @@ vim.g.slime_default_config = {
   target_pane = '{bottom-right}',
 }
 
--- vim-dadbod setup
-vim.g.db_ui_env_variable_url = 'DATABASE_URL'
-vim.g.db_ui_use_nerd_fonts = 1
-vim.g.db_ui_execute_on_save = 0

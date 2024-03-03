@@ -80,12 +80,6 @@ cmp.setup.filetype('gitcommit', {
     }),
 })
 
-cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
-    sources = cmp.config.sources({
-        { name = 'vim-dadbod-completion' },
-    }),
-})
-
 -- cmp.setup.cmdline({ '/', '?' }, {
 --     mapping = cmp.mapping.preset.cmdline(),
 --     view = {

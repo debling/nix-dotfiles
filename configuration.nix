@@ -79,6 +79,7 @@
       "bitwarden"
       "docker"
       "iterm2"
+      "maccy"
       "miniconda"
       "obsidian"
       "slack"

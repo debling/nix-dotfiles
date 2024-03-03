@@ -48,7 +48,7 @@ in
         nixpkgs-fmt
 
         nodePackages.eslint_d
-        nodePackages.prettier_d_slim
+        nodePackages.prettier
 
         ### python
         ruff
@@ -57,10 +57,17 @@ in
 
         nodePackages."@tailwindcss/language-server"
 
+        ### SQL
+        sqlfluff
+
         hurl
 
         ### Dockerfile
         hadolint
+
+
+        ### Web
+        emmet-ls
       ];
 
       sessionVariables = {
@@ -77,6 +84,15 @@ in
             repo = "Arduino.nvim";
             rev = "38559b12dee24e8680565f669e6abac8d11f705d";
             hash = "sha256-4z8aL+ZyS8yeFdRY4+J+CHK2C0+2bJJeaEF+G840COU=";
+          };
+        };
+        harpoon = pkgs.vimUtils.buildVimPlugin {
+          name = "harpoon";
+          src = pkgs.fetchFromGitHub {
+            owner = "ThePrimeagen";
+            repo = "harpoon";
+            rev = "a38be6e0dd4c6db66997deab71fc4453ace97f9c";
+            hash = "sha256-RjwNUuKQpLkRBX3F9o25Vqvpu3Ah1TCFQ5Dk4jXhsbI=";
           };
         };
       in
@@ -107,6 +123,7 @@ in
           nvim-treesitter-refactor
           nvim-treesitter-context
           playground
+          harpoon
 
           ## LSP
           nvim-lspconfig
