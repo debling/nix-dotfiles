@@ -1,5 +1,11 @@
 { pkgs, ... }:
 {
+  documentation = {
+    enable = false;
+    doc.enable = false;
+    info.enable = false;
+  };
+
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {

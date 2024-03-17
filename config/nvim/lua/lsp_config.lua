@@ -17,13 +17,10 @@ local simple_servers = {
     'gopls',
     'lemminx',
     'texlab',
-    'pyright',
     'terraformls',
     'tsserver',
     'kotlin_language_server',
     'tailwindcss',
-
-    'arduino_language_server',
 
     -- vscode-langservers-extracted
     'html',
@@ -31,6 +28,8 @@ local simple_servers = {
     'cssls',
     'astro',
     'emmet_ls',
+
+    'r_language_server',
 }
 
 for _, server in pairs(simple_servers) do
@@ -106,31 +105,16 @@ local null_ls = require('null-ls')
 
 null_ls.setup({
     sources = {
-        null_ls.builtins.formatting.trim_newlines,
-
         null_ls.builtins.hover.dictionary,
         null_ls.builtins.hover.printenv,
 
         -- Javascript
-        -- null_ls.builtins.code_actions.eslint_d,
-        -- null_ls.builtins.diagnostics.eslint_d,
         null_ls.builtins.formatting.prettier,
-
-        -- Shell
-        null_ls.builtins.code_actions.shellcheck,
 
         -- General text
         null_ls.builtins.completion.spell,
 
         -- -- Terraform
         null_ls.builtins.diagnostics.tfsec,
-
-        -- -- Python
-        -- liting
-        null_ls.builtins.diagnostics.ruff,
-        -- code formatting
-        null_ls.builtins.formatting.black,
-        -- import sortint
-        null_ls.builtins.formatting.isort,
     },
 })

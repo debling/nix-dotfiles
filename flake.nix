@@ -6,11 +6,16 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Environment/system management
-    darwin.url = "github:lnl7/nix-darwin";
+    darwin.url = "github:miterion/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    android-nixpkgs = {
+      url = "github:tadfisher/android-nixpkgs/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -18,7 +23,16 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, darwin, nixpkgs, home-manager, flake-utils, nix-index-database, ... }:
+  outputs =
+    { self
+    , darwin
+    , nixpkgs
+    , home-manager
+    , flake-utils
+    , android-nixpkgs
+    , nix-index-database
+    , ...
+    }:
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -27,6 +41,8 @@
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
           })
+
+          android-nixpkgs.overlays.default
         ];
       };
 
@@ -53,6 +69,7 @@
               useUserPackages = true;
               users.${username} = import ./home.nix;
               extraSpecialArgs = {
+                inherit android-nixpkgs;
                 inherit nix-index-database;
               };
             };

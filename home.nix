@@ -29,7 +29,7 @@ in
   android-sdk = {
     enable = true;
 
-    path = "${config.home.homeDirectory}/.local/share/android";
+    path = "${config.home.homeDirectory}/SDKs/android";
 
     packages = sdk: with sdk; [
       build-tools-34-0-0
@@ -38,7 +38,7 @@ in
       platforms-android-34
       platform-tools
       sources-android-34
-      ndk-23-1-7779620
+      # ndk-23-1-7779620
     ];
   };
 
@@ -251,7 +251,8 @@ in
     # A modern replacement for ls.
     eza = {
       enable = true;
-      enableAliases = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
       git = true;
     };
 
@@ -342,7 +343,9 @@ in
 
     zsh = {
       enable = true;
-      enableAutosuggestions = true;
+      autosuggestion = {
+        enable = true;
+      };
       enableCompletion = true;
       syntaxHighlighting = {
         enable = true;
@@ -365,7 +368,8 @@ in
             sha256 = "07zk6lvdwy9n0nlvg9z9h941ijqhc5vvfpbr98g8p95gp4hvh85a";
           };
         }
-        { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
+        # build is currently failing on nixpkgs-unstable
+        # { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
       ];
       initExtraBeforeCompInit = ''
         if type brew &>/dev/null

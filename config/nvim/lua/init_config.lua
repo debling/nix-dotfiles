@@ -27,3 +27,31 @@ vim.g.slime_default_config = {
   target_pane = '{bottom-right}',
 }
 
+-- From kicksart.nvim, see: https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.highlight.on_yank()`
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
+require('todo-comments').setup()
+
+vim.opt.conceallevel = 1
+require('obsidian').setup({
+  workspaces = {
+    {
+      name = 'obsidian-vault',
+      path = '/Users/debling/Library/CloudStorage/GoogleDrive-d.ebling8@gmail.com/My Drive/obsidian-vault',
+    },
+  },
+})
+
+require('chatgpt').setup({
+  api_key_cmd = 'echo ""',
+})

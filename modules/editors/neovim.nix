@@ -65,6 +65,8 @@ in
         ### Dockerfile
         hadolint
 
+        ### R
+        rPackages.languageserver
 
         ### Web
         emmet-ls
@@ -95,6 +97,15 @@ in
             hash = "sha256-RjwNUuKQpLkRBX3F9o25Vqvpu3Ah1TCFQ5Dk4jXhsbI=";
           };
         };
+        chatgpt-nvim = pkgs.vimUtils.buildVimPlugin {
+          name = "chatgpt-nvim";
+          src = pkgs.fetchFromGitHub {
+            owner = "jackMort";
+            repo = "ChatGPT.nvim";
+            rev = "df53728e05129278d6ea26271ec086aa013bed90";
+            hash = "sha256-vD3NEsYmPRWlxBSOxyIMIQiJXQXxx0hhsw4zIxxXB3o=";
+          };
+        };
       in
       {
         enable = true;
@@ -102,6 +113,11 @@ in
         vimAlias = true;
         vimdiffAlias = true;
         plugins = with pkgs.vimPlugins; [
+          obsidian-nvim
+
+          chatgpt-nvim
+          nui-nvim
+
           arduino-nvim
           vim-startuptime
           # gruvbox-nvim
@@ -122,7 +138,7 @@ in
           nvim-treesitter.withAllGrammars
           nvim-treesitter-refactor
           nvim-treesitter-context
-          playground
+          todo-comments-nvim # No setup() call needed
           harpoon
 
           ## LSP
