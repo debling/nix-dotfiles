@@ -32,7 +32,7 @@
     fontDir.enable = true;
     fonts = with pkgs; [
       jetbrains-mono
-      nerdfonts
+      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     ];
   };
 
@@ -43,6 +43,31 @@
   services = {
     yabai = {
       enable = true;
+      config = {
+        # default layout (can be bsp, stack or float)
+        layout = "bsp";
+        # focus_follows_mouse = "autofocus";
+        window_border = "off";
+        window_shadow = "float";
+        # New window spawns to the right if vertical split, or bottom if horizontal split
+        window_placement = "second_child";
+
+        # modifier for clicking and dragging with mouse
+        mouse_modifier = "alt";
+        mouse_drop_action = "swap";
+
+        # padding set to 8px
+        top_padding = 8;
+        bottom_padding = 8;
+        left_padding = 8;
+        right_padding = 8;
+        window_gap = 8;
+
+
+        window_opacity = "on";
+        active_window_opacity = "1.0";
+        normal_window_opacity = "0.9";
+      };
       extraConfig = builtins.readFile ./config/yabai/yabairc;
     };
 

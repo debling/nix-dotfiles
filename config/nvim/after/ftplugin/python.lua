@@ -13,14 +13,3 @@ for _, server in ipairs(language_servers) do
 
     lsp[server].launch()
 end
-
-
-
-lsp_setup.null_ls_register(function(builtins)
-    return {
-        -- code formatting
-        builtins.formatting.black,
-        -- import sortint
-        builtins.formatting.isort,
-    }
-end)

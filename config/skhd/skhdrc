@@ -1,3 +1,6 @@
+# meh = shift + alt + ctrl
+meh - return : open -n -a 'Alacritty.app'
+
 # change window focus within space
 alt - j : yabai -m window --focus south
 alt - k : yabai -m window --focus north
@@ -5,8 +8,8 @@ alt - h : yabai -m window --focus west
 alt - l : yabai -m window --focus east
 
 #change focus between external displays (left and right)
-alt - s: yabai -m display --focus west
-alt - g: yabai -m display --focus east
+alt - 0x2B: yabai -m display --focus west
+alt - 0x2F: yabai -m display --focus east
 
 # rotate layout clockwise
 shift + alt - r : yabai -m space --rotate 270

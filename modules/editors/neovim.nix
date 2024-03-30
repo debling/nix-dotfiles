@@ -15,6 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
+        ruff-lsp
         arduino-language-server
         arduino-cli
         # language servers
@@ -62,6 +63,12 @@ in
 
         hurl
 
+
+        ### Java
+        pmd
+        checkstyle
+        # sonar-scanner-cli
+
         ### Dockerfile
         hadolint
 
@@ -97,15 +104,6 @@ in
             hash = "sha256-RjwNUuKQpLkRBX3F9o25Vqvpu3Ah1TCFQ5Dk4jXhsbI=";
           };
         };
-        chatgpt-nvim = pkgs.vimUtils.buildVimPlugin {
-          name = "chatgpt-nvim";
-          src = pkgs.fetchFromGitHub {
-            owner = "jackMort";
-            repo = "ChatGPT.nvim";
-            rev = "df53728e05129278d6ea26271ec086aa013bed90";
-            hash = "sha256-vD3NEsYmPRWlxBSOxyIMIQiJXQXxx0hhsw4zIxxXB3o=";
-          };
-        };
       in
       {
         enable = true;
@@ -115,7 +113,6 @@ in
         plugins = with pkgs.vimPlugins; [
           obsidian-nvim
 
-          chatgpt-nvim
           nui-nvim
 
           arduino-nvim

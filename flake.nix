@@ -6,11 +6,16 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Environment/system management
-    darwin.url = "github:miterion/nix-darwin";
+    darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
@@ -31,6 +36,7 @@
     , flake-utils
     , android-nixpkgs
     , nix-index-database
+    , sops-nix
     , ...
     }:
     let
@@ -65,6 +71,9 @@
             users.users.${username}.home = "/Users/${username}";
             # `home-manager` config
             home-manager = {
+              sharedModules = [
+                sops-nix.homeManagerModules.sops
+              ];
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${username} = import ./home.nix;

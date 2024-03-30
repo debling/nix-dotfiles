@@ -14,6 +14,18 @@ in
     android-nixpkgs.hmModule
   ];
 
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    defaultSopsFormat = "yaml";
+
+    age.keyFile = "${config.home.homeDirectory}/.age-key";
+
+    secrets."openai_api/nvim" = {
+      path = "${config.home.homeDirectory}/secrets/openai/nvim";
+    };
+
+  };
+
   news.display = "show";
 
   nix = {
@@ -46,6 +58,8 @@ in
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
+      sops
+
       gh
 
       gnumake
@@ -116,6 +130,7 @@ in
       renameutils # adds qmv, and qmc utils for bulk move and copy
 
       taskwarrior-tui
+      timewarrior
 
       # vagrant
       ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
@@ -161,6 +176,11 @@ in
     };
 
     file = {
+      "${config.programs.taskwarrior.dataLocation}/hooks/on-modify.timewarrior" = {
+        executable = true;
+        source = "${pkgs.timewarrior.out}/share/doc/timew/ext/on-modify.timewarrior";
+      };
+
       ${customScriptsDir} = {
         source = ./scripts;
         recursive = true;
@@ -201,6 +221,48 @@ in
   };
 
   programs = {
+    alacritty = {
+      enable = true;
+      settings =
+        let
+          generic_setting = {
+            import = [
+              ./config/alacritty/catppuccin-mocha.toml
+            ];
+
+            live_config_reload = false;
+            ipc_socket = false;
+            scrolling = {
+              history = 0; # history is already provided by tmux
+            };
+
+            font = {
+              normal = {
+                family = "JetBrainsMono Nerd Font";
+                style = "Regular";
+              };
+              size = 14;
+            };
+          };
+
+          macos_specific = {
+            window = {
+              decorations = "buttonless";
+              option_as_alt = "OnlyLeft";
+
+              padding = {
+                x = 10;
+                y = 6;
+              };
+            };
+          };
+        in
+        pkgs.lib.mkMerge [
+          generic_setting
+          (pkgs.lib.optionals pkgs.stdenv.isDarwin macos_specific)
+        ];
+    };
+
     zoxide.enable = true;
 
     dircolors.enable = true;
@@ -412,7 +474,7 @@ in
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "screen-256color";
+      terminal = "alacritty";
       plugins = with pkgs; [
         {
           plugin = tmuxPlugins.catppuccin;
@@ -444,7 +506,11 @@ in
       ];
       extraConfig = ''
         # Terminal config for TrueColor support
-        set -sg terminal-overrides ",*:RGB"
+        # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
+        set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+        set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+        set -as terminal-overrides ",*:RGB"  # true-color support
+
 
         set -g focus-events on
 

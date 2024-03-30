@@ -10,6 +10,8 @@ utils.nmap('[d', vim.diagnostic.goto_prev)
 utils.nmap(']d', vim.diagnostic.goto_next)
 utils.nmap('<space>q', vim.diagnostic.setloclist)
 
+vim.lsp.set_log_level("off")
+
 local simple_servers = {
     'angularls',
     'bashls',
