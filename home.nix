@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, pkgs, nix-index-database, android-nixpkgs, ... }:
+{ config, pkgs, nix-index-database, android-nixpkgs, alacritty-themes, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -227,7 +227,7 @@ in
         let
           generic_setting = {
             import = [
-              ./config/alacritty/catppuccin-mocha.toml
+              "${alacritty-themes.outPath}/themes/gruvbox_dark.toml"
             ];
 
             live_config_reload = false;
@@ -243,6 +243,10 @@ in
               };
               size = 14;
             };
+
+            # override gruvbox_dark with the same background as gruvbox.nvim
+            # see: https://github.com/ellisonleao/gruvbox.nvim/blob/6e4027ae957cddf7b193adfaec4a8f9e03b4555f/lua/gruvbox.lua#L74C18-L74C24
+            colors.primary.background = "#1d2021";
           };
 
           macos_specific = {
@@ -321,19 +325,8 @@ in
     # A modern replacement for cat, with sintax hilghting
     bat = {
       enable = true;
-      themes = {
-        catppuccin = {
-          src = pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "bat";
-            rev = "ba4d16880d63e656acced2b7d4e034e4a93f74b1";
-            hash = "sha256-6WVKQErGdaqb++oaXnY3i6/GuH2FhTgK0v4TN4Y0Wbw=";
-          };
-          file = "Catppuccin-mocha.tmTheme";
-        };
-      };
       config = {
-        theme = "catppuccin";
+        theme = "gruvbox-dark";
       };
     };
 
@@ -475,35 +468,6 @@ in
       escapeTime = 0;
       historyLimit = 10000;
       terminal = "alacritty";
-      plugins = with pkgs; [
-        {
-          plugin = tmuxPlugins.catppuccin;
-          extraConfig = ''
-            set -g @catppuccin_flavour 'mocha'
-
-            set -g @catppuccin_window_left_separator ""
-            set -g @catppuccin_window_right_separator " "
-            set -g @catppuccin_window_middle_separator " █"
-            set -g @catppuccin_window_number_position "right"
-
-            set -g @catppuccin_window_default_fill "number"
-            set -g @catppuccin_window_default_text "#W"
-
-            set -g @catppuccin_window_current_fill "number"
-            set -g @catppuccin_window_current_text "#W"
-
-            set -g @catppuccin_status_modules "directory"
-            set -g @catppuccin_status_modules_right "directory"
-            set -g @catppuccin_status_left_separator  " "
-            set -g @catppuccin_status_right_separator ""
-            set -g @catppuccin_status_right_separator_inverse "no"
-            set -g @catppuccin_status_fill "icon"
-            set -g @catppuccin_status_connect_separator "no"
-
-            set -g @catppuccin_directory_text "#( echo \#{pane_current_path} | sed \"s|$HOME|~|\" )"
-          '';
-        }
-      ];
       extraConfig = ''
         # Terminal config for TrueColor support
         # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
@@ -519,14 +483,14 @@ in
         set -g set-titles on
         set -g set-titles-string "#S / #W"
 
-        # set -g status-style "none,bg=default"
-        # set -g status-justify centre
-        # set -g status-bg colour236
-        # set -g status-left-length 25
-        # set -g status-right '%d/%m %H:%M'
+        set -g status-style "none,bg=default"
+        set -g status-justify centre
+        set -g status-bg colour236
+        set -g status-left-length 25
+        set -g status-right '%d/%m %H:%M'
 
-        #setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
-        #setw -g window-status-format '#[fg=colour250]#I:#W#F'
+        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
+        setw -g window-status-format '#[fg=colour250]#I:#W#F'
 
         # Open new splits in the same directory as the current pane
         bind  %  split-window -h -c "#{pane_current_path}"

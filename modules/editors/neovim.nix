@@ -117,8 +117,7 @@ in
 
           arduino-nvim
           vim-startuptime
-          # gruvbox-nvim
-          catppuccin-nvim
+          gruvbox-nvim
 
           vim-multiple-cursors
 

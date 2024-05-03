@@ -9,7 +9,6 @@
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {
-    package = pkgs.nixUnstable;
     configureBuildUsers = true;
     settings = {
       trusted-users = [ "debling" "@admin" ];

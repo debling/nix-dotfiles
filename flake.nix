@@ -26,6 +26,12 @@
 
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+
+    alacritty-themes = {
+      url = "github:alacritty/alacritty-theme";
+      flake = false;
+    };
   };
 
   outputs =
@@ -38,7 +44,7 @@
     , nix-index-database
     , sops-nix
     , ...
-    }:
+    }@inputs:
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -72,14 +78,13 @@
             # `home-manager` config
             home-manager = {
               sharedModules = [
-                sops-nix.homeManagerModules.sops
+                inputs.sops-nix.homeManagerModules.sops
               ];
               useGlobalPkgs = true;
               useUserPackages = true;
               users.${username} = import ./home.nix;
               extraSpecialArgs = {
-                inherit android-nixpkgs;
-                inherit nix-index-database;
+                inherit (inputs) android-nixpkgs alacritty-themes nix-index-database;
               };
             };
           }
