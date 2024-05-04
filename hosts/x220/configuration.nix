@@ -128,6 +128,7 @@
 
       bitwarden
       bitwarden-cli
+      spotify
       # waybar
       # wofi
       # mako
