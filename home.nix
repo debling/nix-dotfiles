@@ -14,13 +14,55 @@ in
     android-nixpkgs.hmModule
   ];
 
+  services = {
+    mako.enable = true;
+
+    blueman-applet.enable = true;
+
+    network-manager-applet.enable = true;
+
+    mpris-proxy.enable = true;
+  };
+
+  wayland.windowManager.hyprland = {
+    enable = true;
+    extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
+    settings = {
+      general = {
+        layout = "dwindle";
+      };
+      dwindle = {
+        no_gaps_when_only = 1;
+      };
+
+      input = {
+        kb_options = "caps:swapescape";
+        kb_layout = "br";
+        kb_variant = "thinkpad";
+
+        follow_mouse = 1;
+
+        touchpad = {
+          natural_scroll = true;
+        };
+      };
+      "$mod" = "SUPER";
+      misc = {
+        force_default_wallpaper = 1;
+      };
+      # exec-once = ''
+      #   ${pkgs.waybar}/bin/waybar &
+      # '';
+    };
+  };
+
   news.display = "show";
 
   nix = {
     checkConfig = true;
     settings = {
       experimental-features = "nix-command flakes";
-      extra-platforms = "x86_64-darwin aarch64-darwin";
+      # extra-platforms = "x86_64-darwin aarch64-darwin";
     };
   };
 
@@ -46,6 +88,9 @@ in
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
+      rofi-wayland
+      kdePackages.dolphin
+      wofi
       gh
 
       gnumake
@@ -132,6 +177,8 @@ in
       magic-wormhole # Send files over the network
 
       glow
+
+      pavucontrol
     ] ++ lib.optionals stdenv.isDarwin [
       m-cli # useful macOS CLI commands
     ];
@@ -201,6 +248,97 @@ in
   };
 
   programs = {
+    alacritty = {
+      enable = true;
+      settings =
+        let
+          generic_setting = {
+            import = [
+              ./config/alacritty/catppuccin-mocha.toml
+            ];
+
+            live_config_reload = false;
+            ipc_socket = false;
+            scrolling = {
+              history = 0; # history is already provided by tmux
+            };
+
+            font = {
+              normal = {
+                family = "JetBrainsMono Nerd Font";
+                style = "Regular";
+              };
+              size = 12;
+            };
+          };
+
+          macos_specific = {
+            window = {
+              decorations = "buttonless";
+              option_as_alt = "OnlyLeft";
+
+              padding = {
+                x = 10;
+                y = 6;
+              };
+            };
+          };
+        in
+        pkgs.lib.mkMerge [
+          generic_setting
+          # (pkgs.lib.optionals pkgs.stdenv.isDarwin macos_specific)
+        ];
+    };
+
+
+    waybar = {
+      enable = true;
+      systemd.enable = true;
+      style = ./config/waybar/style.css;
+      settings = {
+        mainBar = {
+          layer = "top";
+          position = "top";
+          height = 15;
+          modules-left = [ "hyprland/workspaces" ];
+          modules-center = [ "hyprland/window" ];
+          modules-right = [
+            "pulseaudio"
+            "backlight"
+            "battery"
+            "clock"
+            "tray"
+          ];
+
+          pulseaudio = {
+            format = "{icon} {volume}%";
+            format-muted = "";
+            format-icons = {
+              default = [ "" "" " " ];
+            };
+            on-click = "pavucontrol";
+          };
+
+          backlight = {
+            device = "intel_backlight";
+            format = "{icon}";
+            format-icons = [ "" "" "" "" "" "" "" "" "" ];
+          };
+
+          battery = {
+            states = {
+              warning = 30;
+              critical = 1;
+            };
+            format = "{icon}";
+            format-charging = "󰂄";
+            format-plugged = "󱟢";
+            format-alt = "{icon}";
+            format-icons = [ "󰂃" "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+          };
+        };
+      };
+    };
     zoxide.enable = true;
 
     dircolors.enable = true;
@@ -343,6 +481,7 @@ in
 
     zsh = {
       enable = true;
+      defaultKeymap = "emacs";
       autosuggestion = {
         enable = true;
       };
@@ -522,7 +661,7 @@ in
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "debling";
-  home.homeDirectory = pkgs.lib.mkForce "/Users/debling";
+  home.homeDirectory = pkgs.lib.mkForce "/home/debling";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage

@@ -58,7 +58,7 @@ in
         nodePackages."@tailwindcss/language-server"
 
         ### SQL
-        sqlfluff
+        # sqlfluff
 
         hurl
 

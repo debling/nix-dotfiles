@@ -43,14 +43,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('todo-comments').setup()
 
 vim.opt.conceallevel = 1
-require('obsidian').setup({
-  workspaces = {
-    {
-      name = 'obsidian-vault',
-      path = '/Users/debling/Library/CloudStorage/GoogleDrive-d.ebling8@gmail.com/My Drive/obsidian-vault',
-    },
-  },
-})
+-- require('obsidian').setup({
+--   workspaces = {
+--     {
+--       name = 'obsidian-vault',
+--       path = '/Users/debling/Library/CloudStorage/GoogleDrive-d.ebling8@gmail.com/My Drive/obsidian-vault',
+--     },
+--   },
+-- })
 
 require('chatgpt').setup({
   api_key_cmd = 'echo ""',
