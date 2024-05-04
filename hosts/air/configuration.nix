@@ -67,12 +67,12 @@
         active_window_opacity = "1.0";
         normal_window_opacity = "0.9";
       };
-      extraConfig = builtins.readFile ./config/yabai/yabairc;
+      extraConfig = builtins.readFile ../../config/yabai/yabairc;
     };
 
     skhd = {
       enable = true;
-      skhdConfig = builtins.readFile ./config/skhd/skhdrc;
+      skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
     };
   };
 

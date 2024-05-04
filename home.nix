@@ -25,18 +25,22 @@ in
     };
   };
 
-  services = pkgs.lib.optionals pkgs.stdenv.isLinux {
-    mako.enable = true;
+  services =
+    let
+      shouldEnable = pkgs.stdenv.isLinux;
+    in
+    {
+      mako.enable = shouldEnable;
 
-    blueman-applet.enable = true;
+      blueman-applet.enable = shouldEnable;
 
-    network-manager-applet.enable = true;
+      network-manager-applet.enable = shouldEnable;
 
-    mpris-proxy.enable = true;
-  };
+      mpris-proxy.enable = shouldEnable;
+    };
 
-  wayland.windowManager.hyprland = pkgs.lib.optionals pkgs.stdenv.isLinux {
-    enable = true;
+  wayland.windowManager.hyprland = {
+    enable = pkgs.stdenv.isLinux;
     extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
     settings = {
       general = {
@@ -105,6 +109,7 @@ in
           kdePackages.dolphin
           wofi
           sops
+          pavucontrol
         ];
         macosPkgs = [
           m-cli # useful macOS CLI commands 
@@ -118,8 +123,8 @@ in
         maven
 
         ### Editors/IDEs
-        jetbrains.datagrip
-        jetbrains.idea-ultimate
+        # jetbrains.datagrip
+        # jetbrains.idea-ultimate
         visualvm
 
         ### Langs related
@@ -131,17 +136,17 @@ in
         nodePackages.pnpm
         pipenv
 
-        # (python311.withPackages (ps: with ps; [
-        #   pandas
-        #   numpy
-        #   ipython
-        #   # matplotlib
-        #   # seaborn
-        #   # jupyterlab
-        #   # pudb
-        #   # torch
-        #   # scikit-learn
-        # ]))
+        (python311.withPackages (ps: with ps; [
+          pandas
+          numpy
+          ipython
+          matplotlib
+          seaborn
+          jupyterlab
+          pudb
+          # torch
+          scikit-learn
+        ]))
 
         # poetry
 
@@ -197,11 +202,9 @@ in
         # nix-du
 
         # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
-        magic-wormhole # Send files over the network
+        # magic-wormhole # Send files over the network
 
         glow
-
-        pavucontrol
       ] ++ lib.optionals stdenv.isDarwin macosPkgs
       ++ lib.optionals stdenv.isLinux linuxPkgs;
 
@@ -217,16 +220,10 @@ in
     sessionPath = [
       "$HOME/${customScriptsDir}"
       "$HOME/${globalNodePackagesDir}/bin"
-
-      # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
-      # "$HOME/Library/Android/sdk/platform-tools"
-      # "$HOME/Library/Android/sdk/build-tools/33.0.0"
     ];
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
-      # FIXME: change this static reference, and use https://github.com/tadfisher/android-nixpkgs
-      # ANDROID_HOME = "$HOME/Library/Android/sdk/";
     };
 
     file = {
@@ -315,14 +312,15 @@ in
             };
           };
         in
-        pkgs.lib.mkMerge [
-          generic_setting
-          (pkgs.lib.optionals pkgs.stdenv.isDarwin macos_specific)
-        ];
+        pkgs.lib.mkMerge (
+          [ generic_setting ]
+        ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+          macos_specific
+        ]);
     };
 
-    waybar = pkgs.lib.optionals pkgs.stdenv.isLinux {
-      enable = true;
+    waybar = {
+      enable = pkgs.stdenv.isLinux;
       systemd.enable = true;
       style = ./config/waybar/style.css;
       settings = {
@@ -656,7 +654,7 @@ in
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "debling";
-  home.homeDirectory = pkgs.lib.mkForce "/home/debling";
+  # home.homeDirectory = pkgs.lib.mkForce "/home/debling";
 
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
