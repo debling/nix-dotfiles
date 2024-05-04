@@ -74,7 +74,7 @@ in
       ### Langs related
       # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
       # ansible
-      # clojure # Lisp language with sane concurrency
+      clojure # Lisp language with sane concurrency
       cargo
       nodejs
       nodePackages.pnpm
@@ -95,7 +95,9 @@ in
       # poetry
 
       ### CLI utils
+      pinentry-tty
       bitwarden-cli
+      rbw ## a usable bitwarden cli
       awscli2
       cloc
       coreutils

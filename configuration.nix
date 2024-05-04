@@ -35,7 +35,9 @@
     ];
   };
 
-  environment.systemPackages = with pkgs; [ ncurses ];
+  environment.systemPackages = with pkgs; [
+    pinentry_mac 
+  ];
 
   security.pam.enableSudoTouchIdAuth = true;
 
@@ -45,7 +47,6 @@
       config = {
         # default layout (can be bsp, stack or float)
         layout = "bsp";
-        # focus_follows_mouse = "autofocus";
         window_border = "off";
         window_shadow = "float";
         # New window spawns to the right if vertical split, or bottom if horizontal split
@@ -61,7 +62,6 @@
         left_padding = 8;
         right_padding = 8;
         window_gap = 8;
-
 
         window_opacity = "on";
         active_window_opacity = "1.0";
