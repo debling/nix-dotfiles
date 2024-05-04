@@ -1,26 +1,21 @@
-# default layout (can be bsp, stack or float)
-yabai -m config layout bsp
-# New window spawns to the right if vertical split, or bottom if horizontal split
-yabai -m config window_placement second_child
-# padding set to 12px
-yabai -m config top_padding 8
-yabai -m config bottom_padding 8
-yabai -m config left_padding 8
-yabai -m config right_padding 8
-yabai -m config window_gap 8
-
-# modifier for clicking and dragging with mouse
-yabai -m config mouse_modifier alt
-# set modifier + left-click drag to move window
-yabai -m config mouse_action1 move
-# set modifier + right-click drag to resize window
-yabai -m config mouse_action2 resize
-
-# when window is dropped in center of another window, swap them (on edges it will split it)
-yabai -m mouse_drop_action swap
-
-yabai -m config window_shadow float 
-
 yabai -m rule --add app="^System Settings$" manage=off
 yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Karabiner-Elements$" manage=off
+
+yabai -m rule --add app="Digital Colour Meter" manage=off
+yabai -m rule --add app="Activity Monitor" manage=off
+yabai -m rule --add app="Font Book" manage=off
+yabai -m rule --add app="App Store" manage=off
+
+yabai -m rule --add title="floating" manage=off
+
+# Taken from https://github.com/koekeishiya/yabai/issues/719#issuecomment-728140216
+
+# Focus window after active space changes
+yabai -m signal --add event=space_changed \
+    action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
+
+# Focus window after active display changes
+yabai -m signal --add event=display_changed \
+    action="yabai -m window --focus \$(yabai -m query --windows --space | jq .[0].id)"
+

@@ -14,6 +14,11 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +28,12 @@
 
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+
+    alacritty-themes = {
+      url = "github:alacritty/alacritty-theme";
+      flake = false;
+    };
   };
 
   outputs =
@@ -34,8 +45,9 @@
     , android-nixpkgs
     , nix-index-database
     , nixos-hardware
+    , sops-nix
     , ...
-    }:
+    }@inputs:
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
@@ -50,6 +62,18 @@
       };
 
       username = "debling";
+
+      homeManagerConfiguration = {
+        sharedModules = [
+          inputs.sops-nix.homeManagerModules.sops
+        ];
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        users.${username} = import ./home.nix;
+        extraSpecialArgs = {
+          inherit (inputs) android-nixpkgs alacritty-themes nix-index-database;
+        };
+      };
     in
     {
 
@@ -68,15 +92,7 @@
           {
             nixpkgs = nixpkgsConfig;
             # `home-manager` config
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${username} = import ./home.nix;
-              extraSpecialArgs = {
-                inherit android-nixpkgs;
-                inherit nix-index-database;
-              };
-            };
+            home-manager = homeManagerConfiguration;
           }
         ];
       };
@@ -96,15 +112,7 @@
             nixpkgs = nixpkgsConfig;
             users.users.${username}.home = "/Users/${username}";
             # `home-manager` config
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.${username} = import ./home.nix;
-              extraSpecialArgs = {
-                inherit android-nixpkgs;
-                inherit nix-index-database;
-              };
-            };
+            home-manager = homeManagerConfiguration;
           }
         ];
       };

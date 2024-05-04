@@ -19,7 +19,7 @@ buildGoModule {
   patches = [
     ./patches/0001-Adding-support-for-gitlab-groups-and-subgroups.patch
   ];
-  vendorSha256 = "fGmoD4aEWNKs2OxlXA3xvUbC4ZxwtcoK9lUrWN5Gs5k=";
+  vendorHash = "sha256-fGmoD4aEWNKs2OxlXA3xvUbC4ZxwtcoK9lUrWN5Gs5k=";
   proxyVendor = true;
 
   meta = with lib; {

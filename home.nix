@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, pkgs, nix-index-database, android-nixpkgs, ... }:
+{ config, pkgs, nix-index-database, android-nixpkgs, alacritty-themes, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -14,7 +14,18 @@ in
     android-nixpkgs.hmModule
   ];
 
-  services = {
+  sops = {
+    defaultSopsFile = ./secrets/secrets.yaml;
+    defaultSopsFormat = "yaml";
+
+    age.keyFile = "${config.home.homeDirectory}/.age-key";
+
+    secrets."openai_api/nvim" = {
+      path = "${config.home.homeDirectory}/secrets/openai/nvim";
+    };
+  };
+
+  services = pkgs.lib.optionals pkgs.stdenv.isLinux {
     mako.enable = true;
 
     blueman-applet.enable = true;
@@ -24,7 +35,7 @@ in
     mpris-proxy.enable = true;
   };
 
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = pkgs.lib.optionals pkgs.stdenv.isLinux {
     enable = true;
     extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
     settings = {
@@ -87,101 +98,112 @@ in
   home = {
     enableNixpkgsReleaseCheck = true;
 
-    packages = with pkgs; [
-      rofi-wayland
-      kdePackages.dolphin
-      wofi
-      gh
+    packages = with pkgs;
+      let
+        linuxPkgs = [
+          rofi-wayland
+          kdePackages.dolphin
+          wofi
+          sops
+        ];
+        macosPkgs = [
+          m-cli # useful macOS CLI commands 
+        ];
+      in
+      [
+        gh
 
-      gnumake
-      snitch
-      maven
+        gnumake
+        snitch
+        maven
 
-      ### Editors/IDEs
-      jetbrains.datagrip
-      jetbrains.idea-ultimate
-      visualvm
+        ### Editors/IDEs
+        jetbrains.datagrip
+        jetbrains.idea-ultimate
+        visualvm
 
-      ### Langs related
-      # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
-      # ansible
-      # clojure # Lisp language with sane concurrency
-      cargo
-      nodejs
-      nodePackages.pnpm
-      pipenv
+        ### Langs related
+        # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
+        # ansible
+        clojure # Lisp language with sane concurrency
+        cargo
+        nodejs
+        nodePackages.pnpm
+        pipenv
 
-      # (python311.withPackages (ps: with ps; [
-      #   pandas
-      #   numpy
-      #   ipython
-      #   # matplotlib
-      #   # seaborn
-      #   # jupyterlab
-      #   # pudb
-      #   # torch
-      #   # scikit-learn
-      # ]))
+        # (python311.withPackages (ps: with ps; [
+        #   pandas
+        #   numpy
+        #   ipython
+        #   # matplotlib
+        #   # seaborn
+        #   # jupyterlab
+        #   # pudb
+        #   # torch
+        #   # scikit-learn
+        # ]))
 
-      # poetry
+        # poetry
 
-      ### CLI utils
-      bitwarden-cli
-      awscli2
-      cloc
-      coreutils
-      entr # Run commands when files change
-      graphviz
-      jq
-      texlive.combined.scheme-basic
-      pandoc
-      python310Packages.editorconfig
-      rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-      silver-searcher # A faster and more convenient grep. Executable is called `ag`
-      terraform
-      tree
+        ### CLI utils
+        pinentry-tty
+        bitwarden-cli
+        rbw ## a usable bitwarden cli
+        awscli2
+        cloc
+        coreutils
+        entr # Run commands when files change
+        graphviz
+        jq
+        texlive.combined.scheme-basic
+        pandoc
+        python310Packages.editorconfig
+        rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
+        silver-searcher # A faster and more convenient grep. Executable is called `ag`
+        terraform
+        tree
 
-      ranger
+        ranger
 
-      hledger
-      hledger-ui
-      hledger-web
-      hledger-interest
+        hledger
+        hledger-ui
+        hledger-web
+        hledger-interest
 
-      cachix
+        cachix
 
-      # required by telescope.nvim  
-      ripgrep
-      fd
+        # required by telescope.nvim  
+        ripgrep
+        fd
 
-      wget
-      unrar
-      postgresql_15
+        wget
+        unrar
+        postgresql_15
 
-      renameutils # adds qmv, and qmc utils for bulk move and copy
+        renameutils # adds qmv, and qmc utils for bulk move and copy
 
-      taskwarrior-tui
+        taskwarrior-tui
+        timewarrior
 
-      # vagrant
-      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
-      # https://github.com/mic92/nix-update
-      nurl # https://github.com/nix-community/nurl
-      nix-init # https://github.com/nix-community/nix-init
-      oha # HTTP load generator https://github.com/hatoo/oha
+        # vagrant
+        ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
+        # https://github.com/mic92/nix-update
+        nurl # https://github.com/nix-community/nurl
+        nix-init # https://github.com/nix-community/nix-init
+        oha # HTTP load generator https://github.com/hatoo/oha
 
-      trivy
-      cht-sh # https://github.com/chubin/cheat.sh
-      # nix-du
+        trivy
+        cht-sh # https://github.com/chubin/cheat.sh
+        # nix-du
 
-      # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
-      magic-wormhole # Send files over the network
+        # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
+        magic-wormhole # Send files over the network
 
-      glow
+        glow
 
-      pavucontrol
-    ] ++ lib.optionals stdenv.isDarwin [
-      m-cli # useful macOS CLI commands
-    ];
+        pavucontrol
+      ] ++ lib.optionals stdenv.isDarwin macosPkgs
+      ++ lib.optionals stdenv.isLinux linuxPkgs;
 
     shellAliases = {
       g = "git";
@@ -208,6 +230,11 @@ in
     };
 
     file = {
+      "${config.programs.taskwarrior.dataLocation}/hooks/on-modify.timewarrior" = {
+        executable = true;
+        source = "${pkgs.timewarrior.out}/share/doc/timew/ext/on-modify.timewarrior";
+      };
+
       ${customScriptsDir} = {
         source = ./scripts;
         recursive = true;
@@ -254,7 +281,7 @@ in
         let
           generic_setting = {
             import = [
-              ./config/alacritty/catppuccin-mocha.toml
+              "${alacritty-themes.outPath}/themes/gruvbox_dark.toml"
             ];
 
             live_config_reload = false;
@@ -268,8 +295,12 @@ in
                 family = "JetBrainsMono Nerd Font";
                 style = "Regular";
               };
-              size = 12;
+              size = 14;
             };
+
+            # override gruvbox_dark with the same background as gruvbox.nvim
+            # see: https://github.com/ellisonleao/gruvbox.nvim/blob/6e4027ae957cddf7b193adfaec4a8f9e03b4555f/lua/gruvbox.lua#L74C18-L74C24
+            colors.primary.background = "#1d2021";
           };
 
           macos_specific = {
@@ -286,12 +317,11 @@ in
         in
         pkgs.lib.mkMerge [
           generic_setting
-          # (pkgs.lib.optionals pkgs.stdenv.isDarwin macos_specific)
+          (pkgs.lib.optionals pkgs.stdenv.isDarwin macos_specific)
         ];
     };
 
-
-    waybar = {
+    waybar = pkgs.lib.optionals pkgs.stdenv.isLinux {
       enable = true;
       systemd.enable = true;
       style = ./config/waybar/style.css;
@@ -339,6 +369,7 @@ in
         };
       };
     };
+
     zoxide.enable = true;
 
     dircolors.enable = true;
@@ -397,19 +428,8 @@ in
     # A modern replacement for cat, with sintax hilghting
     bat = {
       enable = true;
-      themes = {
-        catppuccin = {
-          src = pkgs.fetchFromGitHub {
-            owner = "catppuccin";
-            repo = "bat";
-            rev = "ba4d16880d63e656acced2b7d4e034e4a93f74b1";
-            hash = "sha256-6WVKQErGdaqb++oaXnY3i6/GuH2FhTgK0v4TN4Y0Wbw=";
-          };
-          file = "Catppuccin-mocha.tmTheme";
-        };
-      };
       config = {
-        theme = "catppuccin";
+        theme = "gruvbox-dark";
       };
     };
 
@@ -551,39 +571,14 @@ in
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "screen-256color";
-      plugins = with pkgs; [
-        {
-          plugin = tmuxPlugins.catppuccin;
-          extraConfig = ''
-            set -g @catppuccin_flavour 'mocha'
-
-            set -g @catppuccin_window_left_separator ""
-            set -g @catppuccin_window_right_separator " "
-            set -g @catppuccin_window_middle_separator " █"
-            set -g @catppuccin_window_number_position "right"
-
-            set -g @catppuccin_window_default_fill "number"
-            set -g @catppuccin_window_default_text "#W"
-
-            set -g @catppuccin_window_current_fill "number"
-            set -g @catppuccin_window_current_text "#W"
-
-            set -g @catppuccin_status_modules "directory"
-            set -g @catppuccin_status_modules_right "directory"
-            set -g @catppuccin_status_left_separator  " "
-            set -g @catppuccin_status_right_separator ""
-            set -g @catppuccin_status_right_separator_inverse "no"
-            set -g @catppuccin_status_fill "icon"
-            set -g @catppuccin_status_connect_separator "no"
-
-            set -g @catppuccin_directory_text "#( echo \#{pane_current_path} | sed \"s|$HOME|~|\" )"
-          '';
-        }
-      ];
+      terminal = "alacritty";
       extraConfig = ''
         # Terminal config for TrueColor support
-        set -sg terminal-overrides ",*:RGB"
+        # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
+        set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+        set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+        set -as terminal-overrides ",*:RGB"  # true-color support
+
 
         set -g focus-events on
 
@@ -592,14 +587,14 @@ in
         set -g set-titles on
         set -g set-titles-string "#S / #W"
 
-        # set -g status-style "none,bg=default"
-        # set -g status-justify centre
-        # set -g status-bg colour236
-        # set -g status-left-length 25
-        # set -g status-right '%d/%m %H:%M'
+        set -g status-style "none,bg=default"
+        set -g status-justify centre
+        set -g status-bg colour236
+        set -g status-left-length 25
+        set -g status-right '%d/%m %H:%M'
 
-        #setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
-        #setw -g window-status-format '#[fg=colour250]#I:#W#F'
+        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
+        setw -g window-status-format '#[fg=colour250]#I:#W#F'
 
         # Open new splits in the same directory as the current pane
         bind  %  split-window -h -c "#{pane_current_path}"

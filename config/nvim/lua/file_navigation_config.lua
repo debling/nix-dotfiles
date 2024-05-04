@@ -35,6 +35,9 @@ end
 
 vim.defer_fn(load_setup_treesitter, 1)
 
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldenable = false;
 
 local harpoon = require("harpoon")
 
