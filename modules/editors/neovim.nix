@@ -1,4 +1,4 @@
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.myModules.editors.neovim;
@@ -15,13 +15,17 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = with pkgs; [
+        clojure-lsp
+        clj-kondo
+
         ruff-lsp
         arduino-language-server
         arduino-cli
+
         # language servers
         # haskell-language-server
-        gopls
-        ccls
+        gopls # go
+        clang-tools_18 # C/C++
         nodePackages.bash-language-server
         nodePackages.dockerfile-language-server-nodejs
         nodePackages.pyright
@@ -30,10 +34,9 @@ in
         nodePackages.vscode-langservers-extracted
         shellcheck
         terraform-ls
-        texlab
 
         ### Lua
-        sumneko-lua-language-server
+        # sumneko-lua-language-server
         stylua
 
         ltex-ls
@@ -59,7 +62,7 @@ in
         nodePackages."@tailwindcss/language-server"
 
         ### SQL
-        # sqlfluff
+        sqlfluff
 
         hurl
 
@@ -97,11 +100,27 @@ in
         };
         harpoon = pkgs.vimUtils.buildVimPlugin {
           name = "harpoon";
+
+          dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
+
           src = pkgs.fetchFromGitHub {
             owner = "ThePrimeagen";
             repo = "harpoon";
-            rev = "a38be6e0dd4c6db66997deab71fc4453ace97f9c";
-            hash = "sha256-RjwNUuKQpLkRBX3F9o25Vqvpu3Ah1TCFQ5Dk4jXhsbI=";
+            rev = "0378a6c428a0bed6a2781d459d7943843f374bce";
+            hash = "sha256-FZQH38E02HuRPIPAog/nWM55FuBxKp8AyrEldFkoLYk=";
+          };
+        };
+
+        hurl-nvim = pkgs.vimUtils.buildVimPlugin {
+          name = "hurl-nvim";
+
+          dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
+
+          src = pkgs.fetchFromGitHub {
+            owner = "jellydn";
+            repo = "hurl.nvim";
+            rev = "fccd096f555864d3de1f103622c7020224ba6246";
+            hash = "sha256-dvApkpcRBSN5dFJI8Gmqz5kWkvO3O4q++LqC70jGgr4=";
           };
         };
       in
@@ -111,17 +130,17 @@ in
         vimAlias = true;
         vimdiffAlias = true;
         plugins = with pkgs.vimPlugins; [
+          hurl
+          hurl-nvim
+
+          gruvbox-nvim
+
           obsidian-nvim
 
-          nui-nvim
-
           arduino-nvim
-          vim-startuptime
-          gruvbox-nvim
 
           vim-multiple-cursors
 
-          comment-nvim
           nvim-ts-context-commentstring
 
           telescope-nvim
@@ -141,10 +160,9 @@ in
           nvim-lspconfig
           none-ls-nvim
           fidget-nvim # Show lsp server's status
-          lsp-colors-nvim
 
           nvim-dap
-          # nvim-dap-ui
+          nvim-dap-ui
 
           nvim-jdtls
 
@@ -173,10 +191,6 @@ in
 
           kotlin-vim
 
-          ### Markdown
-          # Preview Markdown in real-time, on the browser
-          markdown-preview-nvim
-
           ltex_extra-nvim
 
           ## Git
@@ -190,9 +204,8 @@ in
           indent-blankline-nvim
 
           vim-slime
-          vim-sleuth
 
-          hurl
+          vim-sleuth
 
           SchemaStore-nvim
           oil-nvim
@@ -211,10 +224,22 @@ in
         extraConfig = "lua require('init_config')";
       };
 
-    xdg.configFile = {
-      nvim = {
-        source = ../../config/nvim;
-        recursive = true;
+    xdg = {
+      configFile = {
+        nvim = {
+          source = ../../config/nvim;
+          recursive = true;
+        };
+      };
+
+      dataFile = {
+        "nvim/jdtls/java-debug" = {
+          source =
+            "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug/server/";
+        };
+        "nvim/jdtls/java-test" = {
+          source = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test/server/";
+        };
       };
     };
   };

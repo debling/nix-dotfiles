@@ -243,22 +243,12 @@ in
       '';
 
       ".ideavimrc".source = ./config/.ideavimrc;
-      # Install MacOS applications to the user environment if the targetPlatform is Darwin
-      "Applications/Home Manager Apps".source =
-        let
-          apps = pkgs.buildEnv {
-            name = "home-manager-applications";
-            paths = config.home.packages;
-            pathsToLink = "/Applications";
-          };
-        in
-        "${apps}/Applications";
 
       # Stable SDK symlinks
-      "SDKs/Java/current".source = pkgs.jdk.home;
-      "SDKs/Java/21".source = pkgs.jdk21.home;
-      "SDKs/Java/11".source = pkgs.jdk11.home;
-      "SDKs/Java/8".source = pkgs.jdk8.home;
+      "SDKs/Java/current".source = pkgs.jdk;
+      "SDKs/Java/22".source = pkgs.jdk22;
+      "SDKs/Java/11".source = pkgs.jdk11;
+      "SDKs/Java/8".source = pkgs.jdk8;
       # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };
 
@@ -278,7 +268,7 @@ in
         let
           generic_setting = {
             import = [
-              "${alacritty-themes.outPath}/themes/gruvbox_dark.toml"
+              "${alacritty-themes}/themes/gruvbox_dark.toml"
             ];
 
             live_config_reload = false;
@@ -292,7 +282,7 @@ in
                 family = "JetBrainsMono Nerd Font";
                 style = "Regular";
               };
-              size = 14;
+              size = 12;
             };
 
             # override gruvbox_dark with the same background as gruvbox.nvim
@@ -314,9 +304,10 @@ in
         in
         pkgs.lib.mkMerge (
           [ generic_setting ]
-        ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-          macos_specific
-        ]);
+          ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+            macos_specific
+          ]
+        );
     };
 
     waybar = {
@@ -526,7 +517,7 @@ in
           };
         }
         # build is currently failing on nixpkgs-unstable
-        # { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
+        { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
       ];
       initExtraBeforeCompInit = ''
         if type brew &>/dev/null
@@ -620,7 +611,7 @@ in
       delta = {
         enable = true;
         options = {
-          syntax-theme = "catppuccin";
+          syntax-theme = "gruvbox-dark";
           true-color = "always";
         };
       };

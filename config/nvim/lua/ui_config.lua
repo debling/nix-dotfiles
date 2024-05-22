@@ -18,15 +18,15 @@ vim.cmd('colorscheme gruvbox')
 --
 -- vim.cmd('colorscheme catppuccin')
 
--- require('lualine').setup({
---   options = {
---     theme = 'gruvbox',
---     -- theme = 'catppuccin',
---     component_separators = '|',
---     section_separators = ' ',
---     globalstatus = true,
---   },
--- })
+require('lualine').setup({
+  options = {
+    theme = 'gruvbox',
+    -- theme = 'catppuccin',
+    component_separators = '|',
+    section_separators = ' ',
+    globalstatus = true,
+  },
+})
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 require('ibl').setup()

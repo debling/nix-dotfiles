@@ -1,10 +1,10 @@
 { pkgs, ... }:
 {
-  documentation = {
-    enable = false;
-    doc.enable = false;
-    info.enable = false;
-  };
+  # documentation = {
+  #   enable = false;
+  #   doc.enable = false;
+  #   info.enable = false;
+  # };
 
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
@@ -19,6 +19,10 @@
       extra-platforms = x86_64-darwin aarch64-darwin
     '';
     useDaemon = true;
+
+    # Enable the linux builder, which allows to build packages, and most important
+    # use the build-vm feature
+    linux-builder.enable = true;
   };
 
   programs = {
@@ -36,7 +40,10 @@
   };
 
   environment.systemPackages = with pkgs; [
-    pinentry_mac 
+    pinentry_mac
+
+    # Linux programing api pages
+    man-pages-posix
   ];
 
   security.pam.enableSudoTouchIdAuth = true;
@@ -44,6 +51,7 @@
   services = {
     yabai = {
       enable = true;
+      enableScriptingAddition = true;
       config = {
         # default layout (can be bsp, stack or float)
         layout = "bsp";
@@ -57,15 +65,17 @@
         mouse_drop_action = "swap";
 
         # padding set to 8px
-        top_padding = 8;
-        bottom_padding = 8;
-        left_padding = 8;
-        right_padding = 8;
-        window_gap = 8;
+        top_padding = 6;
+        bottom_padding = 6;
+        left_padding = 6;
+        right_padding = 6;
+        window_gap = 6;
 
         window_opacity = "on";
         active_window_opacity = "1.0";
         normal_window_opacity = "0.9";
+
+        window_animation_duration = 0.0;
       };
       extraConfig = builtins.readFile ../../config/yabai/yabairc;
     };
@@ -84,16 +94,21 @@
     };
     defaults = {
       NSGlobalDomain = {
-        # start key repeat after holdinng a key for 40ms
-        InitialKeyRepeat = 40;
-        # Rate of keyrepeat in hz
-        KeyRepeat = 60;
-        # com.apple.sound.beep.volume = 0;
+        InitialKeyRepeat = 15;
+        KeyRepeat = 1;
+
+        NSAutomaticWindowAnimationsEnabled = true;
+
+        _HIHideMenuBar = true;
       };
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = true;
 
       dock = {
         autohide = true;
+        autohide-delay = 0.1;
+        autohide-time-modifier = 0.1;
+        expose-animation-duration = 0.1;
+
         tilesize = 32;
       };
       finder.AppleShowAllFiles = true; # Show hidden files
@@ -114,6 +129,7 @@
       "obsidian"
       "slack"
       "spotify"
+      "keycastr"
     ];
   };
 }

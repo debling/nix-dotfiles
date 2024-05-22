@@ -11,37 +11,37 @@ end
 local runtimes = {
   {
     name = 'JavaSE-1.8',
-    path = jdk_path('8'),
+    path = jdk_path('8') .. "/zulu-8.jdk/Contents/Home",
   },
   {
     name = 'JavaSE-11',
-    path = jdk_path('11'),
-  },
-  {
-    name = 'JavaSE-19',
-    path = jdk_path('current'),
+    path = jdk_path('11') .. "/zulu-11.jdk/Contents/Home",
   },
   {
     name = 'JavaSE-21',
-    path = jdk_path('21'),
+    path = jdk_path('current') .. "/zulu-21.jdk/Contents/Home",
+  },
+  {
+    name = 'JavaSE-22',
+    path = jdk_path('22') .. "/zulu-22.jdk/Contents/Home",
   },
 }
 
+local jdtls_extensions_path = vim.fn.stdpath('data') .. '/jdtls'
+
 local bundles = {
-  -- FIXME: hardcoded, use nix to build
+  -- vs-code java-debug extension
   vim.fn.glob(
-    '/Users/debling/Workspace/probe/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar',
+    jdtls_extensions_path .. '/java-debug/com.microsoft.java.debug.plugin-*.jar',
     true
   ),
 }
 
 vim.list_extend(
   bundles,
-  vim.split(
-    -- FIXME: hardcoded, use nix to build
-    vim.fn.glob('/Users/debling/Workspace/probe/vscode-java-test/server/*.jar', true),
-    '\n'
-  )
+
+  -- vs-code java-test extension
+  vim.split(vim.fn.glob(jdtls_extensions_path .. '/java-test/*.jar', true), '\n')
 )
 
 local config = {
@@ -90,5 +90,7 @@ local config = {
     },
   },
 }
+
+-- FIXME: hardcoded, use nix to build
 jdtls.jol_path = vim.fs.normalize('~/Downloads/jol-cli-latest.jar')
 jdtls.start_or_attach(config)

@@ -7,7 +7,11 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 -- Add additional capabilities supported by nvim-cmp
 ---@type table
-M.capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+M.capabilities = vim.tbl_deep_extend(
+    'force',
+    require('cmp_nvim_lsp').default_capabilities(capabilities),
+    { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+)
 
 
 -- Null-ls does NOT define a type for its source table
