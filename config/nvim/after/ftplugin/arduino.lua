@@ -1,5 +1,5 @@
-local lsp = require('lspconfig')
-local lsp_setup = require('lsp_server_setup')
+local lsp = require('debling.lspconfig')
+local lsp_setup = require('debling.lsp_server_setup')
 local arduino = require('arduino')
 
 arduino.setup({})

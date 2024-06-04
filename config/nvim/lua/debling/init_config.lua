@@ -1,20 +1,20 @@
 vim.loader.enable()
 
-require('basic_options')
+require('debling.basic_options')
 
-require('ui_config')
+require('debling.ui_config')
 
 require('neodev').setup()
 
-require('lsp_config')
+require('debling.lsp_config')
 
-require('completion_config')
+require('debling.completion_config')
 
-require('telescope_config')
+require('debling.telescope_config')
 
-require('file_navigation_config')
+require('debling.file_navigation_config')
 
-require('vcs_config')
+require('debling.vcs_config')
 
 -- vim-slime setup, default to tmux, using the pane in the bottom right
 vim.g.slime_target = 'tmux'
@@ -49,3 +49,20 @@ if (vim.loop.os_uname().sysname == 'Darwin') then
     },
   })
 end
+
+
+vim.g['conjure#mapping#doc_word'] = 'gk'
+
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+  pattern = {"conjure-log-*"},
+  callback = function(args)
+    local diagnostics = args.data.diagnostics
+
+    if (diagnostics[1] ~= nil) then
+      local bufnr = diagnostics[1]["bufnr"]
+      local namespace = diagnostics[1]["namespace"]
+      vim.diagnostic.enable(false, {bufnr = bufnr})
+      vim.diagnostic.reset(namespace, bufnr)
+    end
+  end,
+})

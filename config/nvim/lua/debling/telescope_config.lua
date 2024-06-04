@@ -1,4 +1,4 @@
-local utils = require('config_utils')
+local utils = require('debling.config_utils')
 
 local tel = require('telescope')
 tel.setup({

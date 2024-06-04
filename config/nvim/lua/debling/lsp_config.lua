@@ -1,7 +1,7 @@
 local lsp = require('lspconfig')
 
-local lsp_setup = require('lsp_server_setup')
-local utils = require('config_utils')
+local lsp_setup = require('debling.lsp_server_setup')
+local utils = require('debling.config_utils')
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -144,5 +144,8 @@ null_ls.setup({
 
 
     null_ls.builtins.diagnostics.clj_kondo,
+
+
+    null_ls.builtins.formatting.clang_format,
   },
 })

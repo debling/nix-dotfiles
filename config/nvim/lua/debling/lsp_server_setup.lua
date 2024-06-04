@@ -1,17 +1,11 @@
 local null_ls = require('null-ls')
-local utils = require('config_utils')
+local utils = require('debling.config_utils')
 
 local M = {}
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-
 -- Add additional capabilities supported by nvim-cmp
 ---@type table
-M.capabilities = vim.tbl_deep_extend(
-    'force',
-    require('cmp_nvim_lsp').default_capabilities(capabilities),
-    { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
-)
+M.capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 
 -- Null-ls does NOT define a type for its source table
@@ -31,6 +25,8 @@ end
 ---@param _ unknown
 ---@param bufnr buffer
 function M.on_attach(_, bufnr)
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { buffer = bufnr }
@@ -65,6 +61,7 @@ function M.on_attach(_, bufnr)
     end
 
     utils.vmap('<space>f', vim.lsp.buf.format, bufopts)
+    utils.imap('<C-k>', vim.lsp.buf.signature_help, bufopts)
 end
 
 return M

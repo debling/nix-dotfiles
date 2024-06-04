@@ -1,4 +1,4 @@
-local utils = require('config_utils')
+local utils = require('debling.config_utils')
 
 local neogit = utils.lazy_require(function()
     local mod = require('neogit')

@@ -1,4 +1,4 @@
-local lsp_setup = require('lsp_server_setup')
+local lsp_setup = require('debling.lsp_server_setup')
 local cmp = require('cmp')
 
 local sqlfluff_args = {

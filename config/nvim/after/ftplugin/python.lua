@@ -1,5 +1,5 @@
 local lsp = require('lspconfig')
-local lsp_setup = require('lsp_server_setup')
+local lsp_setup = require('debling.lsp_server_setup')
 
 
 local language_servers = {'pyright', 'ruff_lsp'}

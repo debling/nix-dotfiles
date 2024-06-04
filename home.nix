@@ -152,7 +152,7 @@ in
 
         ### CLI utils
         pinentry-tty
-        bitwarden-cli
+        # bitwarden-cli
         rbw ## a usable bitwarden cli
         awscli2
         cloc
@@ -483,10 +483,9 @@ in
     gpg.enable = true;
 
     # The true OS
-    # emacs = {
-    #   enable = true;
-    #   package = pkgs.emacs28NativeComp;
-    # };
+    emacs = {
+      enable = true;
+    };
 
     zsh = {
       enable = true;

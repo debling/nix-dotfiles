@@ -53,6 +53,7 @@ vim.opt.clipboard = 'unnamedplus'
 vim.o.directory = os.getenv('HOME') .. '/.cache/nvim'
 vim.o.backup = true
 vim.o.backupdir = os.getenv('HOME') .. '/.cache/nvim'
+vim.o.swapfile = false
 
 -- Enable undo features, even after closing vim
 vim.o.undofile = true
@@ -60,5 +61,8 @@ vim.o.undodir = os.getenv('HOME') .. '/.cache/nvim'
 vim.o.undolevels = 10000
 
 -- Map leader key to <space>
-vim.g.mapleader = ' '
+local leaderKey = " "
+vim.g.mapleader = leaderKey
+vim.g.maplocalleader = leaderKey
 
+vim.o.conceallevel = 2

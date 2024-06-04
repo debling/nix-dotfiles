@@ -1,5 +1,5 @@
 local lsp = require('lspconfig')
-local lsp_setup = require('lsp_server_setup')
+local lsp_setup = require('debling.lsp_server_setup')
 
 lsp.lua_ls.setup({
     on_attach = lsp_setup.on_attach,
@@ -10,6 +10,7 @@ lsp.lua_ls.setup({
             telemetry = {
                 enable = false,
             },
+            hint = { enable = true },
         },
     },
 })
