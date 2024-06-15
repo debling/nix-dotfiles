@@ -25,8 +25,9 @@ in
           plugins = [ pkgs.vimPlugins.nvim-jdtls ];
         };
 
-        sql = {
+        python = {
           systemPkgs = with pkgs; [
+            pyright
             ruff-lsp
             ruff
             python311Packages.black
@@ -35,7 +36,7 @@ in
           plugins = [ ];
         };
 
-        python = {
+        sql = {
           systemPkgs = with pkgs; [ sqlfluff ];
           plugins = with pkgs.vimPlugins; [
             vim-dadbod
@@ -53,6 +54,7 @@ in
 
 
         packages = with pkgs; [
+          checkmake
           clang-tools_18 # C/C++
           bear # wrap make to generate compile_commands.json
 
@@ -64,7 +66,6 @@ in
           gopls # go
           nodePackages.bash-language-server
           nodePackages.dockerfile-language-server-nodejs
-          nodePackages.pyright
           nodePackages.typescript-language-server
           nodePackages.yaml-language-server
           nodePackages.vscode-langservers-extracted
@@ -147,6 +148,19 @@ in
               hash = "sha256-dvApkpcRBSN5dFJI8Gmqz5kWkvO3O4q++LqC70jGgr4=";
             };
           };
+
+          freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {
+            name = "freeze-code-nvim";
+
+            buildInputs = [ pkgs.charm-freeze ];
+
+            src = pkgs.fetchFromGitHub {
+              owner = "AlejandroSuero";
+              repo = "freeze-code.nvim";
+              rev = "e49fc7f13e49be30621038ce8067c0d821f813a3";
+              hash = "sha256-1NGM7bmCQj5ssOgmPGUWtWDtmcrtl59yAAvTEE+P7VE=";
+            };
+          };
         in
         {
           enable = true;
@@ -154,6 +168,10 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
+            hotpot-nvim
+
+            freeze-code-nvim
+
             hurl
             hurl-nvim
 

@@ -3,15 +3,6 @@ local cmp = require('cmp')
 
 local utils = require('debling.config_utils')
 
--- Expand snippert with or run the normal c-k action
-utils.map({ 'i', 's' }, '<c-k>', function()
-    if luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
-    else
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<c-k>', true, true, true), 'n')
-    end
-end)
-
 ---@enum JumpDirection
 local JUMP_DIRECTION = {
     prev = -1,

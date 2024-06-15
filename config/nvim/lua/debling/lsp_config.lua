@@ -34,7 +34,6 @@ local simple_servers = {
   'r_language_server',
 
   'clojure_lsp',
-
 }
 
 for _, server in pairs(simple_servers) do
@@ -145,7 +144,8 @@ null_ls.setup({
 
     null_ls.builtins.diagnostics.clj_kondo,
 
-
     null_ls.builtins.formatting.clang_format,
+
+  null_ls.builtins.diagnostics.checkmake
   },
 })

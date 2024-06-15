@@ -9,16 +9,14 @@
   # Enable experimental nix command and flakes
   # nix.package = pkgs.nixUnstable;
   nix = {
+    package = pkgs.nixVersions.latest;
     configureBuildUsers = true;
     settings = {
       trusted-users = [ "debling" "@admin" ];
       auto-optimise-store = true;
+      experimental-features = [ "nix-command" "flakes" ];
+      extra-platforms = [ "x86_64-darwin" "aarch64-darwin" ];
     };
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      extra-platforms = x86_64-darwin aarch64-darwin
-    '';
-    useDaemon = true;
 
     # Enable the linux builder, which allows to build packages, and most important
     # use the build-vm feature
@@ -27,7 +25,11 @@
 
   programs = {
     # Create /etc/bashrc that loads the nix-darwin environment.
-    zsh.enable = true;
+    zsh = {
+      enable = true;
+      enableGlobalCompInit = false;
+      enableFzfGit = true;
+    };
   };
 
   # Fonts
@@ -49,6 +51,8 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   services = {
+    nix-daemon.enable = true;
+
     yabai = {
       enable = true;
       enableScriptingAddition = true;

@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('todo-comments').setup()
 
 -- TODO: setup obsidian on linux
-if (vim.loop.os_uname().sysname == 'Darwin') then
+if vim.loop.os_uname().sysname == 'Darwin' then
   require('obsidian').setup({
     workspaces = {
       {
@@ -50,19 +50,23 @@ if (vim.loop.os_uname().sysname == 'Darwin') then
   })
 end
 
-
 vim.g['conjure#mapping#doc_word'] = 'gk'
 
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
-  pattern = {"conjure-log-*"},
+  pattern = { 'conjure-log-*' },
   callback = function(args)
     local diagnostics = args.data.diagnostics
 
-    if (diagnostics[1] ~= nil) then
-      local bufnr = diagnostics[1]["bufnr"]
-      local namespace = diagnostics[1]["namespace"]
-      vim.diagnostic.enable(false, {bufnr = bufnr})
+    if diagnostics[1] ~= nil then
+      local bufnr = diagnostics[1]['bufnr']
+      local namespace = diagnostics[1]['namespace']
+      vim.diagnostic.enable(false, { bufnr = bufnr })
       vim.diagnostic.reset(namespace, bufnr)
     end
   end,
+})
+
+require('freeze-code').setup({
+  copy = true,
+  dir = "/tmp"
 })

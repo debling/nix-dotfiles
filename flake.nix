@@ -76,6 +76,22 @@
       };
     in
     {
+      
+      homeConfigurations."debling" = home-manager.lib.homeManagerConfiguration {
+        # Specify your home configuration modules here, for example,
+        # the path to your home.nix.
+        modules = [
+          inputs.sops-nix.homeManagerModules.sops
+          ./home.nix
+        ];
+
+        # Optionally use extraSpecialArgs
+        # to pass through arguments to home.nix
+
+        extraSpecialArgs = {
+          inherit (inputs) android-nixpkgs alacritty-themes nix-index-database;
+        };
+      };
 
       # My `nix-darwin` configs
       nixosConfigurations.x220 = nixpkgs.lib.nixosSystem {

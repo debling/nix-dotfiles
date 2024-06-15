@@ -1,3 +1,5 @@
+local utils = require('debling.config_utils')
+
 local function load_setup_treesitter()
     require('nvim-treesitter.configs').setup({
         ensure_installed = {},
@@ -45,14 +47,14 @@ local harpoon = require("harpoon")
 harpoon:setup()
 -- REQUIRED
 
-vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
-vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+utils.nmap("<leader>a", function() harpoon:list():add() end)
+utils.nmap("<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
-vim.keymap.set("n", "<leader>h", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "<leader>j", function() harpoon:list():select(2) end)
-vim.keymap.set("n", "<leader>k", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "<leader>l", function() harpoon:list():select(4) end)
+utils.nmap("<leader>h", function() harpoon:list():select(1) end)
+utils.nmap("<leader>j", function() harpoon:list():select(2) end)
+utils.nmap("<leader>k", function() harpoon:list():select(3) end)
+utils.nmap("<leader>l", function() harpoon:list():select(4) end)
 
 -- Toggle previous & next buffers stored within Harpoon list
-vim.keymap.set("n", "<leader>p", function() harpoon:list():prev() end)
-vim.keymap.set("n", "<leader>n", function() harpoon:list():next() end)
+utils.nmap("<leader>p", function() harpoon:list():prev() end)
+utils.nmap("<leader>n", function() harpoon:list():next() end)
