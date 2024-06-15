@@ -28,7 +28,7 @@
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
-  time.timeZone = "America/New_York";
+  time.timeZone = "America/Sao_Paulo";
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -44,6 +44,21 @@
 
   # Enable the X11 windowing system.
   services = {
+    # Enable touchpad support (enabled default in most desktopManager).
+    libinput.enable = true;
+
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+      };
+    };
     greetd = {
       enable = true;
       settings =
@@ -101,10 +116,6 @@
     alsa.enable = true;
   };
 
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
     isNormalUser = true;
@@ -120,6 +131,7 @@
   # $ nix search wget
   environment = {
     systemPackages = with pkgs; [
+      uxplay
       neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       tmux
       wget
