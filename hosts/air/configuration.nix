@@ -33,13 +33,9 @@
   };
 
   # Fonts
-  fonts = {
-    fontDir.enable = true;
-    fonts = with pkgs; [
-      jetbrains-mono
+  fonts.packages = with pkgs; [
       (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
     ];
-  };
 
   environment.systemPackages = with pkgs; [
     pinentry_mac
@@ -129,7 +125,6 @@
       "docker"
       "iterm2"
       "maccy"
-      "miniconda"
       "obsidian"
       "slack"
       "spotify"

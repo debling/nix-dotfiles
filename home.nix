@@ -280,7 +280,7 @@ in
             font = {
               normal = {
                 family = "JetBrainsMono Nerd Font";
-                style = "Regular";
+                style = "Medium";
               };
               size = 12;
             };
@@ -395,7 +395,8 @@ in
 
     taskwarrior = {
       enable = true;
-      colorTheme = "dark-256";
+      colorTheme = "dark-16";
+      package = pkgs.taskwarrior3;
     };
 
     # Used to have custom environment per project.
@@ -485,6 +486,7 @@ in
     # The true OS
     emacs = {
       enable = true;
+      package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
     };
 
     zsh = {

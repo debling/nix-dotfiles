@@ -52,7 +52,6 @@ in
           MANPAGER = "nvim +Man!";
         };
 
-
         packages = with pkgs; [
           checkmake
           clang-tools_18 # C/C++
@@ -257,7 +256,7 @@ in
             nvim-web-devicons
           ] ++ (lib.concatMap (s: s.plugins) (lib.attrValues setups));
 
-          extraConfig = "lua require('debling.init_config')";
+          extraConfig = "lua require('debling')";
         };
 
       xdg = {
