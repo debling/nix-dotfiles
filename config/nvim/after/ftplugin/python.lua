@@ -2,7 +2,7 @@ local lsp = require('lspconfig')
 local lsp_setup = require('debling.lsp_server_setup')
 
 
-local language_servers = {'pyright', 'ruff_lsp'}
+local language_servers = {'pyright', 'ruff'}
 
 for _, server in ipairs(language_servers) do
     lsp[server].setup({

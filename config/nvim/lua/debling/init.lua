@@ -48,6 +48,11 @@ if vim.loop.os_uname().sysname == 'Darwin' then
       },
     },
   })
+
+  local utils = require('debling.config_utils')
+
+  utils.nmap('<leader>of', '<cmd>ObsidianFollowLink<CR>')
+  utils.nmap('<leader>of', '<cmd>ObsidianSearch<CR>')
 end
 
 vim.g['conjure#mapping#doc_word'] = 'gk'
@@ -68,5 +73,8 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 
 require('freeze-code').setup({
   copy = true,
-  dir = "/tmp"
+  dir = '/tmp',
 })
+
+
+vim.diagnostic.config({ float = { source = true } })
