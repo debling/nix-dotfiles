@@ -76,7 +76,7 @@
       };
     in
     {
-      
+
       homeConfigurations."debling" = home-manager.lib.homeManagerConfiguration {
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
@@ -93,10 +93,56 @@
         };
       };
 
+      # usb drive
+      nixosConfigurations.live = nixpkgs.lib.nixosSystem {
+        system = flake-utils.lib.system.x86_64-linux;
+        modules = [
+          # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-x86_64.nix"
+
+          # Main `nix-darwin` config
+          ./hosts/x220/configuration.nix
+
+          {
+            virtualisation.vmVariant = {
+              # following configuration is added only when building VM with build-vm
+              virtualisation = {
+                memorySize = 2048;
+                cores = 2;
+                graphics = true;
+              };
+               
+            environment.sessionVariables = {
+                # Nedded to make wlroots work with no hw accell
+                WLR_RENDERER_ALLOW_SOFTWARE = 1;
+              };
+            };
+          }
+
+          # `home-manager` module
+          home-manager.nixosModules.home-manager
+
+          ({lib, ...}: {
+            nixpkgs = nixpkgsConfig;
+            # `home-manager` config
+            home-manager = homeManagerConfiguration;
+            networking.hostName = lib.mkForce "removable-nixos"; 
+            
+            # systemd.services.sshd.wantedBy = lib.mkForce ["multi-user.target"];
+
+            # Much faster than xz
+            # isoImage.squashfsCompression = lib.mkDefault "zstd";
+          })
+        ];
+      };
+
+
       # My `nix-darwin` configs
       nixosConfigurations.x220 = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         modules = [
+
+          ./hosts/x220/hardware-configuration.nix
+
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
 
