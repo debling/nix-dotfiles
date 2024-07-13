@@ -34,6 +34,11 @@
       url = "github:alacritty/alacritty-theme";
       flake = false;
     };
+
+
+  disko.url = "github:nix-community/disko";
+  disko.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =
@@ -46,6 +51,7 @@
     , nix-index-database
     , nixos-hardware
     , sops-nix
+    , disko
     , ...
     }@inputs:
     let
@@ -97,10 +103,14 @@
       nixosConfigurations.live = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         modules = [
-          # "${nixpkgs}/nixos/modules/installer/sd-card/sd-image-x86_64.nix"
+          "${nixpkgs}/nixos/modules/profiles/all-hardware.nix"
 
+          disko.nixosModules.disko
+
+          ./disko.nix
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
+
 
           {
             virtualisation.vmVariant = {
@@ -110,12 +120,12 @@
                 cores = 2;
                 graphics = true;
               };
+            };
                
             environment.sessionVariables = {
                 # Nedded to make wlroots work with no hw accell
                 WLR_RENDERER_ALLOW_SOFTWARE = 1;
               };
-            };
           }
 
           # `home-manager` module
@@ -131,7 +141,18 @@
 
             # Much faster than xz
             # isoImage.squashfsCompression = lib.mkDefault "zstd";
+
+            boot.loader.grub.enable = true;
+            boot.loader.grub.efiSupport = true;
+            boot.loader.grub.device = "/dev/sdb"; # todo : change me once the system booted
+            boot.loader.grub.efiInstallAsRemovable = true;
+            boot.tmpOnTmpfs = true;
+
+            boot.loader.systemd-boot.enable = false;
+            boot.loader.efi.canTouchEfiVariables = false;
+
           })
+
         ];
       };
 
