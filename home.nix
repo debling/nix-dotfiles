@@ -30,7 +30,7 @@ in
       shouldEnable = pkgs.stdenv.isLinux;
     in
     {
-      mako.enable = shouldEnable;
+      # mako.enable = shouldEnable;
 
       blueman-applet.enable = shouldEnable;
 
@@ -39,37 +39,37 @@ in
       mpris-proxy.enable = shouldEnable;
     };
 
-  wayland.windowManager.hyprland = {
-    enable = pkgs.stdenv.isLinux;
-    extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
-    settings = {
-      general = {
-        layout = "dwindle";
-      };
-      dwindle = {
-        no_gaps_when_only = 1;
-      };
-
-      input = {
-        kb_options = "caps:swapescape";
-        kb_layout = "br";
-        kb_variant = "thinkpad";
-
-        follow_mouse = 1;
-
-        touchpad = {
-          natural_scroll = true;
-        };
-      };
-      "$mod" = "SUPER";
-      misc = {
-        force_default_wallpaper = 1;
-      };
-      # exec-once = ''
-      #   ${pkgs.waybar}/bin/waybar &
-      # '';
-    };
-  };
+  # wayland.windowManager.hyprland = {
+  #   enable = pkgs.stdenv.isLinux;
+  #   extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
+  #   settings = {
+  #     general = {
+  #       layout = "dwindle";
+  #     };
+  #     dwindle = {
+  #       no_gaps_when_only = 1;
+  #     };
+  #
+  #     input = {
+  #       kb_options = "caps:swapescape";
+  #       kb_layout = "br";
+  #       kb_variant = "thinkpad";
+  #
+  #       follow_mouse = 1;
+  #
+  #       touchpad = {
+  #         natural_scroll = true;
+  #       };
+  #     };
+  #     "$mod" = "SUPER";
+  #     misc = {
+  #       force_default_wallpaper = 1;
+  #     };
+  #     # exec-once = ''
+  #     #   ${pkgs.waybar}/bin/waybar &
+  #     # '';
+  #   };
+  # };
 
   news.display = "show";
 
@@ -310,54 +310,54 @@ in
         );
     };
 
-    waybar = {
-      enable = pkgs.stdenv.isLinux;
-      systemd.enable = true;
-      style = ./config/waybar/style.css;
-      settings = {
-        mainBar = {
-          layer = "top";
-          position = "top";
-          height = 15;
-          modules-left = [ "hyprland/workspaces" ];
-          modules-center = [ "hyprland/window" ];
-          modules-right = [
-            "pulseaudio"
-            "backlight"
-            "battery"
-            "clock"
-            "tray"
-          ];
-
-          pulseaudio = {
-            format = "{icon} {volume}%";
-            format-muted = "";
-            format-icons = {
-              default = [ "" "" " " ];
-            };
-            on-click = "pavucontrol";
-          };
-
-          backlight = {
-            device = "intel_backlight";
-            format = "{icon}";
-            format-icons = [ "" "" "" "" "" "" "" "" "" ];
-          };
-
-          battery = {
-            states = {
-              warning = 30;
-              critical = 1;
-            };
-            format = "{icon}";
-            format-charging = "󰂄";
-            format-plugged = "󱟢";
-            format-alt = "{icon}";
-            format-icons = [ "󰂃" "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-          };
-        };
-      };
-    };
+    # waybar = {
+    #   enable = pkgs.stdenv.isLinux;
+    #   systemd.enable = true;
+    #   style = ./config/waybar/style.css;
+    #   settings = {
+    #     mainBar = {
+    #       layer = "top";
+    #       position = "top";
+    #       height = 15;
+    #       modules-left = [ "hyprland/workspaces" ];
+    #       modules-center = [ "hyprland/window" ];
+    #       modules-right = [
+    #         "pulseaudio"
+    #         "backlight"
+    #         "battery"
+    #         "clock"
+    #         "tray"
+    #       ];
+    #
+    #       pulseaudio = {
+    #         format = "{icon} {volume}%";
+    #         format-muted = "";
+    #         format-icons = {
+    #           default = [ "" "" " " ];
+    #         };
+    #         on-click = "pavucontrol";
+    #       };
+    #
+    #       backlight = {
+    #         device = "intel_backlight";
+    #         format = "{icon}";
+    #         format-icons = [ "" "" "" "" "" "" "" "" "" ];
+    #       };
+    #
+    #       battery = {
+    #         states = {
+    #           warning = 30;
+    #           critical = 1;
+    #         };
+    #         format = "{icon}";
+    #         format-charging = "󰂄";
+    #         format-plugged = "󱟢";
+    #         format-alt = "{icon}";
+    #         format-icons = [ "󰂃" "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+    #       };
+    #     };
+    #   };
+    # };
 
     zoxide.enable = true;
 

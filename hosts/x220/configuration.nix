@@ -34,6 +34,20 @@
 
   # Enable the X11 windowing system.
   services = {
+
+    # zoneminder = {
+    #   enable = true;
+    #   openFirewall = true;
+    #   database = {
+    #     createLocally = true;
+    #     host = "localhost";
+    #     name = "zm";
+    #     username = "zoneminder";
+    #     password = "zmpass";
+    #   };
+    #   cameras = 1;
+    #   };
+
     # Enable touchpad support (enabled default in most desktopManager).
     libinput.enable = true;
 
@@ -49,25 +63,25 @@
         workstation = true;
       };
     };
-    greetd = {
-      enable = true;
-      settings =
-        let
-          tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
-          session = "${pkgs.hyprland}/bin/Hyprland";
-          username = "debling";
-        in
-        {
-          initial_session = {
-            command = "${session}";
-            user = "${username}";
-          };
-          default_session = {
-            command = "${tuigreet} --greeting 'Welcome to NixOS!' --asterisks --remember --remember-user-session --time --cmd ${session}";
-            user = "greeter";
-          };
-        };
-    };
+    # greetd = {
+    #   enable = true;
+    #   settings =
+    #     let
+    #       tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
+    #       session = "${pkgs.hyprland}/bin/Hyprland";
+    #       username = "debling";
+    #     in
+    #     {
+    #       initial_session = {
+    #         command = "${session}";
+    #         user = "${username}";
+    #       };
+    #       default_session = {
+    #         command = "${tuigreet} --greeting 'Welcome to NixOS!' --asterisks --remember --remember-user-session --time --cmd ${session}";
+    #         user = "greeter";
+    #       };
+    #     };
+    # };
     #    xserver = {
     #      enable = true;
     #      windowManager.i3.enable = true;
@@ -86,7 +100,22 @@
     #      xkbOptions = "caps:escape"; # map caps to escape.
     #    };
 
-    tlp.enable = true;
+
+
+
+       xserver = {
+         enable = true;
+         displayManager.gdm.enable = true;
+         desktopManager.gnome.enable = true;
+         displayManager.autoLogin.user = "debling";
+         # Configure keymap in X11
+         layout = "br";
+         xkbVariant = "thinkpad";
+       };
+
+
+
+    # tlp.enable = true;
 
     blueman.enable = true;
   };
@@ -100,11 +129,11 @@
     mediaKeys.enable = true;
   };
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-  };
+  # services.pipewire = {
+  #   enable = true;
+  #   pulse.enable = true;
+  #   alsa.enable = true;
+  # };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
@@ -164,10 +193,10 @@
     hyprland.enable = true;
   };
 
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  # };
 
   # List services that you want to enable:
 
@@ -178,7 +207,7 @@
     docker.enable = true;
     # virtualbox.host.enable = true;
     libvirtd.enable = true;
-    waydroid.enable = true;
+    # waydroid.enable = true;
   };
 
   fonts = {
@@ -198,6 +227,28 @@
       serif = [ "Source Serif Pro" ];
     };
   };
+
+
+# systemd.timers."hello-world" = {
+#   wantedBy = [ "timers.target" ];
+#     timerConfig = {
+#       OnBootSec = "5m";
+#       OnUnitActiveSec = "5m";
+#       Unit = "duckdns.service";
+#     };
+# };
+#
+# systemd.services."duckdns" = {
+#   script = ''
+#     set -eu
+#     ${pkgs.coreutils}/bin/echo url="https://www.duckdns.org/update?domains=debling&token=ca64b58b-843b-43e7-8706-73fefbaa6f6b&ip=&ipv6=&verbose=true" \
+#     | ${pkgs.curl}/bin/curl -k -K -
+#   '';
+#   serviceConfig = {
+#     Type = "oneshot";
+#     User = "root";
+#   };
+# };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
