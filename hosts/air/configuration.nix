@@ -20,7 +20,7 @@
 
     # Enable the linux builder, which allows to build packages, and most important
     # use the build-vm feature
-    linux-builder.enable = true;
+    linux-builder.enable = false;
   };
 
   programs = {

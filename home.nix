@@ -10,9 +10,14 @@ in
 {
   imports = [
     ./modules/editors/neovim.nix
+    ./modules/alacritty
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
+
+  debling.editors.neovim.enable = true;
+
+  debling.alacritty.enable = true;
 
   sops = {
     defaultSopsFile = ./secrets/secrets.yaml;
@@ -39,37 +44,37 @@ in
       mpris-proxy.enable = shouldEnable;
     };
 
-  wayland.windowManager.hyprland = {
-    enable = pkgs.stdenv.isLinux;
-    extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
-    settings = {
-      general = {
-        layout = "dwindle";
-      };
-      dwindle = {
-        no_gaps_when_only = 1;
-      };
-
-      input = {
-        kb_options = "caps:swapescape";
-        kb_layout = "br";
-        kb_variant = "thinkpad";
-
-        follow_mouse = 1;
-
-        touchpad = {
-          natural_scroll = true;
-        };
-      };
-      "$mod" = "SUPER";
-      misc = {
-        force_default_wallpaper = 1;
-      };
-      # exec-once = ''
-      #   ${pkgs.waybar}/bin/waybar &
-      # '';
-    };
-  };
+  # wayland.windowManager.hyprland = {
+  #   enable = pkgs.stdenv.isLinux;
+  #   extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
+  #   settings = {
+  #     general = {
+  #       layout = "dwindle";
+  #     };
+  #     dwindle = {
+  #       no_gaps_when_only = 1;
+  #     };
+  #
+  #     input = {
+  #       kb_options = "caps:swapescape";
+  #       kb_layout = "br";
+  #       kb_variant = "thinkpad";
+  #
+  #       follow_mouse = 1;
+  #
+  #       touchpad = {
+  #         natural_scroll = true;
+  #       };
+  #     };
+  #     "$mod" = "SUPER";
+  #     misc = {
+  #       force_default_wallpaper = 1;
+  #     };
+  #     # exec-once = ''
+  #     #   ${pkgs.waybar}/bin/waybar &
+  #     # '';
+  #   };
+  # };
 
   news.display = "show";
 
@@ -80,8 +85,6 @@ in
       # extra-platforms = "x86_64-darwin aarch64-darwin";
     };
   };
-
-  myModules.editors.neovim.enable = true;
 
   android-sdk = {
     enable = true;
@@ -167,8 +170,6 @@ in
         silver-searcher # A faster and more convenient grep. Executable is called `ag`
         terraform
         tree
-
-        ranger
 
         hledger
         hledger-ui
@@ -262,102 +263,54 @@ in
   };
 
   programs = {
-    alacritty = {
-      enable = true;
-      settings =
-        let
-          generic_setting = {
-            import = [
-              "${alacritty-themes}/themes/gruvbox_dark.toml"
-            ];
-
-            live_config_reload = false;
-            ipc_socket = false;
-            scrolling = {
-              history = 0; # history is already provided by tmux
-            };
-
-            font = {
-              normal = {
-                family = "JetBrainsMono Nerd Font";
-                style = "Medium";
-              };
-              size = 12;
-            };
-
-            # override gruvbox_dark with the same background as gruvbox.nvim
-            # see: https://github.com/ellisonleao/gruvbox.nvim/blob/6e4027ae957cddf7b193adfaec4a8f9e03b4555f/lua/gruvbox.lua#L74C18-L74C24
-            colors.primary.background = "#1d2021";
-          };
-
-          macos_specific = {
-            window = {
-              decorations = "buttonless";
-              option_as_alt = "OnlyLeft";
-
-              padding = {
-                x = 10;
-                y = 6;
-              };
-            };
-          };
-        in
-        pkgs.lib.mkMerge (
-          [ generic_setting ]
-          ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-            macos_specific
-          ]
-        );
-    };
-
-    waybar = {
-      enable = pkgs.stdenv.isLinux;
-      systemd.enable = true;
-      style = ./config/waybar/style.css;
-      settings = {
-        mainBar = {
-          layer = "top";
-          position = "top";
-          height = 15;
-          modules-left = [ "hyprland/workspaces" ];
-          modules-center = [ "hyprland/window" ];
-          modules-right = [
-            "pulseaudio"
-            "backlight"
-            "battery"
-            "clock"
-            "tray"
-          ];
-
-          pulseaudio = {
-            format = "{icon} {volume}%";
-            format-muted = "";
-            format-icons = {
-              default = [ "" "" " " ];
-            };
-            on-click = "pavucontrol";
-          };
-
-          backlight = {
-            device = "intel_backlight";
-            format = "{icon}";
-            format-icons = [ "" "" "" "" "" "" "" "" "" ];
-          };
-
-          battery = {
-            states = {
-              warning = 30;
-              critical = 1;
-            };
-            format = "{icon}";
-            format-charging = "󰂄";
-            format-plugged = "󱟢";
-            format-alt = "{icon}";
-            format-icons = [ "󰂃" "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
-          };
-        };
-      };
-    };
+    # waybar = {
+    #   enable = pkgs.stdenv.isLinux;
+    #   systemd.enable = true;
+    #   style = ./config/waybar/style.css;
+    #   settings = {
+    #     mainBar = {
+    #       layer = "top";
+    #       position = "top";
+    #       height = 15;
+    #       modules-left = [ "hyprland/workspaces" ];
+    #       modules-center = [ "hyprland/window" ];
+    #       modules-right = [
+    #         "pulseaudio"
+    #         "backlight"
+    #         "battery"
+    #         "clock"
+    #         "tray"
+    #       ];
+    #
+    #       pulseaudio = {
+    #         format = "{icon} {volume}%";
+    #         format-muted = "";
+    #         format-icons = {
+    #           default = [ "" "" " " ];
+    #         };
+    #         on-click = "pavucontrol";
+    #       };
+    #
+    #       backlight = {
+    #         device = "intel_backlight";
+    #         format = "{icon}";
+    #         format-icons = [ "" "" "" "" "" "" "" "" "" ];
+    #       };
+    #
+    #       battery = {
+    #         states = {
+    #           warning = 30;
+    #           critical = 1;
+    #         };
+    #         format = "{icon}";
+    #         format-charging = "󰂄";
+    #         format-plugged = "󱟢";
+    #         format-alt = "{icon}";
+    #         format-icons = [ "󰂃" "󰂎" "󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹" ];
+    #       };
+    #     };
+    #   };
+    # };
 
     zoxide.enable = true;
 
@@ -477,6 +430,12 @@ in
         "pdsa.xen" = {
           hostname = "200.18.45.229";
           user = "admin";
+        };
+
+        "zeit-ryzen" = {
+          hostname = "10.0.0.44";
+          user = "debling";
+          port = 443;
         };
       };
     };

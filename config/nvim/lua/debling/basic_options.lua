@@ -65,4 +65,4 @@ local leaderKey = " "
 vim.g.mapleader = leaderKey
 vim.g.maplocalleader = leaderKey
 
-vim.o.conceallevel = 2
+vim.o.conceallevel = 0

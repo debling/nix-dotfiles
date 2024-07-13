@@ -1,15 +1,11 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.myModules.editors.neovim;
+  cfg = config.debling.editors.neovim;
 in
 {
-  options.myModules.editors.neovim = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable neovim module";
-    };
+  options.debling.editors.neovim = {
+    enable = lib.mkEnableOption "Enable neovim and its configuration";
   };
 
   config =
@@ -53,6 +49,7 @@ in
         };
 
         packages = with pkgs; [
+          sonarlint-ls
           checkmake
           clang-tools_18 # C/C++
           bear # wrap make to generate compile_commands.json
@@ -160,6 +157,19 @@ in
               hash = "sha256-1NGM7bmCQj5ssOgmPGUWtWDtmcrtl59yAAvTEE+P7VE=";
             };
           };
+
+          sonarlint-nvim = pkgs.vimUtils.buildVimPlugin {
+            name = "sonarlint-nvim";
+
+            buildInputs = [ pkgs.sonarlint-ls ];
+
+            src = pkgs.fetchFromGitLab {
+              owner = "schrieveslaach";
+              repo = "sonarlint.nvim";
+              rev = "3ccb3e5452b0c075e4fb7dbee436d4e65d34d294";
+              hash = "sha256-/hESKG0K/U4iGFe5b1byWcDuFsju8g7fUBL5AYFhavo=";
+            };
+          };
         in
         {
           enable = true;
@@ -167,7 +177,8 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
-            hotpot-nvim
+            sonarlint-nvim
+            bigfile-nvim
 
             freeze-code-nvim
 
