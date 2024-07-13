@@ -140,11 +140,12 @@
       nixosConfigurations.x220 = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         modules = [
-
           ./hosts/x220/hardware-configuration.nix
 
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
+
+          ./modules/desktop/dwl
 
           nixos-hardware.nixosModules.lenovo-thinkpad-x220
 

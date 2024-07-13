@@ -5,7 +5,6 @@
 { config, pkgs, ... }:
 
 {
-
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -14,7 +13,7 @@
 
   networking.hostName = "x220"; # Define your hostname.
   # Pick only one of the below networking options.
-  networking.wireless.enable = false;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
@@ -49,44 +48,25 @@
         workstation = true;
       };
     };
-    greetd = {
-      enable = true;
-      settings =
-        let
-          tuigreet = "${pkgs.greetd.tuigreet}/bin/tuigreet";
-          session = "${pkgs.hyprland}/bin/Hyprland";
-          username = "debling";
-        in
-        {
-          initial_session = {
-            command = "${session}";
-            user = "${username}";
-          };
-          default_session = {
-            command = "${tuigreet} --greeting 'Welcome to NixOS!' --asterisks --remember --remember-user-session --time --cmd ${session}";
-            user = "greeter";
-          };
-        };
-    };
 
-       xserver = {
-         enable = true;
-         displayManager.gdm.enable = true;
-         desktopManager.gnome.enable = true;
-         displayManager.autoLogin.user = "debling";
-         # desktopManager = {
-         #   xterm.enable = false;
-         #   xfce = {
-         #     enable = true;
-         #     noDesktop = true;
-         #     enableXfwm = false;
-         #   };
-         # };
-         # Configure keymap in X11
-         layout = "br";
-         xkbVariant = "thinkpad";
-         # xkbOptions = "caps:escape"; # map caps to escape.
-       };
+    xserver = {
+      enable = true;
+      # displayManager.gdm.enable = true;
+      # desktopManager.gnome.enable = true;
+      displayManager.autoLogin.user = "debling";
+      # desktopManager = {
+      #   xterm.enable = false;
+      #   xfce = {
+      #     enable = true;
+      #     noDesktop = true;
+      #     enableXfwm = false;
+      #   };
+      # };
+      # Configure keymap in X11
+      layout = "br";
+      xkbVariant = "thinkpad";
+      xkbOptions = "caps:escape"; # map caps to escape.
+    };
 
     tlp.enable = true;
 
@@ -101,7 +81,9 @@
     enable = true;
     mediaKeys.enable = true;
   };
+
   security.rtkit.enable = true;
+
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -141,10 +123,6 @@
 
 
     sessionVariables = {
-      WLR_NO_HARDWARE_CURSORS = "1";
-      # Hint electron apps to use wayland
-      NIXOS_OZONE_WL = "1";
-
       _JAVA_AWT_WM_NONREPARENTING = "1";
     };
   };
@@ -153,9 +131,6 @@
   # started in user sessions.
   # programs.mtr.enable = true;
   programs = {
-    thunar.enable = true;
-    steam.enable = true;
-
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
@@ -163,12 +138,6 @@
     zsh.enable = true;
     neovim.enable = true;
 
-    hyprland.enable = true;
-  };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   # List services that you want to enable:
@@ -177,7 +146,7 @@
   services.openssh.enable = true;
 
   virtualisation = {
-    docker.enable = true;
+    podman.enable = true;
     # virtualbox.host.enable = true;
     libvirtd.enable = true;
     # waydroid.enable = true;
