@@ -53,16 +53,16 @@ local function jdtls_on_attach(_, bufnr)
   utils.nmap('<leader>tc', jdtls.test_class, opts)
   utils.nmap('<leader>tm', jdtls.test_nearest_method, opts)
 
-  pcall(vim.lsp.codelens.refresh)
+  -- pcall(vim.lsp.codelens.refresh)
 
-  vim.api.nvim_create_autocmd('BufWritePost', {
-    buffer = bufnr,
-    group = java_cmds_au,
-    desc = 'refresh codelens',
-    callback = function()
-      pcall(vim.lsp.codelens.refresh)
-    end,
-  })
+  -- vim.api.nvim_create_autocmd('BufWritePost', {
+  --   buffer = bufnr,
+  --   group = java_cmds_au,
+  --   desc = 'refresh codelens',
+  --   callback = function()
+  --     pcall(vim.lsp.codelens.refresh)
+  --   end,
+  -- })
 end
 
 ---@param err table | nil
@@ -97,12 +97,12 @@ local config = {
       configuration = {
         runtimes = runtimes,
       },
-      implementationsCodeLens = {
-        enabled = true,
-      },
-      referencesCodeLens = {
-        enabled = true,
-      },
+      -- implementationsCodeLens = {
+      --   enabled = true,
+      -- },
+      -- referencesCodeLens = {
+      --   enabled = true,
+      -- },
       references = {
         includeDecompiledSources = true,
       },

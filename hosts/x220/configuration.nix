@@ -68,23 +68,25 @@
           };
         };
     };
-    #    xserver = {
-    #      enable = true;
-    #      windowManager.i3.enable = true;
-    #      displayManager.autoLogin.user = "debling";
-    #      desktopManager = {
-    #        xterm.enable = false;
-    #        xfce = {
-    #          enable = true;
-    #          noDesktop = true;
-    #          enableXfwm = false;
-    #        };
-    #      };
-    #      # Configure keymap in X11
-    #      layout = "br";
-    #      xkbVariant = "thinkpad";
-    #      xkbOptions = "caps:escape"; # map caps to escape.
-    #    };
+
+       xserver = {
+         enable = true;
+         displayManager.gdm.enable = true;
+         desktopManager.gnome.enable = true;
+         displayManager.autoLogin.user = "debling";
+         # desktopManager = {
+         #   xterm.enable = false;
+         #   xfce = {
+         #     enable = true;
+         #     noDesktop = true;
+         #     enableXfwm = false;
+         #   };
+         # };
+         # Configure keymap in X11
+         layout = "br";
+         xkbVariant = "thinkpad";
+         # xkbOptions = "caps:escape"; # map caps to escape.
+       };
 
     tlp.enable = true;
 
@@ -178,7 +180,7 @@
     docker.enable = true;
     # virtualbox.host.enable = true;
     libvirtd.enable = true;
-    waydroid.enable = true;
+    # waydroid.enable = true;
   };
 
   fonts = {

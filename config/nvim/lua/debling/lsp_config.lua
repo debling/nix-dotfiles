@@ -10,7 +10,7 @@ utils.nmap('[d', vim.diagnostic.goto_prev)
 utils.nmap(']d', vim.diagnostic.goto_next)
 utils.nmap('<space>q', vim.diagnostic.setloclist)
 
-vim.lsp.set_log_level('WARN')
+vim.lsp.set_log_level('DEBUG')
 
 local simple_servers = {
   'angularls',
@@ -109,7 +109,7 @@ lsp.ltex.setup({
     -- your other on_attach functions.
     require('ltex_extra').setup({
       load_langs = { 'en-US', 'pt-BR' }, -- table <string> : languages for witch dictionaries will be loaded
-      init_check = true, -- boolean : whether to load dictionaries on startup
+      init_check = true,                 -- boolean : whether to load dictionaries on startup
     })
   end,
   settings = {
@@ -140,12 +140,26 @@ null_ls.setup({
     -- -- Terraform
     null_ls.builtins.diagnostics.tfsec,
 
-
-
     null_ls.builtins.diagnostics.clj_kondo,
 
     null_ls.builtins.formatting.clang_format,
 
-  null_ls.builtins.diagnostics.checkmake
+    null_ls.builtins.diagnostics.checkmake,
+  },
+})
+
+require('sonarlint').setup({
+
+  server = {
+    cmd = {
+      'sonarlint-ls',
+    },
+  },
+
+  filetypes = {
+    -- Tested and working
+    'python',
+    'cpp',
+    'java',
   },
 })
