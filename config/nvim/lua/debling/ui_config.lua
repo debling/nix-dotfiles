@@ -1,32 +1,10 @@
 vim.opt.termguicolors = true
 vim.o.background = 'dark' -- or "light" for light mode
 
-require("gruvbox").setup({
-  contrast = "hard", -- can be "hard", "soft" or empty string
-})
+vim.cmd.hi("Normal ctermbg=none guibg=none")
 
-vim.cmd('colorscheme gruvbox')
-
--- require('catppuccin').setup({
---   flavour = 'mocha', -- latte, frappe, macchiato, mocha
---   transparent_background = false, -- disables setting the background color.
---   integrations = {
---     fidget = true,
---     -- harpoon = true,
---   },
--- })
---
--- vim.cmd('colorscheme catppuccin')
-
-require('lualine').setup({
-  options = {
-    theme = 'gruvbox',
-    -- theme = 'catppuccin',
-    component_separators = '|',
-    section_separators = ' ',
-    -- globalstatus = true,
-  },
-})
+-- change treesitter context to a bridger color, default is NvimDarkGrey1
+vim.cmd.hi("NormalFloat guibg=NvimDarkGrey3")
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 require('ibl').setup()
@@ -39,3 +17,7 @@ require('fidget').setup({
     },
   },
 })
+
+vim.diagnostic.config({ float = { source = true } })
+
+require('todo-comments').setup()
