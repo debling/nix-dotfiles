@@ -49,19 +49,15 @@ cmp.setup({
 
     sources = cmp.config.sources({
         { name = 'nvim_lua' },
-        { name = 'copilot' },
         { name = 'snippets' },
         { name = 'nvim_lsp' },
         { name = 'path' },
-    }, {
-        { name = 'buffer', keyword_length = 5 },
     }),
 
     formatting = {
         format = lspkind.cmp_format({
             mode = 'symbol',
             maxwidth = 50,
-            symbol_map = { Copilot = '' },
         }),
     },
 
@@ -91,35 +87,3 @@ cmp.setup.filetype('gitcommit', {
         { name = 'buffer' },
     }),
 })
-
--- cmp.setup.cmdline({ '/', '?' }, {
---     mapping = cmp.mapping.preset.cmdline(),
---     view = {
---         entries = { name = 'wildmenu', separator = ' | ' },
---     },
---     sources = {
---         { name = 'buffer' },
---     },
--- })
-
--- cmp.setup.cmdline(':', {
---     mapping = cmp.mapping.preset.cmdline(),
---     view = {
---         entries = { name = 'wildmenu', separator = ' | ' },
---     },
---     sources = cmp.config.sources({
---         { name = 'path' },
---     }, {
---         { name = 'cmdline' },
---     }),
---     matching = { disallow_symbol_nonprefix_matching = true },
--- })
-
-vim.defer_fn(function()
-    require('copilot').setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-    })
-
-    require('copilot_cmp').setup()
-end, 0)

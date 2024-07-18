@@ -225,6 +225,10 @@ in
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
+
+      # Neeed on darwin bcs sops looks by default on
+      # $HOME/Library/Application Support/sops/age/keys.txt
+      SOPS_AGE_KEY_FILE = config.sops.age.keyFile;
     };
 
     file = {
