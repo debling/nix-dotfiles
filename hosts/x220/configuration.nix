@@ -71,7 +71,7 @@
       xkbOptions = "caps:escape"; # map caps to escape.
     };
 
-    tlp.enable = true;
+    # tlp.enable = true;
 
     blueman.enable = true;
   };
@@ -80,18 +80,18 @@
   # services.printing.enable = true;
 
   # Enable sound.
-  sound = {
-    enable = true;
-    mediaKeys.enable = true;
-  };
+  # sound = {
+  #   enable = true;
+  #   mediaKeys.enable = true;
+  # };
 
   security.rtkit.enable = true;
 
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-  };
+  # services.pipewire = {
+  #   enable = true;
+  #   pulse.enable = true;
+  #   alsa.enable = true;
+  # };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {

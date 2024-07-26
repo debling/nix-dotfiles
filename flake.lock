@@ -46,11 +46,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1722609272,
         "narHash": "sha256-Kkb+ULEHVmk07AX+OhwyofFxBDpw+2WvsXguUS2m6e4=",
         "owner": "LnL7",
         "repo": "nix-darwin",
         "rev": "f7142b8024d6b70c66fd646e1d099d3aa5bfec49",
+=======
+        "lastModified": 1722082646,
+        "narHash": "sha256-od8dBWVP/ngg0cuoyEl/w9D+TCNDj6Kh4tr151Aax7w=",
+        "owner": "LnL7",
+        "repo": "nix-darwin",
+        "rev": "0413754b3cdb879ba14f6e96915e5fdf06c6aab6",
+>>>>>>> 76293be (feat: dwlb status bar)
         "type": "github"
       },
       "original": {
@@ -215,11 +223,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1722630065,
         "narHash": "sha256-QfM/9BMRkCmgWzrPDK+KbgJOUlSJnfX4OvsUupEUZvA=",
         "owner": "nix-community",
         "repo": "home-manager",
         "rev": "afc892db74d65042031a093adb6010c4c3378422",
+=======
+        "lastModified": 1722321190,
+        "narHash": "sha256-WeVWVRqkgrbLzmk6FfJoloJ7Xe7HWD27Pv950IUG2kI=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "4fcd54df7cbb1d79cbe81209909ee8514d6b17a4",
+>>>>>>> 76293be (feat: dwlb status bar)
         "type": "github"
       },
       "original": {
@@ -247,11 +263,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1722740924,
         "narHash": "sha256-UQPgA5d8azLZuDHZMPmvDszhuKF1Ek89SrTRtqsQ4Ss=",
         "owner": "Mic92",
         "repo": "nix-index-database",
         "rev": "97ca0a0fca0391de835f57e44f369a283e37890f",
+=======
+        "lastModified": 1722136042,
+        "narHash": "sha256-x3FmT4QSyK28itMiR5zfYhUrG5nY+2dv+AIcKfmSp5A=",
+        "owner": "Mic92",
+        "repo": "nix-index-database",
+        "rev": "c0ca47e8523b578464014961059999d8eddd4aae",
+>>>>>>> 76293be (feat: dwlb status bar)
         "type": "github"
       },
       "original": {
@@ -277,11 +301,19 @@
     },
     "nixpkgs": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1722640603,
         "narHash": "sha256-TcXjLVNd3VeH1qKPH335Tc4RbFDbZQX+d7rqnDUoRaY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "81610abc161d4021b29199aa464d6a1a521e0cc9",
+=======
+        "lastModified": 1722141560,
+        "narHash": "sha256-Ul3rIdesWaiW56PS/Ak3UlJdkwBrD4UcagCmXZR9Z7Y=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "038fb464fcfa79b4f08131b07f2d8c9a6bcc4160",
+>>>>>>> 76293be (feat: dwlb status bar)
         "type": "github"
       },
       "original": {
