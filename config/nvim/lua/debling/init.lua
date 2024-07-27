@@ -36,8 +36,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-require('todo-comments').setup()
-
 -- TODO: setup obsidian on linux
 if vim.loop.os_uname().sysname == 'Darwin' then
   require('obsidian').setup({
@@ -77,4 +75,12 @@ require('freeze-code').setup({
 })
 
 
-vim.diagnostic.config({ float = { source = true } })
+require('quarto').setup({
+  codeRunner = {
+    enabled = false,
+    default_method = 'slime', -- 'molten' or 'slime'
+  },
+})
+
+
+require('ts_context_commentstring').setup()
