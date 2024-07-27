@@ -24,10 +24,6 @@ in
     defaultSopsFormat = "yaml";
 
     age.keyFile = "${config.home.homeDirectory}/.age-key";
-
-    secrets."openai_api/nvim" = {
-      path = "${config.home.homeDirectory}/secrets/openai/nvim";
-    };
   };
 
   services =
@@ -150,8 +146,7 @@ in
           # torch
           scikit-learn
         ]))
-
-        # poetry
+        poetry
 
         ### CLI utils
         pinentry-tty
@@ -376,7 +371,7 @@ in
     bat = {
       enable = true;
       config = {
-        theme = "gruvbox-dark";
+        theme = "Solarized (light)";
       };
     };
 
@@ -542,12 +537,13 @@ in
 
         set -g status-style "none,bg=default"
         set -g status-justify centre
-        set -g status-bg colour236
+        set -g status-bg colour10
+        set -g status-fg colour15
         set -g status-left-length 25
         set -g status-right '%d/%m %H:%M'
 
-        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour9]#F'
-        setw -g window-status-format '#[fg=colour250]#I:#W#F'
+        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour5]#F'
+        setw -g window-status-format '#[fg=colour7]#I:#W#F'
 
         # Open new splits in the same directory as the current pane
         bind  %  split-window -h -c "#{pane_current_path}"
@@ -575,7 +571,7 @@ in
       delta = {
         enable = true;
         options = {
-          syntax-theme = "gruvbox-dark";
+          syntax-theme = "Solarized (light)";
           true-color = "always";
         };
       };

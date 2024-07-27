@@ -29,7 +29,10 @@ in
             python311Packages.black
             python311Packages.isort
           ];
-          plugins = [ ];
+          plugins = with pkgs.vimPlugins; [
+            otter-nvim ## quarto dependency
+            quarto-nvim
+          ];
         };
 
         sql = {
@@ -85,19 +88,15 @@ in
           nodePackages.eslint_d
           nodePackages.prettier
 
-
           nodePackages."@tailwindcss/language-server"
 
           hurl
-
-
-          # sonar-scanner-cli
 
           ### Dockerfile
           hadolint
 
           # ### R
-          # rPackages.languageserver
+          rPackages.languageserver
 
           ### Web
           emmet-ls
@@ -170,6 +169,17 @@ in
               hash = "sha256-/hESKG0K/U4iGFe5b1byWcDuFsju8g7fUBL5AYFhavo=";
             };
           };
+
+          solarized-nvim = pkgs.vimUtils.buildVimPlugin {
+            name = "solarized-nvim";
+
+            src = pkgs.fetchFromGitHub {
+              owner = "maxmx03";
+              repo = "solarized.nvim";
+              rev = "6875d609077411c88d293cb0520ca4e08b829ded";
+              hash = "sha256-Jg9HC3rvxLv4dI/r84TYZpaabkEYh1qHTtusMVaoj+Q=";
+            };
+          };
         in
         {
           enable = true;
@@ -177,6 +187,7 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
+            solarized-nvim
             sonarlint-nvim
             bigfile-nvim
 
@@ -186,8 +197,6 @@ in
             hurl-nvim
 
             rainbow-delimiters-nvim
-
-            gruvbox-nvim
 
             obsidian-nvim
 
@@ -233,9 +242,6 @@ in
             cmp-path
 
             lspkind-nvim
-
-            copilot-lua
-            copilot-cmp
 
             # Language specific
             plantuml-syntax

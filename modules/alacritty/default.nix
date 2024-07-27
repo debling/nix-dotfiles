@@ -14,7 +14,7 @@ in
       let
         generic_setting = {
           import = [
-            "${alacritty-themes}/themes/gruvbox_dark.toml"
+            "${alacritty-themes}/themes/solarized_light.toml"
           ];
 
           live_config_reload = true;
@@ -31,9 +31,7 @@ in
             size = 14;
           };
 
-          # override gruvbox_dark with the same background as gruvbox.nvim
-          # see: https://github.com/ellisonleao/gruvbox.nvim/blob/6e4027ae957cddf7b193adfaec4a8f9e03b4555f/lua/gruvbox.lua#L74C18-L74C24
-          colors.primary.background = "#1d2021";
+          colors.primary.foreground = "#556b72";
         };
 
         macos_specific = {

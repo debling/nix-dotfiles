@@ -34,8 +34,8 @@
 
   # Fonts
   fonts.packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-    ];
+    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+  ];
 
   environment.systemPackages = with pkgs; [
     pinentry_mac
@@ -48,6 +48,16 @@
 
   services = {
     nix-daemon.enable = true;
+
+    karabiner-elements.enable = true;
+
+    jankyborders = {
+      enable = true;
+      active_color = "0xFF586e75";
+      inactive_color = "0xFFfdf6e3";
+      # style = "square";
+      hidpi = true;
+    };
 
     yabai = {
       enable = true;
@@ -69,7 +79,7 @@
         bottom_padding = 6;
         left_padding = 6;
         right_padding = 6;
-        window_gap = 6;
+        window_gap = 8;
 
         window_opacity = "on";
         active_window_opacity = "1.0";
