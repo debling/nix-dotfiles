@@ -15,6 +15,15 @@ in
     android-nixpkgs.hmModule
   ];
 
+  dconf.settings = {
+    "org/gnome/desktop/background" = {
+      picture-uri-dark = "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
+    };
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
   debling.editors.neovim.enable = true;
 
   debling.alacritty.enable = true;

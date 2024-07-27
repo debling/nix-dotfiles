@@ -49,6 +49,8 @@
       };
     };
 
+    displayManager.autoLogin.user = "debling";
+
     xserver = {
       enable = true;
       displayManager.gdm.enable = true;
@@ -65,10 +67,12 @@
       #   };
       # };
       # Configure keymap in X11
-      layout = "br";
-      xkbVariant = "thinkpad";
       # xkbOptions = "caps:escape"; # map caps to escape.
-      xkbOptions = "caps:escape"; # map caps to escape.
+      xkb = {
+        layout = "br";
+        variant = "thinkpad";
+        options = "caps:escape"; # map caps to escape.
+      };
     };
 
     # tlp.enable = true;
