@@ -14,7 +14,7 @@
 
   networking.hostName = "x220"; # Define your hostname.
   # Pick only one of the below networking options.
-  networking.wireless.enable = false;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
@@ -69,24 +69,24 @@
         };
     };
 
-       xserver = {
-         enable = true;
-         displayManager.gdm.enable = true;
-         desktopManager.gnome.enable = true;
-         displayManager.autoLogin.user = "debling";
-         # desktopManager = {
-         #   xterm.enable = false;
-         #   xfce = {
-         #     enable = true;
-         #     noDesktop = true;
-         #     enableXfwm = false;
-         #   };
-         # };
-         # Configure keymap in X11
-         layout = "br";
-         xkbVariant = "thinkpad";
-         # xkbOptions = "caps:escape"; # map caps to escape.
-       };
+    xserver = {
+      enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
+      displayManager.autoLogin.user = "debling";
+      # desktopManager = {
+      #   xterm.enable = false;
+      #   xfce = {
+      #     enable = true;
+      #     noDesktop = true;
+      #     enableXfwm = false;
+      #   };
+      # };
+      # Configure keymap in X11
+      layout = "br";
+      xkbVariant = "thinkpad";
+      # xkbOptions = "caps:escape"; # map caps to escape.
+    };
 
     tlp.enable = true;
 

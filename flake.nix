@@ -33,6 +33,19 @@
       url = "github:alacritty/alacritty-theme";
       flake = false;
     };
+
+    zig-overlay = {
+      url = "github:mitchellh/zig-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    zls = {
+      url = "github:zigtools/zls";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        zig-overlay.follows = "zig-overlay";
+      };
+    };
   };
 
   outputs =
@@ -41,10 +54,6 @@
     , nixpkgs
     , home-manager
     , flake-utils
-    , android-nixpkgs
-    , nix-index-database
-    , nixos-hardware
-    , sops-nix
     , ...
     }@inputs:
     let
@@ -54,9 +63,11 @@
         overlays = [
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
+            zig = inputs.zig-overlay.packages.${prev.system}.master;
+            zls = inputs.zls.packages.${prev.system}.default;
           })
 
-          android-nixpkgs.overlays.default
+          inputs.android-nixpkgs.overlays.default
         ];
       };
 
@@ -109,8 +120,8 @@
                 cores = 2;
                 graphics = true;
               };
-               
-            environment.sessionVariables = {
+
+              environment.sessionVariables = {
                 # Nedded to make wlroots work with no hw accell
                 WLR_RENDERER_ALLOW_SOFTWARE = 1;
               };
@@ -120,12 +131,12 @@
           # `home-manager` module
           home-manager.nixosModules.home-manager
 
-          ({lib, ...}: {
+          ({ lib, ... }: {
             nixpkgs = nixpkgsConfig;
             # `home-manager` config
             home-manager = homeManagerConfiguration;
-            networking.hostName = lib.mkForce "removable-nixos"; 
-            
+            networking.hostName = lib.mkForce "removable-nixos";
+
             # systemd.services.sshd.wantedBy = lib.mkForce ["multi-user.target"];
 
             # Much faster than xz
@@ -145,7 +156,7 @@
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
 
-          nixos-hardware.nixosModules.lenovo-thinkpad-x220
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x220
 
           # `home-manager` module
           home-manager.nixosModules.home-manager

@@ -11,6 +11,11 @@ in
   config =
     let
       setups = {
+        rust = {
+          systemPkgs = with pkgs; [ rust-analyzer cargo rustc clippy ];
+          plugins = [ ];
+        };
+
         clojure = {
           systemPkgs = with pkgs; [ clojure-lsp clj-kondo ];
           plugins = with pkgs.vimPlugins; [ conjure cmp-conjure ];
@@ -52,6 +57,8 @@ in
         };
 
         packages = with pkgs; [
+          zig
+          zls
           sonarlint-ls
           checkmake
           clang-tools_18 # C/C++
@@ -90,7 +97,7 @@ in
 
           nodePackages."@tailwindcss/language-server"
 
-          hurl
+          # hurl
 
           ### Dockerfile
           hadolint

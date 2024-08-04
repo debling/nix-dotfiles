@@ -34,7 +34,11 @@ local simple_servers = {
   'r_language_server',
 
   'clojure_lsp',
+  'rust_analyzer',
+  'zls',
 }
+
+vim.g.zig_fmt_autosave = 0
 
 for _, server in pairs(simple_servers) do
   lsp[server].setup({

@@ -8,13 +8,13 @@ in
     enable = lib.mkEnableOption "Enable alacritty program with custom settings";
   };
 
-    config.programs.alacritty = lib.mkIf cfg.enable {
+  config.programs.alacritty = lib.mkIf cfg.enable {
     enable = true;
     settings =
       let
         generic_setting = {
           import = [
-            "${alacritty-themes}/themes/solarized_light.toml"
+            # "${alacritty-themes}/themes/solarized_light.toml"
           ];
 
           live_config_reload = true;
@@ -31,7 +31,7 @@ in
             size = 14;
           };
 
-          colors.primary.foreground = "#556b72";
+          # colors.primary.foreground = "#556b72";
         };
 
         macos_specific = {
