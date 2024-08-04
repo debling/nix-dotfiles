@@ -59,6 +59,10 @@
       hidpi = true;
     };
 
+    # spacebar = {
+    #   enable = true;
+    # };
+
     yabai = {
       enable = true;
       enableScriptingAddition = true;

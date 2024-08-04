@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, pkgs, nix-index-database, android-nixpkgs, alacritty-themes, ... }:
+{ config, pkgs, nix-index-database, android-nixpkgs, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -115,6 +115,7 @@ in
         ];
       in
       [
+        babashka
         gh
 
         gnumake
@@ -339,7 +340,8 @@ in
         "extensions.experimental.affinity" = {
           "vscodevim.vim" = 1;
         };
-
+        "zig.path" = "zig";
+        "zig.zls.path" = "zig";
       };
     };
 
@@ -348,7 +350,33 @@ in
     taskwarrior = {
       enable = true;
       colorTheme = "dark-16";
-      package = pkgs.taskwarrior3;
+        # HACK: fix until https://github.com/NixOS/nixpkgs/pull/331377
+      package = 
+        (pkgs.taskwarrior3.overrideAttrs (final: prev:
+          let
+            fetch_src = pkgs.fetchFromGitHub {
+              owner = "GothenburgBitFactory";
+              repo = "taskwarrior";
+              rev = "v3.1.0";
+              hash = "sha256-iKpOExj1xM9rU/rIcOLLKMrZrAfz7y9X2kt2CjfMOOQ=";
+              fetchSubmodules = true;
+            };
+
+          in
+          {
+            version = "3.1.0";
+            preCheck = "";
+            checkTarget = "build_tests";
+
+            src = fetch_src;
+            cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
+              name = "${prev.pname}-3.1.0-cargo-deps";
+              src = fetch_src;
+              sourceRoot = fetch_src.name;
+              hash = "sha256-L+hYYKXSOG4XYdexLMG3wdA7st+A9Wk9muzipSNjxrA=";
+            };
+          })
+        );
     };
 
     # Used to have custom environment per project.
@@ -371,7 +399,7 @@ in
     bat = {
       enable = true;
       config = {
-        theme = "Solarized (light)";
+        theme = "base16-256";
       };
     };
 
@@ -537,7 +565,7 @@ in
 
         set -g status-style "none,bg=default"
         set -g status-justify centre
-        set -g status-bg colour10
+        set -g status-bg colour8
         set -g status-fg colour15
         set -g status-left-length 25
         set -g status-right '%d/%m %H:%M'
@@ -571,7 +599,7 @@ in
       delta = {
         enable = true;
         options = {
-          syntax-theme = "Solarized (light)";
+          syntax-theme = "base16-256";
           true-color = "always";
         };
       };
