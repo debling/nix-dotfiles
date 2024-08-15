@@ -53,11 +53,11 @@
 
     xserver = {
       enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
       # displayManager.gdm.enable = true;
       # desktopManager.gnome.enable = true;
-      displayManager.autoLogin.user = "debling";
+      # displayManager.gdm.enable = true;
+      # desktopManager.gnome.enable = true;
+      # displayManager.autoLogin.user = "debling";
       # desktopManager = {
       #   xterm.enable = false;
       #   xfce = {
@@ -75,7 +75,7 @@
       };
     };
 
-    # tlp.enable = true;
+    tlp.enable = true;
 
     blueman.enable = true;
   };

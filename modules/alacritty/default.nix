@@ -17,7 +17,7 @@ in
             # "${alacritty-themes}/themes/solarized_light.toml"
           ];
 
-          live_config_reload = true;
+          live_config_reload = false;
           ipc_socket = false;
           scrolling = {
             history = 0; # history is already provided by tmux
