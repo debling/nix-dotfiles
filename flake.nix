@@ -34,9 +34,8 @@
       flake = false;
     };
 
-
-  disko.url = "github:nix-community/disko";
-  disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     zig-overlay = {
       url = "github:mitchellh/zig-overlay";
@@ -49,6 +48,11 @@
         nixpkgs.follows = "nixpkgs";
         zig-overlay.follows = "zig-overlay";
       };
+    };
+
+    kmonad = {
+      url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -69,6 +73,7 @@
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zig = inputs.zig-overlay.packages.${prev.system}.master;
             zls = inputs.zls.packages.${prev.system}.default;
+            kmonad = inputs.kmonad.packages.${prev.system}.default;
           })
 
           inputs.android-nixpkgs.overlays.default

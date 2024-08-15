@@ -124,6 +124,7 @@ in
         ];
       in
       [
+        jetbrains.idea-ultimate
         babashka
         gh
 
@@ -311,33 +312,7 @@ in
     taskwarrior = {
       enable = true;
       colorTheme = "dark-16";
-        # HACK: fix until https://github.com/NixOS/nixpkgs/pull/331377
-      package = 
-        (pkgs.taskwarrior3.overrideAttrs (final: prev:
-          let
-            fetch_src = pkgs.fetchFromGitHub {
-              owner = "GothenburgBitFactory";
-              repo = "taskwarrior";
-              rev = "v3.1.0";
-              hash = "sha256-iKpOExj1xM9rU/rIcOLLKMrZrAfz7y9X2kt2CjfMOOQ=";
-              fetchSubmodules = true;
-            };
-
-          in
-          {
-            version = "3.1.0";
-            preCheck = "";
-            checkTarget = "build_tests";
-
-            src = fetch_src;
-            cargoDeps = pkgs.rustPlatform.fetchCargoTarball {
-              name = "${prev.pname}-3.1.0-cargo-deps";
-              src = fetch_src;
-              sourceRoot = fetch_src.name;
-              hash = "sha256-L+hYYKXSOG4XYdexLMG3wdA7st+A9Wk9muzipSNjxrA=";
-            };
-          })
-        );
+      package = pkgs.taskwarrior3; 
     };
 
     # Used to have custom environment per project.
