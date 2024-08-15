@@ -155,7 +155,7 @@
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
 
-          # ./modules/desktop/dwl
+          ./modules/desktop/dwl
 
           # `home-manager` module
           home-manager.nixosModules.home-manager

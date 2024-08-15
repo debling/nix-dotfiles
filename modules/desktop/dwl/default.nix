@@ -7,14 +7,17 @@ let
     domain = "codeberg.org";
     owner = "dwl";
     repo = "dwl-patches";
-    rev = "5252fe728ed5bc62ba70bd2c9b0d36df074d20e9";
-    hash = "sha256-mD4mc6CzJaN+Z+Kz5WHkRNNh7Q/OSWkt6BOZXlCoGj8=";
+    rev = "3c690cfb8bd744006ab8e49d23c8d4a9408ea66a";
+hash = "sha256-syiHhCedW1Jl42UBdBAdBxmiXwEKYBfqV2JrQLhilNY=";
   };
-  dwl = pkgs.dwl.override {
-    # patches = [
-    #   "${dwl-patches.outPath}/patches/bar/bar.patch"
-    # ];
-    conf = ./config.def.h;
+  dwl-with-patches = pkgs.dwl.overrideAttrs {
+    patches = [
+      # "${dwl-patches.outPath}/patches/unclutter/unclutter.patch"
+    ];
+  };
+
+  dwl = dwl-with-patches.override {
+    configH = ./config.def.h;
   };
 in
 {
@@ -33,7 +36,11 @@ in
     };
 
     environment = {
-      systemPackages = [ dwl dwlb ];
+      systemPackages = [ dwl dwlb 
+        pkgs.slstatus
+        pkgs.brightnessctl
+        pkgs.bemenu
+ ];
       sessionVariables = {
         WLR_NO_HARDWARE_CURSORS = "1";
         # Hint electron apps to use wayland
