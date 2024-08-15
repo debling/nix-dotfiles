@@ -52,7 +52,7 @@
     displayManager.autoLogin.user = "debling";
 
     xserver = {
-      enable = true;
+      # enable = true;
       # displayManager.gdm.enable = true;
       # desktopManager.gnome.enable = true;
       # displayManager.gdm.enable = true;
