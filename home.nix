@@ -163,7 +163,7 @@ in
         pinentry-tty
         # bitwarden-cli
         rbw ## a usable bitwarden cli
-        awscli2
+        # awscli2
         cloc
         coreutils
         entr # Run commands when files change
@@ -201,7 +201,7 @@ in
         ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
         # https://github.com/mic92/nix-update
         nurl # https://github.com/nix-community/nurl
-        nix-init # https://github.com/nix-community/nix-init
+        # nix-init # https://github.com/nix-community/nix-init
         oha # HTTP load generator https://github.com/hatoo/oha
 
         trivy
@@ -523,7 +523,6 @@ in
       settings = {
         git.paging = {
           colorArg = "always";
-          pager = "delta --dark --paging=never";
         };
       };
     };
@@ -532,13 +531,6 @@ in
       enable = true;
       userName = "Denilson dos Santos Ebling";
       userEmail = "d.ebling8@gmail.com";
-      delta = {
-        enable = true;
-        options = {
-          syntax-theme = "base16-256";
-          true-color = "always";
-        };
-      };
       lfs.enable = true;
       signing = {
         key = "CCBC8AA1AF062142";
