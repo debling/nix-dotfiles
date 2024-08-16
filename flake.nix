@@ -69,9 +69,10 @@
       nixpkgsConfig = {
         config = { allowUnfree = true; };
         overlays = [
+          inputs.zig-overlay.overlays.default
+
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
-            zig = inputs.zig-overlay.packages.${prev.system}.master;
             zls = inputs.zls.packages.${prev.system}.default;
             kmonad = inputs.kmonad.packages.${prev.system}.default;
           })
@@ -123,7 +124,6 @@
           ./disko.nix
           # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
-
 
           {
             virtualisation.vmVariant = {

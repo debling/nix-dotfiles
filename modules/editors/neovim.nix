@@ -57,7 +57,7 @@ in
         };
 
         packages = with pkgs; [
-          zig
+          zigpkgs.master
           zls
           sonarlint-ls
           checkmake
