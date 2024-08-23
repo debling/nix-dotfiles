@@ -1,6 +1,4 @@
 # TODO: separate linux and darwin stuff
-# TODO: check programs.lf
-# TODO: setup plantuml
 { config, pkgs, nix-index-database, android-nixpkgs, ... }:
 
 let
@@ -11,6 +9,7 @@ in
   imports = [
     ./modules/editors/neovim.nix
     ./modules/alacritty
+    ./modules/home/version-control.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
@@ -348,9 +347,6 @@ in
       fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
     };
 
-    # GitHub's cli tool
-    # gh.enable = true;
-
     java.enable = true;
 
     # JSON query tool, but its mainly used for pretty-printing
@@ -515,49 +511,6 @@ in
 
         bind-key -r f run-shell "tmux neww tmux-sessionizer"
       '';
-    };
-
-    gh-dash.enable = true;
-    lazygit = {
-      enable = true;
-      settings = {
-        git.paging = {
-          colorArg = "always";
-          pager = "delta --dark --paging=never";
-        };
-      };
-    };
-
-    git = {
-      enable = true;
-      userName = "Denilson dos Santos Ebling";
-      userEmail = "d.ebling8@gmail.com";
-      delta = {
-        enable = true;
-        options = {
-          syntax-theme = "base16-256";
-          true-color = "always";
-        };
-      };
-      lfs.enable = true;
-      signing = {
-        key = "CCBC8AA1AF062142";
-        signByDefault = true;
-      };
-      aliases = {
-        co = "checkout";
-        lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'";
-        st = "status";
-        stall = "stash save --include-untracked";
-        undo = "reset --soft HEAD^";
-      };
-      ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
-      extraConfig = {
-        pull = { rebase = true; };
-        push = { autoSetupRemote = true; };
-        rerere = { enabled = true; };
-        branch = { sort = "-committerdate"; };
-      };
     };
   };
 
