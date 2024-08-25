@@ -153,7 +153,7 @@ in
           ipython
           matplotlib
           seaborn
-          jupyterlab
+          # jupyterlab
           pudb
           # torch
           scikit-learn
