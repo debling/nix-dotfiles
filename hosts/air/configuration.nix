@@ -47,9 +47,15 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   services = {
+
+    # postgresql = {
+    #   enable = true;
+    #   extraPlugins = with 
+    # };
+
     nix-daemon.enable = true;
 
-    karabiner-elements.enable = true;
+    # karabiner-elements.enable = true;
 
     jankyborders = {
       enable = true;

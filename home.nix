@@ -156,6 +156,7 @@ in
           # jupyterlab
           pudb
           # torch
+          boto3
           scikit-learn
         ]))
         poetry
