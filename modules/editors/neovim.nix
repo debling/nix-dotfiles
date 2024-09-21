@@ -64,7 +64,7 @@ in
           clang-tools_18 # C/C++
           bear # wrap make to generate compile_commands.json
 
-          arduino-language-server
+          # arduino-language-server
           arduino-cli
 
           # language servers
@@ -103,7 +103,7 @@ in
           hadolint
 
           # ### R
-          rPackages.languageserver
+          # rPackages.languageserver
 
           ### Web
           emmet-ls
@@ -235,8 +235,6 @@ in
             nvim-dap-ui
 
             vim-table-mode
-
-            editorconfig-nvim
 
             ## Snippets
             nvim-snippets

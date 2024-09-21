@@ -8,7 +8,7 @@ let
     owner = "dwl";
     repo = "dwl-patches";
     rev = "3c690cfb8bd744006ab8e49d23c8d4a9408ea66a";
-hash = "sha256-syiHhCedW1Jl42UBdBAdBxmiXwEKYBfqV2JrQLhilNY=";
+    hash = "sha256-syiHhCedW1Jl42UBdBAdBxmiXwEKYBfqV2JrQLhilNY=";
   };
   dwl-with-patches = pkgs.dwl.overrideAttrs {
     patches = [
@@ -36,11 +36,13 @@ in
     };
 
     environment = {
-      systemPackages = [ dwl dwlb 
+      systemPackages = [
+        dwl
+        dwlb
         pkgs.slstatus
         pkgs.brightnessctl
         pkgs.bemenu
- ];
+      ];
       sessionVariables = {
         WLR_NO_HARDWARE_CURSORS = "1";
         # Hint electron apps to use wayland

@@ -173,7 +173,7 @@ in
         jq
         texlive.combined.scheme-basic
         pandoc
-        python310Packages.editorconfig
+        # python310Packages.editorconfig
         rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
         silver-searcher # A faster and more convenient grep. Executable is called `ag`
         terraform
@@ -191,7 +191,7 @@ in
         fd
 
         wget
-        unrar
+        # unrar
         postgresql_15
 
         renameutils # adds qmv, and qmc utils for bulk move and copy
@@ -314,7 +314,7 @@ in
     taskwarrior = {
       enable = true;
       colorTheme = "dark-16";
-      package = pkgs.taskwarrior3; 
+      package = pkgs.taskwarrior3;
     };
 
     # Used to have custom environment per project.
@@ -323,6 +323,20 @@ in
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+      stdlib = /* sh */ ''
+        # PUT this here
+        layout_poetry() {
+          if [[ ! -f pyproject.toml ]]; then
+            log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
+            exit 2
+          fi
+        
+          local VENV=$(dirname $(poetry run which python))
+          export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
+          export POETRY_ACTIVE=1
+          PATH_add "$VENV"
+        }
+      '';
     };
 
     # A modern replacement for ls.

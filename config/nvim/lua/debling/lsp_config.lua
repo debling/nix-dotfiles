@@ -142,7 +142,7 @@ null_ls.setup({
     null_ls.builtins.completion.spell,
 
     -- -- Terraform
-    null_ls.builtins.diagnostics.tfsec,
+    null_ls.builtins.diagnostics.trivy,
 
     null_ls.builtins.diagnostics.clj_kondo,
 

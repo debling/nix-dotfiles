@@ -26,7 +26,7 @@ stdenv.mkDerivation {
 
   makeFlags = [ "PREFIX=$(out)" ];
 
-  meta =  {
+  meta = {
     homepage = "https://github.com/MadcowOG/dwl-bar";
     description = "Feature-Complete Bar for DWL";
     license = lib.licenses.gpl3;

@@ -47,12 +47,6 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   services = {
-
-    # postgresql = {
-    #   enable = true;
-    #   extraPlugins = with 
-    # };
-
     nix-daemon.enable = true;
 
     # karabiner-elements.enable = true;
@@ -108,6 +102,8 @@
 
   # TODO: Move this config to home-manager
   system = {
+    stateVersion = 5;
+
     keyboard = {
       enableKeyMapping = true;
       remapCapsLockToEscape = true;
