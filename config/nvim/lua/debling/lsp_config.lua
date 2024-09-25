@@ -20,7 +20,7 @@ local simple_servers = {
   'lemminx',
   'texlab',
   'terraformls',
-  'tsserver',
+  'ts_ls',
   'kotlin_language_server',
   'tailwindcss',
 
