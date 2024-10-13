@@ -13,10 +13,6 @@ in
     settings =
       let
         generic_setting = {
-          import = [
-            # "${alacritty-themes}/themes/solarized_light.toml"
-          ];
-
           live_config_reload = false;
           ipc_socket = false;
           scrolling = {

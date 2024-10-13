@@ -10,7 +10,7 @@ in
 {
   imports = [
     ./modules/editors/neovim.nix
-    ./modules/alacritty
+    ./modules/terminals/alacritty.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
