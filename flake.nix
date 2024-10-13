@@ -202,13 +202,17 @@
           # `home-manager` module
           home-manager.darwinModules.home-manager
 
-          {
+          ({pkgs, ... }: {
             networking.hostName = "air-m1";
             nixpkgs = nixpkgsConfig;
-            users.users.${username}.home = "/Users/${username}";
+            users.users.${username} = {
+              description = "Denilson S. Ebling";
+              home = "/Users/${username}";
+              shell = pkgs.zsh;
+            };
             # `home-manager` config
             home-manager = homeManagerConfiguration;
-          }
+          })
         ];
       };
 
