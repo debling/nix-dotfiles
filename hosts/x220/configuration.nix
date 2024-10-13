@@ -30,6 +30,13 @@
     useXkbConfig = true; # use xkbOptions in tty.
   };
 
+  # Allow PMTU / DHCP
+  networking.firewall.allowPing = true;
+
+  # The notion of "online" is a broken concept
+  # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
+  systemd.services.NetworkManager-wait-online.enable = false;
+  systemd.network.wait-online.enable = false;
 
   # Enable the X11 windowing system.
   services = {
@@ -195,4 +202,15 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
+
+  system.activationScripts.diff = {
+  supportsDryActivation = true;
+  text = ''
+    if [[ -e /run/current-system ]]; then
+      echo "--- diff to current-system"
+      ${pkgs.nvd}/bin/nvd --nix-bin-dir=${config.nix.package}/bin diff /run/current-system "$systemConfig"
+      echo "---"
+    fi
+  '';
+  };
 }
