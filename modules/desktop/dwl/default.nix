@@ -42,6 +42,8 @@ in
         pkgs.slstatus
         pkgs.brightnessctl
         pkgs.bemenu
+        pkgs.libnotify
+        pkgs.foot
       ];
       sessionVariables = {
         WLR_NO_HARDWARE_CURSORS = "1";

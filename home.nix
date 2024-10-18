@@ -11,6 +11,7 @@ in
   imports = [
     ./modules/editors/neovim.nix
     ./modules/terminals/alacritty.nix
+    ./modules/terminals/foot.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
