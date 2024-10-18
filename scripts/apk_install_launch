@@ -9,4 +9,4 @@ adb install -r -t "$apk"
 adb shell am start -n "${pkg}/${act}"
 
 app_pid=$(adb shell ps | grep "$pkg"  | tr -s '[:space:]' ' ' | cut -d' ' -f2)
-adb logcat | grep -F "$app_pid"
+adb logcat --pid="$app_pid"
