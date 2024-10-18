@@ -25,8 +25,13 @@
       };
       ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
       extraConfig = {
+        status = {
+          short = true;
+          branch = true;
+        };
         pull = { rebase = true; };
         push = { autoSetupRemote = true; };
+        rebase = { autoStash = true; };
         rerere = { enabled = true; };
         branch = { sort = "-committerdate"; };
       };
@@ -41,7 +46,6 @@
         };
       };
     };
-
 
     gh = {
       enable = true;

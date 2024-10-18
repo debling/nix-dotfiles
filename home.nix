@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, pkgs, nix-index-database, android-nixpkgs, ... }:
+{ config, lib, pkgs, nix-index-database, android-nixpkgs, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -12,6 +12,7 @@ in
     ./modules/editors/neovim.nix
     ./modules/terminals/alacritty.nix
     ./modules/terminals/foot.nix
+    ./modules/home/version-control.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
@@ -98,13 +99,15 @@ in
     path = "${config.home.homeDirectory}/SDKs/android";
 
     packages = sdk: with sdk; [
-      build-tools-34-0-0
+      build-tools-30-0-0
+      build-tools-30-0-3
       cmdline-tools-latest
       emulator
-      platforms-android-34
+      platforms-android-33
       platform-tools
-      sources-android-34
-      # ndk-23-1-7779620
+      sources-android-33
+      ndk-23-1-7779620
+      cmake-3-22-1
     ];
   };
 
@@ -165,7 +168,7 @@ in
         pinentry-tty
         # bitwarden-cli
         rbw ## a usable bitwarden cli
-        # awscli2
+        awscli2
         cloc
         coreutils
         entr # Run commands when files change
@@ -220,7 +223,7 @@ in
     shellAliases = {
       g = "git";
       e = "emacs -nw";
-      v = "vi";
+      v = "nvim";
       ni = "nix profile install";
       ns = "nix-shell --pure";
       nsp = "nix-shell -p";
@@ -261,6 +264,7 @@ in
       "SDKs/Java/current".source = pkgs.jdk;
       "SDKs/Java/22".source = pkgs.jdk22;
       "SDKs/Java/11".source = pkgs.jdk11;
+      "SDKs/Java/17".source = pkgs.jdk17;
       "SDKs/Java/8".source = pkgs.jdk8;
       # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };
@@ -275,6 +279,38 @@ in
   };
 
   programs = {
+    fish = {
+      enable = true;
+      # FIXME: This is needed to address bug where the $PATH is re-ordered by
+      # the `path_helper` tool, prioritising Apple’s tools over the ones we’ve
+      # installed with nix.
+      #
+      # This gist explains the issue in more detail: https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
+      # There is also an issue open for nix-darwin: https://github.com/LnL7/nix-darwin/issues/122
+      loginShellInit =
+        let
+          # We should probably use `config.environment.profiles`, as described in
+          # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+          # but this takes into account the new XDG paths used when the nix
+          # configuration has `use-xdg-base-directories` enabled. See:
+          # https://github.com/LnL7/nix-darwin/issues/947 for more information.
+          profiles = [
+            "/etc/profiles/per-user/$USER" # Home manager packages
+            "$HOME/.nix-profile"
+            "(set -q XDG_STATE_HOME; and echo $XDG_STATE_HOME; or echo $HOME/.local/state)/nix/profile"
+            "/run/current-system/sw"
+            "/nix/var/nix/profiles/default"
+          ];
+
+          makeBinSearchPath =
+            lib.concatMapStringsSep " " (path: "${path}/bin");
+        in
+        ''
+          # Fix path that was re-ordered by Apple's path_helper
+          fish_add_path --move --prepend --path ${makeBinSearchPath profiles}
+          set fish_user_paths $fish_user_paths
+        '';
+    };
 
     zoxide.enable = true;
 
@@ -288,6 +324,7 @@ in
       enable = true;
       enableUpdateCheck = false;
       mutableExtensionsDir = true;
+      package = pkgs.vscodium;
       userSettings = {
         "files.autoSave" = "afterDelay";
         "vim.enableNeovim" = true;
@@ -427,6 +464,12 @@ in
       package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
     };
 
+    yazi = {
+      enable = true;
+      enableBashIntegration = true;
+      enableZshIntegration = true;
+    };
+
     zsh = {
       enable = true;
       defaultKeymap = "emacs";
@@ -500,6 +543,8 @@ in
       escapeTime = 0;
       historyLimit = 10000;
       terminal = "alacritty";
+      sensibleOnTop = false;
+      tmuxp.enable = true;
       extraConfig = ''
         # Terminal config for TrueColor support
         # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
@@ -534,39 +579,6 @@ in
     };
 
     gh-dash.enable = true;
-    lazygit = {
-      enable = true;
-      settings = {
-        git.paging = {
-          colorArg = "always";
-        };
-      };
-    };
-
-    git = {
-      enable = true;
-      userName = "Denilson dos Santos Ebling";
-      userEmail = "d.ebling8@gmail.com";
-      lfs.enable = true;
-      signing = {
-        key = "CCBC8AA1AF062142";
-        signByDefault = true;
-      };
-      aliases = {
-        co = "checkout";
-        lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'";
-        st = "status";
-        stall = "stash save --include-untracked";
-        undo = "reset --soft HEAD^";
-      };
-      ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
-      extraConfig = {
-        pull = { rebase = true; };
-        push = { autoSetupRemote = true; };
-        rerere = { enabled = true; };
-        branch = { sort = "-committerdate"; };
-      };
-    };
   };
 
 

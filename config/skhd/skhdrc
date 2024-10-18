@@ -1,5 +1,5 @@
 # meh = shift + alt + ctrl
-meh - return : alacritty
+alt - return : alacritty
 
 # change window focus within space
 alt - j : yabai -m window --focus south

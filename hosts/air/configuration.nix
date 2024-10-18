@@ -30,6 +30,10 @@
       enableGlobalCompInit = false;
       enableFzfGit = true;
     };
+
+    fish = {
+      enable = true;
+    };
   };
 
   # Fonts
@@ -134,6 +138,10 @@
 
   homebrew = {
     enable = true;
+    onActivation = {
+      upgrade = true;
+      cleanup = "zap";
+    };
     casks = [
       "android-studio"
       "anydesk"

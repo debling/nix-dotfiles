@@ -58,7 +58,7 @@ in
 
         packages = with pkgs; [
           zigpkgs.master
-          zls
+          # zls
           sonarlint-ls
           checkmake
           clang-tools_18 # C/C++
@@ -211,7 +211,7 @@ in
 
             vim-multiple-cursors
 
-            nvim-ts-context-commentstring
+            ts-comments-nvim
 
             telescope-nvim
             telescope-fzf-native-nvim

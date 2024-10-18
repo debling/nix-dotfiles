@@ -74,7 +74,6 @@ require('freeze-code').setup({
   dir = '/tmp',
 })
 
-
 require('quarto').setup({
   codeRunner = {
     enabled = false,
@@ -82,5 +81,4 @@ require('quarto').setup({
   },
 })
 
-
-require('ts_context_commentstring').setup()
+require("ts-comments").setup()
