@@ -134,11 +134,11 @@
                 graphics = true;
               };
             };
-               
-              environment.sessionVariables = {
-                # Nedded to make wlroots work with no hw accell
-                WLR_RENDERER_ALLOW_SOFTWARE = 1;
-              };
+
+            environment.sessionVariables = {
+              # Nedded to make wlroots work with no hw accell
+              WLR_RENDERER_ALLOW_SOFTWARE = 1;
+            };
           }
 
           # `home-manager` module
