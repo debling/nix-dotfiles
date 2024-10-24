@@ -88,9 +88,9 @@ in
           kotlin-language-server
 
           ### nix
-          nil # language server
+          nixd # language server
           statix #  static analysis
-          nixpkgs-fmt
+          nixfmt-rfc-style
 
           nodePackages.eslint_d
           nodePackages.prettier

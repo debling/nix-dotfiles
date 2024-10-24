@@ -1,12 +1,12 @@
 local lsp = require('lspconfig')
 local lsp_setup = require('debling.lsp_server_setup')
 
-lsp.nil_ls.setup({
+lsp.nixd.setup({
     on_attach = lsp_setup.on_attach,
     capabilities = lsp_setup.capabilities,
     autostart = false,
     settings = {
-        ['nil'] = {
+        nixd = {
             formatting = {
                 command = { 'nixpkgs-fmt' },
             },
@@ -14,7 +14,7 @@ lsp.nil_ls.setup({
     },
 })
 
-lsp.nil_ls.launch()
+lsp.nixd.launch()
 
 lsp_setup.null_ls_register(function(builtins)
     return {
