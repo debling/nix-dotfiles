@@ -122,8 +122,8 @@
           inputs.disko.nixosModules.disko
 
           ./disko.nix
-          # Main `nix-darwin` config
-          ./hosts/x220/configuration.nix
+          ./hosts/portable/configuration.nix
+          ./modules/desktop/dwl
 
           {
             virtualisation.vmVariant = {
@@ -144,27 +144,11 @@
           # `home-manager` module
           home-manager.nixosModules.home-manager
 
-          ({ lib, ... }: {
+          {
             nixpkgs = nixpkgsConfig;
             # `home-manager` config
             home-manager = homeManagerConfiguration;
-            networking.hostName = lib.mkForce "removable-nixos";
-
-            # systemd.services.sshd.wantedBy = lib.mkForce ["multi-user.target"];
-
-            # Much faster than xz
-            # isoImage.squashfsCompression = lib.mkDefault "zstd";
-
-            boot.loader.grub.enable = true;
-            boot.loader.grub.efiSupport = true;
-            boot.loader.grub.device = "/dev/sdb"; # todo : change me once the system booted
-            boot.loader.grub.efiInstallAsRemovable = true;
-            boot.tmpOnTmpfs = true;
-
-            boot.loader.systemd-boot.enable = false;
-            boot.loader.efi.canTouchEfiVariables = false;
-
-          })
+          }
 
         ];
       };

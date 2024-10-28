@@ -88,18 +88,31 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1728334376,
         "narHash": "sha256-CTKEKPzD/j8FK6H4DO3EjyixZd3HHvgAgfnCwpGFP5c=",
         "owner": "nix-community",
         "repo": "disko",
         "rev": "d39ee334984fcdae6244f5a8e6ab857479cbaefe",
 =======
+=======
+>>>>>>> 2152579 (chore: running)
         "lastModified": 1723685519,
         "narHash": "sha256-GkXQIoZmW2zCPp1YFtAYGg/xHNyFH/Mgm79lcs81rq0=",
         "owner": "nix-community",
         "repo": "disko",
         "rev": "276a0d055a720691912c6a34abb724e395c8e38a",
+<<<<<<< HEAD
 >>>>>>> e9eb078 (added portable host)
+=======
+=======
+        "lastModified": 1726842196,
+        "narHash": "sha256-u9h03JQUuQJ607xmti9F9Eh6E96kKUAGP+aXWgwm70o=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "51994df8ba24d5db5459ccf17b6494643301ad28",
+>>>>>>> aebdbc6 (chore: running)
+>>>>>>> 2152579 (chore: running)
         "type": "github"
       },
       "original": {
@@ -258,11 +271,27 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1728584964,
         "narHash": "sha256-40093uJyc+pf0CaOtbj5dDiyL0PQ7c5pmnGkfO6Q/hw=",
         "owner": "nix-community",
         "repo": "home-manager",
         "rev": "d47d33254fbf4fdbdee9f1f14095f689662e479d",
+=======
+<<<<<<< HEAD
+        "lastModified": 1726764199,
+        "narHash": "sha256-aiw08ZK7PBVwnOglT0rk+VI3ZqPgbFlOWP7SCFb8sHA=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "1f7b8188a9c9c5ba32f9a8351c55f42ecc22b77c",
+=======
+        "lastModified": 1726863345,
+        "narHash": "sha256-fjbKe1/UJpLT6tQLAKJ/djJFdnmAh2kkdsgmylyFrQA=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "dfe4d334b172071e7189d971ddecd3a7f811b48d",
+>>>>>>> aebdbc6 (chore: running)
+>>>>>>> 2152579 (chore: running)
         "type": "github"
       },
       "original": {
@@ -281,6 +310,7 @@
 =======
       "locked": {
         "dir": "nix",
+<<<<<<< HEAD
         "lastModified": 1723528867,
         "narHash": "sha256-V4j1h6f6tLWgRVhc4pnhQ6rhIPGTqrtxnkP0oy1SNFc=",
         "ref": "refs/heads/master",
@@ -305,8 +335,18 @@
         "lastModified": 1728567251,
         "narHash": "sha256-ymM01ZxzDDY0RTgSOlzVLTRx3mais7dcfb1bYStVcRU=",
         "ref": "refs/heads/master",
+<<<<<<< HEAD
         "rev": "751bad81ce48557b3e2c56de36e3c6db906b752a",
         "revCount": 864,
+=======
+=======
+        "lastModified": 1726080562,
+        "narHash": "sha256-76VNPE4hXQqPKgEXHTueDsOSRpcRx+uFg6OTkolCboQ=",
+        "ref": "refs/heads/master",
+>>>>>>> aebdbc6 (chore: running)
+        "rev": "4e17fc4432dad3664d39274e4e698c7a5497216d",
+        "revCount": 853,
+>>>>>>> 2152579 (chore: running)
         "submodules": true,
         "type": "git",
         "url": "https://github.com/kmonad/kmonad?dir=nix"
@@ -356,12 +396,15 @@
     "nixpkgs": {
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1728538411,
         "narHash": "sha256-f0SBJz1eZ2yOuKUr5CA9BHULGXVSn6miBuUWdTyhUhU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "b69de56fac8c2b6f8fd27f2eca01dcda8e0a4221",
 =======
+=======
+>>>>>>> 2152579 (chore: running)
 <<<<<<< HEAD
         "lastModified": 1726583932,
         "narHash": "sha256-zACxiQx8knB3F8+Ze+1BpiYrI+CbhxyWpcSID9kVhkQ=",
@@ -375,7 +418,17 @@
         "repo": "nixpkgs",
         "rev": "8b908192e64224420e2d59dfd9b2e4309e154c5d",
 >>>>>>> e6ad1c4 (chore: removed delta)
+<<<<<<< HEAD
 >>>>>>> fc7e402 (chore: removed delta)
+=======
+=======
+        "lastModified": 1726652927,
+        "narHash": "sha256-WO6Lmbn37PlamY2fDg3B187THkSKU/W01z8SxoIqJd0=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "294eb5975def0caa718fca92dc5a9d656ae392a9",
+>>>>>>> aebdbc6 (chore: running)
+>>>>>>> 2152579 (chore: running)
         "type": "github"
       },
       "original": {
@@ -528,12 +581,15 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1728562297,
         "narHash": "sha256-MCpC5HXubbYKbjuc3/0jJ4GRCx81XOw6DqHa9BoYK14=",
         "owner": "mitchellh",
         "repo": "zig-overlay",
         "rev": "e7b6c43e8d7c091a15b0decede36ac1a2307fbc8",
 =======
+=======
+>>>>>>> 2152579 (chore: running)
 <<<<<<< HEAD
         "lastModified": 1726705691,
         "narHash": "sha256-pEE16mZ+sYUaJG0f23BkN/1OCtIiMsCJwqeZO85Qr9E=",
@@ -547,7 +603,17 @@
         "repo": "zig-overlay",
         "rev": "0d35f6e3ee68f3bd560324bd86c325413d6b2667",
 >>>>>>> e6ad1c4 (chore: removed delta)
+<<<<<<< HEAD
 >>>>>>> fc7e402 (chore: removed delta)
+=======
+=======
+        "lastModified": 1726792091,
+        "narHash": "sha256-dYu645m+1xsSpyx0IIZ4bc/G6Mw1mQMz221QOxRYzI0=",
+        "owner": "mitchellh",
+        "repo": "zig-overlay",
+        "rev": "7e7ad073ba0a34ff75e7cf60f9f7153cf965f27f",
+>>>>>>> aebdbc6 (chore: running)
+>>>>>>> 2152579 (chore: running)
         "type": "github"
       },
       "original": {
@@ -567,11 +633,15 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aebdbc6 (chore: running)
         "lastModified": 1726402199,
         "narHash": "sha256-Q1NZ72dNZivH7KFkzW3wN1AHdAier+Xido+7XDzc++I=",
         "owner": "mitchellh",
         "repo": "zig-overlay",
         "rev": "ca646ec2a1eebe15b2b6bd33811de6f12aa576c4",
+<<<<<<< HEAD
 =======
         "lastModified": 1722600600,
         "narHash": "sha256-bRpvmyAvt4OFbQJlmAURyW1To8nlRjNcQJdbOyI1MLE=",
@@ -579,6 +649,8 @@
         "repo": "zig-overlay",
         "rev": "4c95bb8378ca31cc06eba0a9ee0c04851221c193",
 >>>>>>> e6ad1c4 (chore: removed delta)
+=======
+>>>>>>> aebdbc6 (chore: running)
         "type": "github"
       },
       "original": {
@@ -598,12 +670,15 @@
       },
       "locked": {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "lastModified": 1728483147,
         "narHash": "sha256-WWLzEZm9E6aBxoJqahYw4wCwUYV1+ndwGz1gwv87Wzc=",
         "owner": "zigtools",
         "repo": "zls",
         "rev": "6ae67e89267440380f63544312b9113c0a895882",
 =======
+=======
+>>>>>>> 2152579 (chore: running)
 <<<<<<< HEAD
         "lastModified": 1726516447,
         "narHash": "sha256-CV6Mr2zm5ZmtW4RnC3taJqA0tZ0U0ERzLBoO6GfzGWA=",
@@ -617,7 +692,17 @@
         "repo": "zls",
         "rev": "6f8bd2729c84fd29acac10b1f3adb21d5e605cbb",
 >>>>>>> e6ad1c4 (chore: removed delta)
+<<<<<<< HEAD
 >>>>>>> fc7e402 (chore: removed delta)
+=======
+=======
+        "lastModified": 1726791560,
+        "narHash": "sha256-0SDGQeb/onI7zVdNOdUhTJ2r4EmSJQJV2bjyXENBgws=",
+        "owner": "zigtools",
+        "repo": "zls",
+        "rev": "2b613d32696676bcbc257e31542a1dcbfa7f22a8",
+>>>>>>> aebdbc6 (chore: running)
+>>>>>>> 2152579 (chore: running)
         "type": "github"
       },
       "original": {

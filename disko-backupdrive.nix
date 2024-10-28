@@ -11,9 +11,9 @@
             bak = {
               size = "100%";
               content = {
-                  type = "filesystem";
-                  format = "ntfs";
-                  mountpoint = "/";
+                type = "filesystem";
+                format = "ntfs";
+                mountpoint = "/";
               };
             };
           };
