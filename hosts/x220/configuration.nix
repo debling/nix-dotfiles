@@ -107,9 +107,6 @@
   users.users.debling = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "podman" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      firefox
-    ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
     shell = pkgs.fish;
   };
@@ -149,6 +146,9 @@
     zsh.enable = true;
     neovim.enable = true;
 
+    programs.steam = {
+      enable = true;
+    };
   };
 
   # List services that you want to enable:
@@ -209,4 +209,9 @@
       fi
     '';
   };
+  system.switch = {
+    enable = false;
+    enableNg = true;
+  };
+
 }

@@ -6,8 +6,11 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../modules/common/pipewire.nix
+      ../../modules/common/podman.nix
     ];
 
   nix = {
@@ -17,13 +20,40 @@
   };
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.efi.canTouchEfiVariables = false;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = true;
+    efiInstallAsRemovable = true;
+  };
+
 
   networking.hostName = "nixos-portable"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+
+  # The notion of "online" is a broken concept
+  # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
+  systemd.services.NetworkManager-wait-online.enable = false;
+  systemd.network.wait-online.enable = false;
+
+  # Allow PMTU / DHCP
+  networking.firewall.allowPing = true;
+
+  # Keep dmesg/journalctl -k output readable by NOT logging
+  # each refused connection on the open internet.
+  networking.firewall.logRefusedConnections = lib.mkDefault false;
+
+  # Use networkd instead of the pile of shell scripts
+  networking.useNetworkd = lib.mkDefault true;
+
+  # Allows to find machines on the local network by name, i.e. useful for printer discovery
+  systemd.network.networks."99-ethernet-default-dhcp".networkConfig.MulticastDNS = "yes";
+  systemd.network.networks."99-wireless-client-dhcp".networkConfig.MulticastDNS = "yes";
+  networking.firewall.allowedUDPPorts = [ 5353 ]; # Multicast DNS
+
 
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
@@ -33,12 +63,13 @@
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "rn_US.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
-    keyMap = "br";
     useXkbConfig = true; # use xkb.options in tty.
   };
+
+
 
   # Configure keymap in X11
   services = {
@@ -47,43 +78,36 @@
       enable = true;
 
       # Enable the GNOME Desktop Environment.
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+      # displayManager.gdm.enable = true;
+      # desktopManager.gnome.enable = true;
       xkb = {
         layout = "br";
+        options = "caps:escape"; # map caps to escape.
       };
     };
+
+    # Enable CUPS to print documents.
+    printing.enable = true;
+
+    # Bluetooth
+    blueman.enable = true;
   };
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  hardware.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.henrique = {
+  users.users.debling = {
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
-    packages = with pkgs; [
-      firefox
-      tree
-    ];
+    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
+    shell = pkgs.zsh;
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
+    firefox
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -96,6 +120,10 @@
     };
     zsh.enable = true;
     neovim.enable = true;
+
+    steam = {
+      enable = true;
+    };
   };
 
   # List services that you want to enable:
@@ -109,14 +137,24 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  virtualisation = {
-    docker.enable = true;
+  fonts = {
+    enableDefaultPackages = true;
+    fontDir.enable = true;
+    packages = with pkgs; [
+      corefonts # microsoft free fonts
+      source-sans-pro
+      source-serif-pro
+      (nerdfonts.override {
+        fonts = [ "JetBrainsMono" ];
+      })
+    ];
+    fontconfig.defaultFonts = {
+      monospace = [ "JetBrainsMono Nerd Font" ];
+      sansSerif = [ "Source Sans Pro" ];
+      serif = [ "Source Serif Pro" ];
+    };
   };
 
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  system.copySystemConfiguration = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
@@ -137,5 +175,20 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
 
+  system.activationScripts.update-diff = {
+    supportsDryActivation = true;
+    text = ''
+      if [[ -e /run/current-system ]]; then
+        echo "--- diff to current-system"
+        ${pkgs.nvd}/bin/nvd --nix-bin-dir=${config.nix.package}/bin diff /run/current-system "$systemConfig"
+        echo "---"
+      fi
+    '';
+  };
+
+  system.switch = {
+    enable = false;
+    enableNg = true;
+  };
 }
 
