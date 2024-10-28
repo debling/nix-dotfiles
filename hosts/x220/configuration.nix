@@ -62,8 +62,6 @@
       enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
-      # displayManager.gdm.enable = true;
-      # desktopManager.gnome.enable = true;
       # displayManager.autoLogin.user = "debling";
       # desktopManager = {
       #   xterm.enable = false;

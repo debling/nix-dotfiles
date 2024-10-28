@@ -87,11 +87,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1728334376,
         "narHash": "sha256-CTKEKPzD/j8FK6H4DO3EjyixZd3HHvgAgfnCwpGFP5c=",
         "owner": "nix-community",
         "repo": "disko",
         "rev": "d39ee334984fcdae6244f5a8e6ab857479cbaefe",
+=======
+        "lastModified": 1723685519,
+        "narHash": "sha256-GkXQIoZmW2zCPp1YFtAYGg/xHNyFH/Mgm79lcs81rq0=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "276a0d055a720691912c6a34abb724e395c8e38a",
+>>>>>>> e9eb078 (added portable host)
         "type": "github"
       },
       "original": {
@@ -399,7 +407,11 @@
         "android-nixpkgs": "android-nixpkgs",
         "darwin": "darwin",
         "disko": "disko",
+<<<<<<< HEAD
         "flake-utils": "flake-utils_2",
+=======
+        "flake-utils": "flake-utils_3",
+>>>>>>> e9eb078 (added portable host)
         "home-manager": "home-manager",
         "kmonad": "kmonad",
         "nix-index-database": "nix-index-database",
