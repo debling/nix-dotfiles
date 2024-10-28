@@ -269,6 +269,29 @@
           "nixpkgs"
         ]
       },
+<<<<<<< HEAD
+=======
+      "locked": {
+        "dir": "nix",
+        "lastModified": 1723528867,
+        "narHash": "sha256-V4j1h6f6tLWgRVhc4pnhQ6rhIPGTqrtxnkP0oy1SNFc=",
+        "ref": "refs/heads/master",
+        "rev": "07cd1cb4fddb46a8d9de3bb9d06196d08b7a8ed2",
+        "revCount": 839,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/kmonad/kmonad?dir=nix"
+      },
+      "original": {
+        "dir": "nix",
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/kmonad/kmonad?dir=nix"
+      }
+    },
+    "langref": {
+      "flake": false,
+>>>>>>> e6ad1c4 (chore: removed delta)
       "locked": {
         "dir": "nix",
         "lastModified": 1728567251,
@@ -324,11 +347,27 @@
     },
     "nixpkgs": {
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1728538411,
         "narHash": "sha256-f0SBJz1eZ2yOuKUr5CA9BHULGXVSn6miBuUWdTyhUhU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
         "rev": "b69de56fac8c2b6f8fd27f2eca01dcda8e0a4221",
+=======
+<<<<<<< HEAD
+        "lastModified": 1726583932,
+        "narHash": "sha256-zACxiQx8knB3F8+Ze+1BpiYrI+CbhxyWpcSID9kVhkQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "658e7223191d2598641d50ee4e898126768fe847",
+=======
+        "lastModified": 1723703277,
+        "narHash": "sha256-nk0RaUB5f68BwtXAYy3WAjqFhVKqIl9Z89RGycTa2vk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "8b908192e64224420e2d59dfd9b2e4309e154c5d",
+>>>>>>> e6ad1c4 (chore: removed delta)
+>>>>>>> fc7e402 (chore: removed delta)
         "type": "github"
       },
       "original": {
@@ -476,11 +515,27 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1728562297,
         "narHash": "sha256-MCpC5HXubbYKbjuc3/0jJ4GRCx81XOw6DqHa9BoYK14=",
         "owner": "mitchellh",
         "repo": "zig-overlay",
         "rev": "e7b6c43e8d7c091a15b0decede36ac1a2307fbc8",
+=======
+<<<<<<< HEAD
+        "lastModified": 1726705691,
+        "narHash": "sha256-pEE16mZ+sYUaJG0f23BkN/1OCtIiMsCJwqeZO85Qr9E=",
+        "owner": "mitchellh",
+        "repo": "zig-overlay",
+        "rev": "ebb5761edfecf55177720427944b9928b98d87b4",
+=======
+        "lastModified": 1723767964,
+        "narHash": "sha256-kgtAjdnT6kAlPtXSDuAILpoC/1Ux26iDfclrQyBKl80=",
+        "owner": "mitchellh",
+        "repo": "zig-overlay",
+        "rev": "0d35f6e3ee68f3bd560324bd86c325413d6b2667",
+>>>>>>> e6ad1c4 (chore: removed delta)
+>>>>>>> fc7e402 (chore: removed delta)
         "type": "github"
       },
       "original": {
@@ -499,11 +554,19 @@
         ]
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1726402199,
         "narHash": "sha256-Q1NZ72dNZivH7KFkzW3wN1AHdAier+Xido+7XDzc++I=",
         "owner": "mitchellh",
         "repo": "zig-overlay",
         "rev": "ca646ec2a1eebe15b2b6bd33811de6f12aa576c4",
+=======
+        "lastModified": 1722600600,
+        "narHash": "sha256-bRpvmyAvt4OFbQJlmAURyW1To8nlRjNcQJdbOyI1MLE=",
+        "owner": "mitchellh",
+        "repo": "zig-overlay",
+        "rev": "4c95bb8378ca31cc06eba0a9ee0c04851221c193",
+>>>>>>> e6ad1c4 (chore: removed delta)
         "type": "github"
       },
       "original": {
@@ -522,11 +585,27 @@
         "zig-overlay": "zig-overlay_2"
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1728483147,
         "narHash": "sha256-WWLzEZm9E6aBxoJqahYw4wCwUYV1+ndwGz1gwv87Wzc=",
         "owner": "zigtools",
         "repo": "zls",
         "rev": "6ae67e89267440380f63544312b9113c0a895882",
+=======
+<<<<<<< HEAD
+        "lastModified": 1726516447,
+        "narHash": "sha256-CV6Mr2zm5ZmtW4RnC3taJqA0tZ0U0ERzLBoO6GfzGWA=",
+        "owner": "zigtools",
+        "repo": "zls",
+        "rev": "cf9b49a67b15693d62926ea11d17f53efc60be50",
+=======
+        "lastModified": 1723721745,
+        "narHash": "sha256-jHwR9urGbanO0geTV9CbqMErvKrg4jTk7PD51ZBIuDg=",
+        "owner": "zigtools",
+        "repo": "zls",
+        "rev": "6f8bd2729c84fd29acac10b1f3adb21d5e605cbb",
+>>>>>>> e6ad1c4 (chore: removed delta)
+>>>>>>> fc7e402 (chore: removed delta)
         "type": "github"
       },
       "original": {
