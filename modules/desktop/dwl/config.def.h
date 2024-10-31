@@ -22,7 +22,15 @@ static int log_level = WLR_ERROR;
 
 /* Autostart */
 static const char *const autostart[] = {
+
+	// The commands below were adapted from:
+	// https://github.com/NixOS/nixpkgs/blob/ad3e815dfa9181aaa48b9aa62a00cf9f5e4e3da7/nixos/modules/programs/wayland/sway.nix#L122
+	// Import the most important environment variables into the D-Bus and systemd
+	"dbus-update-activation-environment", "--systemd", "DISPLAY", "WAYLAND_DISPLAY", NULL,
+	// enable systemd-integration
+	"systemctl", "--user", "import-environment", "DISPLAY", "WAYLAND_DISPLAY", NULL,
         "systemctl", "--user", "start", "dwl-session.target", NULL,
+
         NULL /* terminate */
 };
 
@@ -132,6 +140,17 @@ static const Key keys[] = {
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          SHCMD(termcmd) },
+
+	{ NULL, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+") },
+	{ NULL, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-") },
+	{ NULL, XKB_KEY_XF86AudioMute, spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
+	{ NULL, XKB_KEY_XF86AudioPlay, spawn, SHCMD("playerctl play-pause") },
+	{ NULL, XKB_KEY_XF86AudioPrev, spawn, SHCMD("playerctl previous") },
+	{ NULL, XKB_KEY_XF86AudioNext, spawn, SHCMD("playerctl next") },
+ 
+	{ NULL,	XKB_KEY_XF86MonBrightnessUp, spawn, SHCMD("brightnessctl s 5%+") },
+	{ NULL,	XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("brightnessctl s 5%-") },
+
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },

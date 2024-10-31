@@ -17,15 +17,6 @@ in
     android-nixpkgs.hmModule
   ];
 
-  dconf.settings = {
-    "org/gnome/desktop/background" = {
-      picture-uri-dark = "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
-    };
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
-  };
-
   debling.editors.neovim.enable = true;
 
   debling.alacritty.enable = true;
@@ -94,7 +85,7 @@ in
   };
 
   android-sdk = {
-    enable = true;
+    enable = false;
 
     path = "${config.home.homeDirectory}/SDKs/android";
 
@@ -281,6 +272,13 @@ in
   programs = {
     fish = {
       enable = true;
+      interactiveShellInit = ''
+        set fish_greeting # Disable greeting
+      '';
+      plugins = [
+        { name = "done"; src = pkgs.fishPlugins.done.src; }
+      ];
+
       # FIXME: This is needed to address bug where the $PATH is re-ordered by
       # the `path_helper` tool, prioritising Apple’s tools over the ones we’ve
       # installed with nix.
@@ -304,7 +302,7 @@ in
 
           makeBinSearchPath =
             lib.concatMapStringsSep " " (path: "${path}/bin");
-        in
+        in lib.mkIf pkgs.stdenv.isDarwin
         ''
           # Fix path that was re-ordered by Apple's path_helper
           fish_add_path --move --prepend --path ${makeBinSearchPath profiles}
@@ -579,6 +577,33 @@ in
     };
 
     gh-dash.enable = true;
+  };
+
+  dconf.settings = {
+    "org/gnome/desktop/background" = {
+      picture-uri-dark = "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
+    };
+
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "adwaita";
+    style = {
+      package = [ pkgs.adwaita-qt ];
+      name = "adwaita-dark";
+    };
   };
 
 

@@ -50,6 +50,8 @@ in
         pkgs.bemenu
         pkgs.libnotify
         pkgs.foot
+        pkgs.playerctl
+        pkgs.brightnessctl
       ];
       sessionVariables = {
         WLR_NO_HARDWARE_CURSORS = "1";
@@ -76,6 +78,16 @@ in
       };
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
+      restartIfChanged = true;
+    };
+
+    systemd.user.services.status-bar = {
+      description = "Service to run the status bar provider";
+      enable = true;
+      script = "${lib.getExe pkgs.slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
+      bindsTo = [ "dwlb.service" ];
+      wantedBy = [ "dwlb.service" ];
+      restartIfChanged = true;
     };
 
     security = {

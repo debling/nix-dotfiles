@@ -113,7 +113,7 @@
       firefox
     ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
   };
 
   # List packages installed in system profile. To search, run:
@@ -130,10 +130,6 @@
       bitwarden
       bitwarden-cli
       spotify
-      # waybar
-      # wofi
-      # mako
-      # libnotify
     ];
 
 
@@ -146,6 +142,8 @@
   # started in user sessions.
   # programs.mtr.enable = true;
   programs = {
+    firefox.enable = true;
+    fish.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
@@ -161,7 +159,12 @@
   services.openssh.enable = true;
 
   virtualisation = {
-    podman.enable = true;
+    podman = {
+      enable = true;
+      dockerCompat = true;
+      dockerSocket.enable = true;
+      extraPackages = with pkgs; [ podman-compose ];
+    };
     # virtualbox.host.enable = true;
     libvirtd.enable = true;
     # waydroid.enable = true;
