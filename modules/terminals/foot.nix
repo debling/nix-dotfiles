@@ -4,9 +4,10 @@
     enable = true;
     server.enable = true;
     settings = {
-      include = "${pkgs.foot.themes}/share/foot/themes/modus-operandi";
       main = {
-        font = "monospace:size=12";
+        include = "${pkgs.foot.themes}/share/foot/themes/modus-vivendi";
+        font = "monospace:size=14";
+        dpi-aware = true;
       };
       scrollback = {
         lines = 0; # disable scrollbacl, tmux does it better

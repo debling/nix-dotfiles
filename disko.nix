@@ -36,7 +36,8 @@
                   mountOptions = [
                     # "compress_algorithm=zstd:6"
                     # "compress_chksum"
-                    "atgc" "gc_merge"
+                    "atgc"
+                    "gc_merge"
                     "lazytime"
                   ];
                 };

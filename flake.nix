@@ -97,7 +97,7 @@
     in
     {
 
-      homeConfigurations."debling" = home-manager.lib.homeManagerConfiguration {
+      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
         modules = [
@@ -180,6 +180,7 @@
           ./hosts/x220/configuration.nix
 
           ./modules/desktop/dwl
+          ./modules/nixos/containers.nix
 
           # `home-manager` module
           home-manager.nixosModules.home-manager

@@ -159,12 +159,6 @@
   services.openssh.enable = true;
 
   virtualisation = {
-    podman = {
-      enable = true;
-      dockerCompat = true;
-      dockerSocket.enable = true;
-      extraPackages = with pkgs; [ podman-compose ];
-    };
     # virtualbox.host.enable = true;
     libvirtd.enable = true;
     # waydroid.enable = true;

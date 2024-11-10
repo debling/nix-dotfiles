@@ -151,6 +151,10 @@ static const Key keys[] = {
 	{ NULL,	XKB_KEY_XF86MonBrightnessUp, spawn, SHCMD("brightnessctl s 5%+") },
 	{ NULL,	XKB_KEY_XF86MonBrightnessDown, spawn, SHCMD("brightnessctl s 5%-") },
 
+	{ WLR_MODIFIER_ALT|WLR_MODIFIER_SHIFT, XKB_KEY_4, spawn, SHCMD("screenshot")},
+
+	{ MODKEY, XKB_KEY_y, spawn, SHCMD("cliphist list | bemenu -l 5 | cliphist decode | wl-copy")},
+
 	{ MODKEY,                    XKB_KEY_j,          focusstack,     {.i = +1} },
 	{ MODKEY,                    XKB_KEY_k,          focusstack,     {.i = -1} },
 	{ MODKEY,                    XKB_KEY_i,          incnmaster,     {.i = +1} },

@@ -15,7 +15,7 @@ let
       "${dwl-patches}/patches/ipc/ipc.patch"
       "${dwl-patches}/patches/autostart/autostart.patch"
     ];
-    
+
     passthru = {
       providedSessions = [ prev.meta.mainProgram ];
     };
@@ -36,11 +36,25 @@ let
     wait
     systemctl --user stop dwl-session.target
   '';
+
+  screenshot = pkgs.writeShellApplication {
+    name = "screenshot";
+
+    runtimeInputs = with pkgs; [ grim slurp satty ];
+
+    text = ''
+      grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
+        | satty --filename - \
+                --fullscreen \
+                --output-filename "$HOME/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png";
+    '';
+  };
 in
 {
   config = {
     environment = {
       systemPackages = [
+        screenshot
         pkgs.wl-clipboard
         dwl-run
         dwl
@@ -61,7 +75,7 @@ in
     };
 
     services.displayManager.sessionPackages = [ dwl ];
-    
+
     systemd.user.targets.dwl-session = {
       description = "dwl compositor session";
       documentation = [ "man:systemd.special(7)" ];
@@ -105,6 +119,10 @@ in
     xdg.portal.extraPortals = [
       pkgs.xdg-desktop-portal-gtk
     ];
+
+    home-manager.users.debling = {
+      services.cliphist.enable = true;
+    };
 
     # Window manager only sessions (unlike DEs) don't handle XDG
     # autostart files, so force them to run the service
