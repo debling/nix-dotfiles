@@ -253,7 +253,6 @@ in
 
       # Stable SDK symlinks
       "SDKs/Java/current".source = pkgs.jdk;
-      "SDKs/Java/22".source = pkgs.jdk22;
       "SDKs/Java/11".source = pkgs.jdk11;
       "SDKs/Java/17".source = pkgs.jdk17;
       "SDKs/Java/8".source = pkgs.jdk8;

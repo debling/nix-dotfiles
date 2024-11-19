@@ -20,20 +20,6 @@ static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You ca
 /* logging */
 static int log_level = WLR_ERROR;
 
-/* Autostart */
-static const char *const autostart[] = {
-
-	// The commands below were adapted from:
-	// https://github.com/NixOS/nixpkgs/blob/ad3e815dfa9181aaa48b9aa62a00cf9f5e4e3da7/nixos/modules/programs/wayland/sway.nix#L122
-	// Import the most important environment variables into the D-Bus and systemd
-	"dbus-update-activation-environment", "--systemd", "DISPLAY", "WAYLAND_DISPLAY", NULL,
-	// enable systemd-integration
-	"systemctl", "--user", "import-environment", "DISPLAY", "WAYLAND_DISPLAY", NULL,
-        "systemctl", "--user", "start", "dwl-session.target", NULL,
-
-        NULL /* terminate */
-};
-
 /* NOTE: ALWAYS keep a rule declared even if you don't use rules (e.g leave at least one example) */
 static const Rule rules[] = {
 	/* app_id             title       tags mask     isfloating   monitor */

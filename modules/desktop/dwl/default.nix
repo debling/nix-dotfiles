@@ -13,7 +13,6 @@ let
   dwl-with-patches = pkgs.dwl.overrideAttrs (prev: {
     patches = [
       "${dwl-patches}/patches/ipc/ipc.patch"
-      "${dwl-patches}/patches/autostart/autostart.patch"
     ];
 
     passthru = {
@@ -26,14 +25,22 @@ let
   };
 
   dwl-run = pkgs.writeShellScriptBin "dwl-run" ''
-    ${lib.getExe dwl} &
-    waitPID=$!
-    ${lib.getExe dwlb} -ipc -font 'mono:size=10' &
-    sleep 1
-    systemctl --user start dwl-session.target
-    echo dwl session started
-    wait $waitPID
-    wait
+    set -x
+
+    systemctl --user is-active dwl-session.target \
+      && echo "DWL is already running" \
+      && exit 1
+
+    # The commands below were adapted from:
+    # https://github.com/NixOS/nixpkgs/blob/ad3e815dfa9181aaa48b9aa62a00cf9f5e4e3da7/nixos/modules/programs/wayland/sway.nix#L122
+    # Import the most important environment variables into the D-Bus and systemd
+    dbus-run-session -- ${lib.getExe dwl} -s "
+      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_SESSION_TYPE;
+      systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_SESSION_TYPE;
+      systemctl --user start dwl-session.target;
+    " & 
+    dwlPID=$!
+    wait $dwlPID
     systemctl --user stop dwl-session.target
   '';
 
@@ -54,6 +61,8 @@ in
   config = {
     environment = {
       systemPackages = [
+        pkgs.slurp
+        pkgs.grim
         screenshot
         pkgs.wl-clipboard
         dwl-run
@@ -115,10 +124,24 @@ in
 
     services.graphical-desktop.enable = true;
 
-    xdg.portal.wlr.enable = true;
-    xdg.portal.extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
+    xdg.portal = {
+      enable = true;
+      config = {
+        common = {
+          default = "wlr";
+        };
+      };
+      wlr = {
+        enable = true;
+        settings.screencast = {
+          chooser_type = "simple";
+          chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o -or";
+        };
+      };
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+    };
 
     home-manager.users.debling = {
       services.cliphist.enable = true;
