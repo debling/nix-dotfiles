@@ -97,7 +97,7 @@ in
 
           nodePackages."@tailwindcss/language-server"
 
-          # hurl
+          hurl
 
           ### Dockerfile
           hadolint
@@ -143,12 +143,12 @@ in
 
             dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
 
-            src = pkgs.fetchFromGitHub {
-              owner = "jellydn";
-              repo = "hurl.nvim";
-              rev = "fccd096f555864d3de1f103622c7020224ba6246";
-              hash = "sha256-dvApkpcRBSN5dFJI8Gmqz5kWkvO3O4q++LqC70jGgr4=";
-            };
+              src = pkgs.fetchFromGitHub {
+                owner = "jellydn";
+                repo = "hurl.nvim";
+                rev = "839784128048251ea9169264b72eaee171fbb1bd";
+                hash = "sha256-GSww1LYGw1m+OQB90fTtFgxNjUMnEMlIF3AD7LXVDlg=";
+              };
           };
 
           freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {
@@ -202,6 +202,7 @@ in
 
             hurl
             hurl-nvim
+            render-markdown-nvim
 
             rainbow-delimiters-nvim
 
