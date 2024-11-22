@@ -14,9 +14,11 @@
     ];
 
   nix = {
+    settings.trusted-users = [ "root" "debling" ];
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+   channel.enable = false;
   };
 
   # Use the systemd-boot EFI boot loader.

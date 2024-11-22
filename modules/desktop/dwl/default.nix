@@ -7,10 +7,30 @@ let
     domain = "codeberg.org";
     owner = "dwl";
     repo = "dwl-patches";
-    rev = "3c690cfb8bd744006ab8e49d23c8d4a9408ea66a";
-    hash = "sha256-syiHhCedW1Jl42UBdBAdBxmiXwEKYBfqV2JrQLhilNY=";
+      rev = "9dc4bb37dabedf0859aaee8102f739da2d51e05a";
+  hash = "sha256-D/2A5inrTXvaG54CBfn4Ff1zJnzYNpVylvZhy67HylI=";
   };
   dwl-with-patches = pkgs.dwl.overrideAttrs (prev: {
+    src = pkgs.fetchFromGitea {
+      domain = "codeberg.org";
+      owner = "dwl";
+      repo = "dwl";
+      rev = "1d08ade13225343890e3476f7c4003ab87dc266c";
+      hash = "sha256-MoPU8SeIBHEf9kNu0xyuW1F/wTPEgpcWMGSAje3PFEU=";
+    };
+      buildInputs = with pkgs; [
+      libinput
+      xorg.libxcb
+      libxkbcommon
+      pixman
+      wayland
+      wayland-protocols
+      wlroots
+      xorg.libX11
+      xorg.xcbutilwm
+      xwayland
+    ];
+
     patches = [
       "${dwl-patches}/patches/ipc/ipc.patch"
     ];
