@@ -54,6 +54,10 @@
       url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+
+    nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs =
@@ -78,10 +82,18 @@
           })
 
           inputs.android-nixpkgs.overlays.default
+
+          inputs.nixpkgs-wayland.overlays.default
         ];
       };
 
       username = "debling";
+
+      specialArgs = {
+        inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
+        mainUser = username;
+        colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
+      };
 
       homeManagerConfiguration = {
         sharedModules = [
@@ -90,9 +102,7 @@
         useGlobalPkgs = true;
         useUserPackages = true;
         users.${username} = import ./home.nix;
-        extraSpecialArgs = {
-          inherit (inputs) android-nixpkgs alacritty-themes nix-index-database;
-        };
+        extraSpecialArgs = specialArgs;
       };
     in
     {
@@ -108,9 +118,7 @@
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
 
-        extraSpecialArgs = {
-          inherit (inputs) android-nixpkgs alacritty-themes nix-index-database;
-        };
+        extraSpecialArgs = specialArgs;
       };
 
       # usb drive

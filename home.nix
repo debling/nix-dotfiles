@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, ... }:
+{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, colorScheme, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -33,7 +33,16 @@ in
       shouldEnable = pkgs.stdenv.isLinux;
     in
     {
-      mako.enable = shouldEnable;
+      mako = with colorScheme.palette; {
+        enable = shouldEnable;
+        defaultTimeout = 8000;
+        backgroundColor = "#${base01}";
+        borderColor = "#${base0E}";
+        borderRadius = 5;
+        borderSize = 2;
+        textColor = "#${base04}";
+        layer = "overlay";
+      };
 
       blueman-applet.enable = shouldEnable;
 
@@ -613,7 +622,7 @@ in
 
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
-  home.username = "debling";
+  home.username = mainUser;
   # home.homeDirectory = pkgs.lib.mkForce "/home/debling";
 
   # This value determines the Home Manager release that your
