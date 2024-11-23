@@ -24,4 +24,15 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  zramSwap = {
+    enable = true;
+  };
+
+  swapDevices = [
+    {
+      device = "/var/swapfile";
+      size = 4 * 1024; # 4GB
+    }
+  ];
 }
