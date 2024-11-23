@@ -35,12 +35,11 @@ in
     {
       mako = with colorScheme.palette; {
         enable = shouldEnable;
-        defaultTimeout = 8000;
-        backgroundColor = "#${base01}";
+        defaultTimeout = 10 * 1000;
+        backgroundColor = "#${base00}";
         borderColor = "#${base0E}";
-        borderRadius = 5;
-        borderSize = 2;
-        textColor = "#${base04}";
+        borderSize = 1;
+        textColor = "#FFFFFF";
         layer = "overlay";
       };
 
@@ -50,38 +49,6 @@ in
 
       mpris-proxy.enable = shouldEnable;
     };
-
-  # wayland.windowManager.hyprland = {
-  #   enable = pkgs.stdenv.isLinux;
-  #   extraConfig = builtins.readFile ./config/hyprland/hyprland.conf;
-  #   settings = {
-  #     general = {
-  #       layout = "dwindle";
-  #     };
-  #     dwindle = {
-  #       no_gaps_when_only = 1;
-  #     };
-  #
-  #     input = {
-  #       kb_options = "caps:swapescape";
-  #       kb_layout = "br";
-  #       kb_variant = "thinkpad";
-  #
-  #       follow_mouse = 1;
-  #
-  #       touchpad = {
-  #         natural_scroll = true;
-  #       };
-  #     };
-  #     "$mod" = "SUPER";
-  #     misc = {
-  #       force_default_wallpaper = 1;
-  #     };
-  #     # exec-once = ''
-  #     #   ${pkgs.waybar}/bin/waybar &
-  #     # '';
-  #   };
-  # };
 
   news.display = "show";
 
