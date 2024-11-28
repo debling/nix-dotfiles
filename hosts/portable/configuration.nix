@@ -135,6 +135,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     firefox
+    spotify
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -172,11 +173,11 @@
       source-sans-pro
       source-serif-pro
       (nerdfonts.override {
-        fonts = [ "JetBrainsMono" ];
+        fonts = [ "JetBrainsMono" "IosevkaTerm" ];
       })
     ];
     fontconfig.defaultFonts = {
-      monospace = [ "JetBrainsMono Nerd Font" ];
+      monospace = [ "IosevkaTerm Nerd Font" ];
       sansSerif = [ "Source Sans Pro" ];
       serif = [ "Source Serif Pro" ];
     };

@@ -44,6 +44,11 @@ let
     configH = ./config.def.h;
   };
 
+  slstatus = pkgs.slstatus.override {
+    conf = ./slstatus-config.h;
+  };
+
+
   dwl-run = pkgs.writeShellScriptBin "dwl-run" ''
     set -x
 
@@ -88,7 +93,7 @@ in
         dwl-run
         dwl
         dwlb
-        pkgs.slstatus
+        slstatus
         pkgs.brightnessctl
         pkgs.bemenu
         pkgs.libnotify
@@ -127,10 +132,11 @@ in
     systemd.user.services.status-bar = {
       description = "Service to run the status bar provider";
       enable = true;
-      script = "${lib.getExe pkgs.slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
+      script = "${lib.getExe slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
       bindsTo = [ "dwlb.service" ];
       wantedBy = [ "dwlb.service" ];
-      restartIfChanged = true;
+      reloadTriggers = [dwlb slstatus];
+      restartTriggers = [dwlb slstatus];
     };
 
     security = {

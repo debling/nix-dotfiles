@@ -43,9 +43,9 @@ in
         layer = "overlay";
       };
 
-      blueman-applet.enable = shouldEnable;
+      # blueman-applet.enable = shouldEnable;
 
-      network-manager-applet.enable = shouldEnable;
+      # network-manager-applet.enable = shouldEnable;
 
       mpris-proxy.enable = shouldEnable;
     };
@@ -581,6 +581,8 @@ in
       name = "adwaita-dark";
     };
   };
+
+  systemd.user.startServices = "sd-switch";
 
 
   ####

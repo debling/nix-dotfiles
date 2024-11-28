@@ -27,12 +27,13 @@
 
   zramSwap = {
     enable = true;
+    memoryPercent = 35;
   };
 
   swapDevices = [
     {
       device = "/var/swapfile";
-      size = 4 * 1024; # 4GB
+      size = 2 * 1024; # 4GB
     }
   ];
 }

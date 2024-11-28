@@ -73,6 +73,7 @@ in
           nodePackages.bash-language-server
           nodePackages.dockerfile-language-server-nodejs
           nodePackages.typescript-language-server
+          angular-language-server
           nodePackages.yaml-language-server
           nodePackages.vscode-langservers-extracted
           shellcheck
