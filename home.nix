@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, colorScheme, ... }:
+{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, colorscheme, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -33,7 +33,7 @@ in
       shouldEnable = pkgs.stdenv.isLinux;
     in
     {
-      mako = with colorScheme.palette; {
+      mako = with colorscheme.palette; {
         enable = shouldEnable;
         defaultTimeout = 10 * 1000;
         backgroundColor = "#${base00}";
@@ -57,6 +57,9 @@ in
     settings = {
       experimental-features = "nix-command flakes";
       # extra-platforms = "x86_64-darwin aarch64-darwin";
+      substituters = "https://cache.nixos.org https://debling.cachix.org";
+      trusted-public-keys =
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= debling.cachix.org-1:S2Zx2LNGAF1DIYoxKyVcqk7h/XMLLjxHLjfeHsOkgWo=";
     };
   };
 

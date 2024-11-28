@@ -9,6 +9,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
+    settings.trusted-users = [ "root" "debling" ];
   };
 
   networking.hostName = "x220"; # Define your hostname.
@@ -62,17 +63,7 @@
       enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
-      # displayManager.autoLogin.user = "debling";
-      # desktopManager = {
-      #   xterm.enable = false;
-      #   xfce = {
-      #     enable = true;
-      #     noDesktop = true;
-      #     enableXfwm = false;
-      #   };
-      # };
-      # Configure keymap in X11
-      # xkbOptions = "caps:escape"; # map caps to escape.
+
       xkb = {
         layout = "br";
         variant = "thinkpad";
@@ -82,26 +73,12 @@
 
     tlp.enable = true;
     power-profiles-daemon.enable = false;
-
-    blueman.enable = true;
   };
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
 
-  # Enable sound.
-  # sound = {
-  #   enable = true;
-  #   mediaKeys.enable = true;
-  # };
-
   security.rtkit.enable = true;
-
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  #   alsa.enable = true;
-  # };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
@@ -146,45 +123,10 @@
     zsh.enable = true;
     neovim.enable = true;
 
-    programs.steam = {
-      enable = true;
+    steam = {
+      enable = false;
     };
   };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-
-  virtualisation = {
-    # virtualbox.host.enable = true;
-    libvirtd.enable = true;
-    # waydroid.enable = true;
-  };
-
-  fonts = {
-    enableDefaultPackages = true;
-    fontDir.enable = true;
-    packages = with pkgs; [
-      corefonts # microsoft free fonts
-      source-sans-pro
-      source-serif-pro
-      (nerdfonts.override {
-        fonts = [ "JetBrainsMono" ];
-      })
-    ];
-    fontconfig.defaultFonts = {
-      monospace = [ "JetBrainsMono Nerd Font" ];
-      sansSerif = [ "Source Sans Pro" ];
-      serif = [ "Source Serif Pro" ];
-    };
-  };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you

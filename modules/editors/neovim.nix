@@ -144,12 +144,12 @@ in
 
             dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
 
-              src = pkgs.fetchFromGitHub {
-                owner = "jellydn";
-                repo = "hurl.nvim";
-                rev = "839784128048251ea9169264b72eaee171fbb1bd";
-                hash = "sha256-GSww1LYGw1m+OQB90fTtFgxNjUMnEMlIF3AD7LXVDlg=";
-              };
+            src = pkgs.fetchFromGitHub {
+              owner = "jellydn";
+              repo = "hurl.nvim";
+              rev = "839784128048251ea9169264b72eaee171fbb1bd";
+              hash = "sha256-GSww1LYGw1m+OQB90fTtFgxNjUMnEMlIF3AD7LXVDlg=";
+            };
           };
 
           freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {

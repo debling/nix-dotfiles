@@ -40,7 +40,7 @@
                     # case of the drive have free space, but the disk is full
                     # bcs theres no inode lefs
                     # see: https://lore.kernel.org/all/CAF_dkJB%3d2PAqes+41xAi74Z3X0dSjQzCd9eMwDjpKmLD9PBq6A@mail.gmail.com/T/
-                    "-i" 
+                    "-i"
 
                     # Flags
                     "-O"

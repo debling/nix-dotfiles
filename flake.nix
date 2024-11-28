@@ -92,7 +92,7 @@
       specialArgs = {
         inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
         mainUser = username;
-        colorScheme = inputs.nix-colors.colorSchemes.tomorrow-night;
+        colorscheme = inputs.nix-colors.colorschemes.tomorrow-night;
       };
 
       homeManagerConfiguration = {
@@ -165,6 +165,7 @@
       # My `nix-darwin` configs
       nixosConfigurations.x220 = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
+        specialArgs = specialArgs;
         modules = [
           ./hosts/x220/hardware-configuration.nix
 
@@ -172,6 +173,8 @@
           ./hosts/x220/configuration.nix
 
           ./modules/desktop/dwl
+          ./modules/common/fonts.nix
+          ./modules/common/bluetooth.nix
           ./modules/nixos/containers.nix
 
           # `home-manager` module

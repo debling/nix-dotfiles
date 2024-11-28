@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, mainUser, colorscheme, ... }:
 
 
 let
@@ -7,8 +7,8 @@ let
     domain = "codeberg.org";
     owner = "dwl";
     repo = "dwl-patches";
-      rev = "9dc4bb37dabedf0859aaee8102f739da2d51e05a";
-  hash = "sha256-D/2A5inrTXvaG54CBfn4Ff1zJnzYNpVylvZhy67HylI=";
+    rev = "9dc4bb37dabedf0859aaee8102f739da2d51e05a";
+    hash = "sha256-D/2A5inrTXvaG54CBfn4Ff1zJnzYNpVylvZhy67HylI=";
   };
   dwl-with-patches = pkgs.dwl.overrideAttrs (prev: {
     src = pkgs.fetchFromGitea {
@@ -18,7 +18,7 @@ let
       rev = "1d08ade13225343890e3476f7c4003ab87dc266c";
       hash = "sha256-MoPU8SeIBHEf9kNu0xyuW1F/wTPEgpcWMGSAje3PFEU=";
     };
-      buildInputs = with pkgs; [
+    buildInputs = with pkgs; [
       libinput
       xorg.libxcb
       libxkbcommon
@@ -108,7 +108,14 @@ in
       };
     };
 
-    services.displayManager.sessionPackages = [ dwl ];
+    services.displayManager.sessionPackages = [
+      ((pkgs.writeTextDir "share/wayland-sessions/dwl.desktop" ''
+        [Desktop Entry]
+        Name=dwl
+        Exec=dwl-run
+        Type=Application
+      '').overrideAttrs (_: { passthru.providedSessions = [ "dwl" ]; }))
+    ];
 
     systemd.user.targets.dwl-session = {
       description = "dwl compositor session";
@@ -122,7 +129,14 @@ in
       description = "Service to run the dwlb status bar";
       enable = true;
       serviceConfig = {
-        ExecStart = "${lib.getExe dwlb} -ipc -font 'mono:size=10'";
+        ExecStart = with colorscheme.palette; ''
+          ${lib.getExe dwlb} -ipc -font 'mono:size=12' \
+            -inactive-bg-color '#${base00}' \
+            -middle-bg-color '#${base0E}' \
+            -middle-bg-color-selected '#${base0E}' \
+            -active-bg-color '#${base0E}' \
+            -occupied-bg-color '#${base00}'
+        '';
       };
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
@@ -135,8 +149,8 @@ in
       script = "${lib.getExe slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
       bindsTo = [ "dwlb.service" ];
       wantedBy = [ "dwlb.service" ];
-      reloadTriggers = [dwlb slstatus];
-      restartTriggers = [dwlb slstatus];
+      reloadTriggers = [ dwlb slstatus ];
+      restartTriggers = [ dwlb slstatus ];
     };
 
     security = {
@@ -169,7 +183,7 @@ in
       ];
     };
 
-    home-manager.users.debling = {
+    home-manager.users.${mainUser} = {
       services.cliphist.enable = true;
     };
 
