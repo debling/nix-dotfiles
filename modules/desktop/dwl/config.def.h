@@ -127,8 +127,8 @@ static const Key keys[] = {
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          SHCMD(termcmd) },
 
-	{ NULL, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+") },
-	{ NULL, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-") },
+	{ NULL, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("volume set 5%+") },
+	{ NULL, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("volume set 5%-") },
 	{ NULL, XKB_KEY_XF86AudioMute, spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
 	{ NULL, XKB_KEY_XF86AudioPlay, spawn, SHCMD("playerctl play-pause") },
 	{ NULL, XKB_KEY_XF86AudioPrev, spawn, SHCMD("playerctl previous") },

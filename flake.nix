@@ -124,6 +124,7 @@
       # usb drive
       nixosConfigurations.live = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
+        specialArgs = specialArgs;
         modules = [
           "${nixpkgs}/nixos/modules/profiles/all-hardware.nix"
 
@@ -131,7 +132,6 @@
 
           ./disko.nix
           ./hosts/portable/configuration.nix
-          ./modules/desktop/dwl
 
           {
             virtualisation.vmVariant = {

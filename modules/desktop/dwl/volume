@@ -1,0 +1,59 @@
+#!/bin/sh
+
+
+ICON_SET="/run/current-system/sw/share/icons/rose-pine"
+ICON_VOLUME_HIGH="${ICON_SET}/16x16/actions/audio-volume-high.svg"
+ICON_VOLUME_MEDIUM="${ICON_SET}/16x16/actions/audio-volume-medium.svg"
+ICON_VOLUME_LOW="${ICON_SET}/16x16/actions/audio-volume-low.svg"
+ICON_VOLUME_MUTED="${ICON_SET}/16x16/actions/audio-volume-muted.svg"
+
+getIcon() {
+    currLevel="$1"
+    if [ "$currLevel" -eq "0" ]; then
+        echo $ICON_VOLUME_MUTED
+    elif [ "$currLevel" -ge "60" ]; then
+        echo $ICON_VOLUME_HIGH
+    elif [ "$currLevel" -ge "30" ]; then
+        echo $ICON_VOLUME_MEDIUM
+    else
+        echo $ICON_VOLUME_LOW
+    fi
+}
+
+
+setVolumeImpl() {
+    amount="$1"
+    wpctl set-volume @DEFAULT_AUDIO_SINK@ "$amount";
+}
+
+# Returns the current level in a 0-100 range
+getCurrentLevel() {
+    wpctl get-volume @DEFAULT_AUDIO_SINK@ |  cut -d" " -f2 | tr -d '.'
+}
+
+
+setVolume() {
+    amount="$1"
+
+    setVolumeImpl "$amount"
+
+    newLevel="$(getCurrentLevel)"
+
+    notify-send --transient \
+        --urgency=low \
+        -h string:x-canonical-private-synchronous:volume \
+        -h "int:value:${newLevel}" \
+        -i "$(getIcon "$newLevel")" \
+        "$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+}
+
+help() {
+    echo "volume set 5%+"
+}
+
+
+if [ "$1" = "set" ]; then
+    setVolume "$2"
+else
+    help
+fi

@@ -69,6 +69,12 @@ let
     systemctl --user stop dwl-session.target
   '';
 
+  volume = pkgs.writeShellApplication {
+    name = "volume";
+    runtimeInputs = with pkgs; [ libnotify pipewire ];
+    text = builtins.readFile ./volume;
+  };
+
   screenshot = pkgs.writeShellApplication {
     name = "screenshot";
 
@@ -89,6 +95,7 @@ in
         pkgs.slurp
         pkgs.grim
         screenshot
+        volume
         pkgs.wl-clipboard
         dwl-run
         dwl
@@ -130,7 +137,7 @@ in
       enable = true;
       serviceConfig = {
         ExecStart = with colorscheme.palette; ''
-          ${lib.getExe dwlb} -ipc -font 'mono:size=12' \
+          ${lib.getExe dwlb} -ipc -font 'mono:size=10' \
             -inactive-bg-color '#${base00}' \
             -middle-bg-color '#${base0E}' \
             -middle-bg-color-selected '#${base0E}' \
