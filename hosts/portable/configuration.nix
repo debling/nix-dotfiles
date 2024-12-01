@@ -11,6 +11,8 @@
       ./hardware-configuration.nix
       ../../modules/common/pipewire.nix
       ../../modules/nixos/containers.nix
+      ../../modules/desktop/dwl
+      ../../modules/common/fonts.nix
     ];
 
   nix = {
@@ -134,6 +136,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    rose-pine-icon-theme
     firefox
     spotify
   ];
@@ -164,25 +167,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
-
-  fonts = {
-    enableDefaultPackages = true;
-    fontDir.enable = true;
-    packages = with pkgs; [
-      corefonts # microsoft free fonts
-      source-sans-pro
-      source-serif-pro
-      (nerdfonts.override {
-        fonts = [ "JetBrainsMono" "IosevkaTerm" ];
-      })
-    ];
-    fontconfig.defaultFonts = {
-      monospace = [ "IosevkaTerm Nerd Font" ];
-      sansSerif = [ "Source Sans Pro" ];
-      serif = [ "Source Serif Pro" ];
-    };
-  };
-
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

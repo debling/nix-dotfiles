@@ -13,6 +13,7 @@ in
     ./modules/terminals/alacritty.nix
     ./modules/terminals/foot.nix
     ./modules/home/version-control.nix
+    ./modules/home/gtk-qt.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
@@ -41,6 +42,7 @@ in
         borderSize = 1;
         textColor = "#FFFFFF";
         layer = "overlay";
+        iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
       };
 
       # blueman-applet.enable = shouldEnable;
@@ -558,32 +560,6 @@ in
     gh-dash.enable = true;
   };
 
-  dconf.settings = {
-    "org/gnome/desktop/background" = {
-      picture-uri-dark = "file://${pkgs.nixos-artwork.wallpapers.nineish-dark-gray.src}";
-    };
-
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
-  };
-
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
-    };
-  };
-
-  qt = {
-    enable = true;
-    platformTheme.name = "adwaita";
-    style = {
-      package = [ pkgs.adwaita-qt ];
-      name = "adwaita-dark";
-    };
-  };
 
   systemd.user.startServices = "sd-switch";
 
