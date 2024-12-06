@@ -92,7 +92,7 @@
       specialArgs = {
         inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
         mainUser = username;
-        colorscheme = inputs.nix-colors.colorschemes.tomorrow-night;
+        colorscheme = inputs.nix-colors.colorschemes.gruvbox-dark-hard;
       };
 
       homeManagerConfiguration = {

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, mainUser, colorscheme, ... }:
+{ config, lib, pkgs, mainUser, nix-colors, colorscheme, ... }:
 
 
 let
@@ -158,6 +158,27 @@ in
       wantedBy = [ "dwlb.service" ];
       reloadTriggers = [ dwlb slstatus ];
       restartTriggers = [ dwlb slstatus ];
+    };
+
+    systemd.user.services.wallpaper = {
+      description = "Service to set the wallpapper";
+      enable = true;
+      serviceConfig = {
+        ExecStart = let
+          nix-colors-lib = nix-colors.lib.contrib { inherit pkgs; };
+          wallpaper = nix-colors-lib.nixWallpaperFromScheme {
+            scheme = colorscheme;
+            width = 1920;
+            height = 1080;
+            logoScale = 4.0;
+          };
+        in ''
+          ${lib.getExe pkgs.wbg} ${wallpaper}
+        '';
+      };
+      bindsTo = [ "dwl-session.target" ];
+      wantedBy = [ "dwl-session.target" ];
+      restartIfChanged = true;
     };
 
     security = {
