@@ -37,12 +37,23 @@ in
       mako = with colorscheme.palette; {
         enable = shouldEnable;
         defaultTimeout = 10 * 1000;
-        backgroundColor = "#${base00}";
-        borderColor = "#${base0E}";
-        borderSize = 1;
-        textColor = "#FFFFFF";
         layer = "overlay";
         iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
+        backgroundColor = "#${base00}";
+        textColor = "#${base05}";
+        borderColor = "#${base0D}";
+        progressColor = "#${base02}";
+        extraConfig = ''
+          [urgency=low]
+          background-color=#${base00}
+          text-color=#${base0A}
+          border-color=#${base0D}
+
+          [urgency=high]
+          background-color=#${base00}
+          text-color=#${base08}
+          border-color=#${base0D}
+        '';
       };
 
       # blueman-applet.enable = shouldEnable;
@@ -250,6 +261,7 @@ in
   };
 
   programs = {
+    nushell.enable = true;
     fish = {
       enable = true;
       interactiveShellInit = ''

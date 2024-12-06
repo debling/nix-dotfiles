@@ -139,7 +139,7 @@ in
         ExecStart = with colorscheme.palette; ''
           ${lib.getExe dwlb} -ipc -font 'mono:size=10' \
             -inactive-bg-color '#${base00}' \
-            -middle-bg-color '#${base0E}' \
+            -middle-bg-color '#${base00}' \
             -middle-bg-color-selected '#${base0E}' \
             -active-bg-color '#${base0E}' \
             -occupied-bg-color '#${base00}'

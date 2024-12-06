@@ -20,7 +20,7 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-   channel.enable = false;
+    channel.enable = false;
   };
 
   # Use the systemd-boot EFI boot loader.

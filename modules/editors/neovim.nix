@@ -58,7 +58,7 @@ in
 
         packages = with pkgs; [
           zigpkgs.master
-          # zls
+          zls
           sonarlint-ls
           checkmake
           clang-tools_18 # C/C++
