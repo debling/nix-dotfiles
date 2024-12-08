@@ -1,14 +1,9 @@
-vim.opt.termguicolors = true
-
--- vim.o.background = 'light' -- or "light" for light mode
--- require('solarized').setup({
---     transparent = true, -- enable transparent background
--- })
--- vim.cmd('colorscheme solarized')
-
-vim.cmd.hi("Normal ctermbg=none guibg=none")
--- change treesitter context to a bridger color, default is NvimDarkGrey1
-vim.cmd.hi("NormalFloat guibg=NvimDarkGrey3")
+-- vim.cmd.colorscheme('retrobox')
+--
+-- vim.cmd.hi('Normal ctermbg=none guibg=none')
+--
+-- -- change treesitter context to a bridger color, default is NvimDarkGrey1
+-- vim.cmd.hi('NormalFloat guibg=NvimDarkGrey3')
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 require('ibl').setup()

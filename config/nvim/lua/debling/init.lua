@@ -1,10 +1,15 @@
 vim.loader.enable()
 
+require('snacks').setup({
+    bigfile = { enabled = true },
+    quickfile = { enabled = true },
+    statuscolumn = { enabled = true },
+    words = { enabled = true },
+})
+
 require('debling.basic_options')
 
 require('debling.ui_config')
-
-require('neodev').setup()
 
 require('debling.lsp_config')
 

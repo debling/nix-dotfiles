@@ -59,7 +59,6 @@ in
         packages = with pkgs; [
           zigpkgs.master
           zls
-          sonarlint-ls
           checkmake
           clang-tools_18 # C/C++
           bear # wrap make to generate compile_commands.json
@@ -126,19 +125,6 @@ in
               hash = "sha256-4z8aL+ZyS8yeFdRY4+J+CHK2C0+2bJJeaEF+G840COU=";
             };
           };
-          harpoon = pkgs.vimUtils.buildVimPlugin {
-            name = "harpoon";
-
-            dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
-
-            src = pkgs.fetchFromGitHub {
-              owner = "ThePrimeagen";
-              repo = "harpoon";
-              rev = "0378a6c428a0bed6a2781d459d7943843f374bce";
-              hash = "sha256-FZQH38E02HuRPIPAog/nWM55FuBxKp8AyrEldFkoLYk=";
-            };
-          };
-
           hurl-nvim = pkgs.vimUtils.buildVimPlugin {
             name = "hurl-nvim";
 
@@ -165,19 +151,6 @@ in
             };
           };
 
-          sonarlint-nvim = pkgs.vimUtils.buildVimPlugin {
-            name = "sonarlint-nvim";
-
-            buildInputs = [ pkgs.sonarlint-ls ];
-
-            src = pkgs.fetchFromGitLab {
-              owner = "schrieveslaach";
-              repo = "sonarlint.nvim";
-              rev = "3ccb3e5452b0c075e4fb7dbee436d4e65d34d294";
-              hash = "sha256-/hESKG0K/U4iGFe5b1byWcDuFsju8g7fUBL5AYFhavo=";
-            };
-          };
-
           solarized-nvim = pkgs.vimUtils.buildVimPlugin {
             name = "solarized-nvim";
 
@@ -195,9 +168,9 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
-            solarized-nvim
-            sonarlint-nvim
-            bigfile-nvim
+            harpoon2
+
+            snacks-nvim
 
             freeze-code-nvim
 
@@ -226,7 +199,6 @@ in
             nvim-treesitter-refactor
             nvim-treesitter-context
             todo-comments-nvim # No setup() call needed
-            harpoon
 
             ## LSP
             nvim-lspconfig
@@ -261,7 +233,7 @@ in
             gitsigns-nvim
             neogit
 
-            neodev-nvim
+            lazydev-nvim
 
             ## UI
             lualine-nvim

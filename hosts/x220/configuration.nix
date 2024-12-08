@@ -2,14 +2,41 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, mainUser, ... }:
 
 {
+  imports =
+    [
+      # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+
+      ../../modules/desktop/dwl
+      ../../modules/common/bluetooth.nix
+      ../../modules/common/pipewire.nix
+      ../../modules/nixos/containers.nix
+      ../../modules/common/fonts.nix
+    ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.${mainUser} = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel" # Enable ‘sudo’ for the user.
+      "docker" "podman" # docker and podman without sudo
+    ]; 
+    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
+    shell = pkgs.fish;
+  };
+  security.sudo.wheelNeedsPassword = false;
+
+  home-manager.users.${mainUser} = import ./home.nix;
+
+
   nix = {
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-    settings.trusted-users = [ "root" "debling" ];
+    settings.trusted-users = [ "root" mainUser ];
   };
 
   networking.hostName = "x220"; # Define your hostname.
@@ -57,7 +84,7 @@
       };
     };
 
-    displayManager.autoLogin.user = "debling";
+    displayManager.autoLogin.user = mainUser;
 
     xserver = {
       enable = true;
@@ -79,14 +106,6 @@
   # services.printing.enable = true;
 
   security.rtkit.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.debling = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "podman" ]; # Enable ‘sudo’ for the user.
-    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
-    shell = pkgs.fish;
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

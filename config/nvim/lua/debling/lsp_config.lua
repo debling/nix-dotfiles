@@ -151,19 +151,3 @@ null_ls.setup({
     null_ls.builtins.diagnostics.checkmake,
   },
 })
-
-require('sonarlint').setup({
-
-  server = {
-    cmd = {
-      'sonarlint-ls',
-    },
-  },
-
-  filetypes = {
-    -- Tested and working
-    'python',
-    'cpp',
-    'java',
-  },
-})

@@ -101,26 +101,10 @@
         ];
         useGlobalPkgs = true;
         useUserPackages = true;
-        users.${username} = import ./home.nix;
         extraSpecialArgs = specialArgs;
       };
     in
     {
-
-      homeConfigurations.${username} = home-manager.lib.homeManagerConfiguration {
-        # Specify your home configuration modules here, for example,
-        # the path to your home.nix.
-        modules = [
-          inputs.sops-nix.homeManagerModules.sops
-          ./home.nix
-        ];
-
-        # Optionally use extraSpecialArgs
-        # to pass through arguments to home.nix
-
-        extraSpecialArgs = specialArgs;
-      };
-
       # usb drive
       nixosConfigurations.live = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
@@ -161,28 +145,14 @@
         ];
       };
 
-
-      # My `nix-darwin` configs
       nixosConfigurations.x220 = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [
-          ./hosts/x220/hardware-configuration.nix
-
-          # Main `nix-darwin` config
           ./hosts/x220/configuration.nix
-
-          ./modules/desktop/dwl
-          ./modules/common/fonts.nix
-          ./modules/common/bluetooth.nix
-          ./modules/nixos/containers.nix
-
-          # `home-manager` module
           home-manager.nixosModules.home-manager
-
           {
             nixpkgs = nixpkgsConfig;
-            # `home-manager` config
             home-manager = homeManagerConfiguration;
           }
         ];
