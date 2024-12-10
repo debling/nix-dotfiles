@@ -5,14 +5,22 @@
     # Package sets
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # Environment/system management
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
-
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -62,8 +70,9 @@
 
   outputs =
     { self
-    , darwin
     , nixpkgs
+    , darwin
+    , nix-on-droid
     , home-manager
     , flake-utils
     , ...
@@ -187,6 +196,14 @@
             # `home-manager` config
             home-manager = homeManagerConfiguration;
           })
+        ];
+      };
+
+      nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = import nixpkgs (nixpkgsConfig // { system = flake-utils.lib.system.aarch64-darwin; });
+        extraSpecialArgs = specialArgs;
+        modules = [ 
+          ./hosts/pixel-6/nix-on-droid.nix 
         ];
       };
 

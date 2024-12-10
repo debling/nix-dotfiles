@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-android-integration = {
-	termux-open.enable = true;
-	termux-open-url.enable = true;
-};
+  android-integration = {
+    termux-open.enable = true;
+    termux-open-url.enable = true;
+  };
   # Simply install just the packages
   environment.packages = with pkgs; [
     # User-facing stuff that you really really want to have
@@ -47,6 +47,15 @@ android-integration = {
     experimental-features = nix-command flakes
   '';
 
+
   # Set your time zone
   time.timeZone = "America/Sao_Paulo";
+
+  # Configure home-manager
+  home-manager = {
+    backupFileExtension = "hm-bak";
+    useGlobalPkgs = true;
+
+    config = ./home.nix;
+  };
 }
