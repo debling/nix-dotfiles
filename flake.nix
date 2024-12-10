@@ -200,7 +200,10 @@
       };
 
       nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
-        pkgs = import nixpkgs (nixpkgsConfig // { system = flake-utils.lib.system.aarch64-darwin; });
+        pkgs = import nixpkgs {
+          config = { allowUnfree = true; };
+          system = flake-utils.lib.system.aarch64-darwin; 
+        };
         extraSpecialArgs = specialArgs;
         modules = [ 
           ./hosts/pixel-6/nix-on-droid.nix 
