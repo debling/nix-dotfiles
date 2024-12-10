@@ -1,4 +1,5 @@
--- vim.cmd.colorscheme('retrobox')
+vim.cmd.colorscheme('base16-gruvbox-dark-hard')
+
 --
 -- vim.cmd.hi('Normal ctermbg=none guibg=none')
 --

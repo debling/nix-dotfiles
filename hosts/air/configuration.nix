@@ -38,7 +38,7 @@
 
   # Fonts
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+    nerd-fonts.jetbrains-mono
   ];
 
   environment.systemPackages = with pkgs; [
@@ -56,16 +56,12 @@
     # karabiner-elements.enable = true;
 
     jankyborders = {
-      enable = true;
+      enable = false;
       active_color = "0xFF586e75";
       inactive_color = "0xFFfdf6e3";
       # style = "square";
       hidpi = true;
     };
-
-    # spacebar = {
-    #   enable = true;
-    # };
 
     yabai = {
       enable = true;
@@ -89,9 +85,9 @@
         right_padding = 6;
         window_gap = 8;
 
-        window_opacity = "on";
-        active_window_opacity = "1.0";
-        normal_window_opacity = "0.9";
+        # window_opacity = "on";
+        # active_window_opacity = "1.0";
+        # normal_window_opacity = "0.9";
 
         window_animation_duration = 0.0;
       };

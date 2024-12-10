@@ -46,7 +46,7 @@
       url = "github:zigtools/zls";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        # zig-overlay.follows = "zig-overlay";
+        zig-overlay.follows = "zig-overlay";
       };
     };
 
@@ -80,6 +80,12 @@
             zls = inputs.zls.packages.${prev.system}.default;
             kmonad = inputs.kmonad.packages.${prev.system}.default;
           })
+
+          # (final: prev: {
+          #   nodePackages = prev.nodePackages // (prev.callPackage ./overlays/nodePackages {
+          #     pkgs = prev;
+          #   });
+          # })
 
           inputs.android-nixpkgs.overlays.default
 

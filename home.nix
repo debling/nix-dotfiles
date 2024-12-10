@@ -111,7 +111,10 @@ in
         ];
       in
       [
-        jetbrains.idea-ultimate
+        # nodePackages.pgsh
+        nodePackages.eas-cli
+
+        # jetbrains.idea-ultimate
         babashka
         gh
 
@@ -121,7 +124,6 @@ in
 
         ### Editors/IDEs
         # jetbrains.datagrip
-        # jetbrains.idea-ultimate
         visualvm
 
         ### Langs related
@@ -246,7 +248,6 @@ in
       # Stable SDK symlinks
       "SDKs/Java/current".source = pkgs.jdk;
       "SDKs/Java/11".source = pkgs.jdk11;
-      "SDKs/Java/17".source = pkgs.jdk17;
       "SDKs/Java/8".source = pkgs.jdk8;
       # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };

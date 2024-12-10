@@ -13,8 +13,11 @@ in
     settings =
       let
         generic_setting = {
-          live_config_reload = false;
-          ipc_socket = false;
+          general = {
+            ipc_socket = false;
+            live_config_reload = false;
+          };
+
           scrolling = {
             history = 0; # history is already provided by tmux
           };

@@ -1,7 +1,8 @@
-{ colorscheme, ... }:
+{ pkgs, colorscheme, ... }:
+
 {
   programs.foot = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     server.enable = true;
     settings = {
       main = {

@@ -146,19 +146,8 @@ in
             src = pkgs.fetchFromGitHub {
               owner = "AlejandroSuero";
               repo = "freeze-code.nvim";
-              rev = "e49fc7f13e49be30621038ce8067c0d821f813a3";
-              hash = "sha256-1NGM7bmCQj5ssOgmPGUWtWDtmcrtl59yAAvTEE+P7VE=";
-            };
-          };
-
-          solarized-nvim = pkgs.vimUtils.buildVimPlugin {
-            name = "solarized-nvim";
-
-            src = pkgs.fetchFromGitHub {
-              owner = "maxmx03";
-              repo = "solarized.nvim";
-              rev = "6875d609077411c88d293cb0520ca4e08b829ded";
-              hash = "sha256-Jg9HC3rvxLv4dI/r84TYZpaabkEYh1qHTtusMVaoj+Q=";
+              rev = "b9e54ef8842d831f09298d331e997b574ee0ff78";
+              hash = "sha256-EOO8l/V1EPGmxGFXcu+66B7QtaD3lDInUVA56sDahFo=";
             };
           };
         in
@@ -168,7 +157,7 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
-            harpoon2
+            base16-nvim
 
             snacks-nvim
 

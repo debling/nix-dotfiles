@@ -21,6 +21,11 @@ require('debling.file_navigation_config')
 
 require('debling.vcs_config')
 
+require('snacks').setup({
+    bigfile = { enabled = true },
+    quickfile = { enabled = true },
+})
+
 -- vim-slime setup, default to tmux, using the pane in the bottom right
 vim.g.slime_target = 'tmux'
 vim.g.slime_default_config = {
@@ -77,6 +82,9 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 require('freeze-code').setup({
   copy = true,
   dir = '/tmp',
+  freeze_config = { -- configuration options for `freeze` command
+    theme = "catppuccin-mocha",
+  },
 })
 
 require('quarto').setup({

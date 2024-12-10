@@ -1,5 +1,5 @@
 # meh = shift + alt + ctrl
-alt - return : alacritty
+alt - return : open "$HOME/Applications/Home Manager Apps/Alacritty.app"
 
 # change window focus within space
 alt - j : yabai -m window --focus south

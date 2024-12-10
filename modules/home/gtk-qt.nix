@@ -12,7 +12,7 @@
   };
 
   gtk = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     theme = {
       name = "rose-pine";
       package = pkgs.rose-pine-gtk-theme;
@@ -24,7 +24,7 @@
   };
 
   qt = {
-    enable = true;
+    enable = pkgs.stdenv.isLinux;
     platformTheme.name = "adwaita";
     style = {
       package = [ pkgs.adwaita-qt ];

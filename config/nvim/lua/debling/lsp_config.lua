@@ -118,6 +118,7 @@ lsp.ltex.setup({
   end,
   settings = {
     ltex = {
+      language =  "auto",
       additionalRules = {
         motherTongue = 'pt-BR',
         enablePickyRules = true,
