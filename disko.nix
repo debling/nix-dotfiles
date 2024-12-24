@@ -54,10 +54,10 @@
                   mountOptions = [
                     # tells F2FS to use zstd for compression at level 6, which
                     # should give pretty good compression ratio.
-                    "compress_algorithm=zstd:6"
+                    # "compress_algorithm=zstd:6"
                     # tells the filesystem to verify compressed blocks with a
                     # checksum (to avoid corruption)
-                    "compress_chksum"
+                    # "compress_chksum"
 
                     # Enable better garbage collector, and enable some
                     # foreground garbage collections to be asynchronous

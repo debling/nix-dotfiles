@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, mainUser, ... }:
 
 {
   imports =
@@ -14,6 +14,19 @@
       ../../modules/desktop/dwl
       ../../modules/common/fonts.nix
     ];
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.debling = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
+    shell = pkgs.fish;
+  };
+
+
+  security.sudo.wheelNeedsPassword = false;
+
+  home-manager.users.${mainUser} = import ./home.nix;
 
   nix = {
     settings.trusted-users = [ "root" "debling" ];
@@ -122,16 +135,6 @@
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
-
-  security.sudo.wheelNeedsPassword = false;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.debling = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
-    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
-    shell = pkgs.fish;
-  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

@@ -128,35 +128,15 @@
           "${nixpkgs}/nixos/modules/profiles/all-hardware.nix"
 
           inputs.disko.nixosModules.disko
-
           ./disko.nix
+
           ./hosts/portable/configuration.nix
 
-          {
-            virtualisation.vmVariant = {
-              # following configuration is added only when building VM with build-vm
-              virtualisation = {
-                memorySize = 2048;
-                cores = 2;
-                graphics = true;
-              };
-            };
-
-            environment.sessionVariables = {
-              # Nedded to make wlroots work with no hw accell
-              WLR_RENDERER_ALLOW_SOFTWARE = 1;
-            };
-          }
-
-          # `home-manager` module
           home-manager.nixosModules.home-manager
-
           {
             nixpkgs = nixpkgsConfig;
-            # `home-manager` config
             home-manager = homeManagerConfiguration;
           }
-
         ];
       };
 
