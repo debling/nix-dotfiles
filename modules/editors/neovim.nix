@@ -234,7 +234,6 @@ in
             vim-sleuth
 
             SchemaStore-nvim
-            oil-nvim
 
             ## Remember last place on files
             nvim-lastplace

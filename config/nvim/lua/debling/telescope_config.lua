@@ -32,6 +32,3 @@ utils.nmap('z=', tel_builtin.spell_suggest)
 
 -- remember the last place you were editing a file
 require('nvim-lastplace').setup()
-
--- a pretty good file explorer
-require('oil').setup()

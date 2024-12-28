@@ -16,11 +16,6 @@ vim.g.loaded_matchparen = 1
 vim.g.loaded_logiPat = 1
 vim.g.loaded_rrhelper = 1
 
--- disable netrw at the very start of your init.lua, recomended for nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_netrwSettings = 1
-
 -- Search options
 vim.o.ignorecase = true
 vim.o.smartcase = true
