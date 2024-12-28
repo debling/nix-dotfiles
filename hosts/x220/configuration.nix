@@ -10,11 +10,13 @@
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
-      ../../modules/desktop/dwl
-      ../../modules/common/bluetooth.nix
-      ../../modules/common/pipewire.nix
-      ../../modules/nixos/containers.nix
+      ../../modules/common/containers.nix
       ../../modules/common/fonts.nix
+      ../../modules/common/networking.nix
+      ../../modules/common/nix.nix
+      ../../modules/common/pipewire.nix
+      ../../modules/desktop/dwl
+      ../../modules/hardware/bluetooth.nix
     ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -32,25 +34,10 @@
 
   home-manager.users.${mainUser} = import ./home.nix;
 
-
-  nix = {
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-    settings.trusted-users = [ "root" mainUser ];
-  };
-
   networking.hostName = "x220"; # Define your hostname.
-  # Pick only one of the below networking options.
-  networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -58,14 +45,6 @@
     font = "Lat2-Terminus16";
     useXkbConfig = true; # use xkbOptions in tty.
   };
-
-  # Allow PMTU / DHCP
-  networking.firewall.allowPing = true;
-
-  # The notion of "online" is a broken concept
-  # https://github.com/systemd/systemd/blob/e1b45a756f71deac8c1aa9a008bd0dab47f64777/NEWS#L13
-  systemd.services.NetworkManager-wait-online.enable = false;
-  systemd.network.wait-online.enable = false;
 
   # Enable the X11 windowing system.
   services = {
@@ -142,10 +121,6 @@
     };
     zsh.enable = true;
     neovim.enable = true;
-
-    steam = {
-      enable = false;
-    };
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
@@ -160,20 +135,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
-
-  system.activationScripts.diff = {
-    supportsDryActivation = true;
-    text = ''
-      if [[ -e /run/current-system ]]; then
-        echo "--- diff to current-system"
-        ${pkgs.nvd}/bin/nvd --nix-bin-dir=${config.nix.package}/bin diff /run/current-system "$systemConfig"
-        echo "---"
-      fi
-    '';
-  };
-  system.switch = {
-    enable = false;
-    enableNg = true;
-  };
-
 }
