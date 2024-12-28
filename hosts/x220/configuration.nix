@@ -22,8 +22,9 @@
     isNormalUser = true;
     extraGroups = [
       "wheel" # Enable ‘sudo’ for the user.
-      "docker" "podman" # docker and podman without sudo
-    ]; 
+      "docker"
+      "podman" # docker and podman without sudo
+    ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
     shell = pkgs.fish;
   };

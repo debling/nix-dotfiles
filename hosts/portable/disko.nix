@@ -3,7 +3,7 @@
     disk = {
       main = {
         # When using disko-install, we will overwrite this value from the commandline
-        device = "/dev/disk/by-id/usb-WDC_WDS1_20G2G0A-00JH30_20D11E80105D-0:0";
+        device = "/dev/disk/by-id/usb-Samsung_SSD_870_EVO_1TB_20D11E80105D-0:0";
         type = "disk";
         content = {
           type = "gpt";
@@ -27,7 +27,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted";
+                name = "crypted-root";
                 settings.allowDiscards = true;
                 passwordFile = "/tmp/secret.key";
                 content = {
@@ -59,14 +59,16 @@
                     # checksum (to avoid corruption)
                     # "compress_chksum"
 
+
+                    # "atgc"
+                    # "gc_merge"
                     # Enable better garbage collector, and enable some
                     # foreground garbage collections to be asynchronous
-                    "atgc"
-                    "gc_merge"
 
+                    # - "lazytime"
                     # Do not synchronously update access or modification times.
                     # Improves IO performance and flash durability. 
-                    "lazytime"
+                    "compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime,nodiscard"
                   ];
                 };
               };

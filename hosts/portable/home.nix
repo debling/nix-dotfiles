@@ -145,7 +145,7 @@ in
         ### CLI utils
         pinentry-tty
         # bitwarden-cli
-        awscli2
+        # awscli2
         cloc
         coreutils
         entr # Run commands when files change
@@ -446,74 +446,6 @@ in
     #   enableBashIntegration = true;
     #   enableZshIntegration = true;
     # };
-
-    zsh = {
-      enable = true;
-      defaultKeymap = "emacs";
-      autosuggestion = {
-        enable = true;
-      };
-      enableCompletion = true;
-      syntaxHighlighting = {
-        enable = true;
-      };
-      enableVteIntegration = true;
-      autocd = true;
-      history.size = 100000;
-      localVariables = {
-        TYPEWRITTEN_ARROW_SYMBOL = "➜";
-        TYPEWRITTEN_RELATIVE_PATH = "adaptive";
-        TYPEWRITTEN_SYMBOL = "$";
-      };
-      plugins = [
-        {
-          name = "typewritten";
-          src = pkgs.fetchFromGitHub {
-            owner = "reobin";
-            repo = "typewritten";
-            rev = "v1.5.1";
-            sha256 = "07zk6lvdwy9n0nlvg9z9h941ijqhc5vvfpbr98g8p95gp4hvh85a";
-          };
-        }
-        # build is currently failing on nixpkgs-unstable
-        { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
-      ];
-      initExtraBeforeCompInit = ''
-        if type brew &>/dev/null
-        then
-            fpath+="$(brew --prefix)/share/zsh/site-functions"
-        fi
-      '';
-      initExtra = ''
-        # Enable editing of the command line in an editor with Ctrl-X Ctrl-E
-        autoload -z edit-command-line
-        zle -N edit-command-line
-        bindkey "^X^E" edit-command-line
-
-        # load module for list-style selection
-        # zmodload zsh/complist
-
-        # use the module above for autocomplete selection
-        # zstyle ':completion:*' menu yes select
-
-        # now we can define keybindings for complist module
-        # you want to trigger search on autocomplete items
-        # so we'll bind some key to trigger history-incremental-search-forward function
-        # bindkey -M menuselect '?' history-incremental-search-forward
-
-        #### zfzf-tab config
-        # disable sort when completing `git checkout`
-        zstyle ':completion:*:git-checkout:*' sort false
-        # set descriptions format to enable group support
-        zstyle ':completion:*:descriptions' format '[%d]'
-        # set list-colors to enable filename colorizing
-        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-        # preview directory's content with exa when completing cd
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-        # switch group using `,` and `.`
-        zstyle ':fzf-tab:*' switch-group ',' '.'
-      '';
-    };
 
     tmux = {
       enable = true;

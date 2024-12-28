@@ -18,7 +18,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" "gamemode" ]; # Enable ‘sudo’ for the user.
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
     shell = pkgs.fish;
   };
@@ -29,11 +29,12 @@
   home-manager.users.${mainUser} = import ./home.nix;
 
   nix = {
-    settings.trusted-users = [ "root" "debling" ];
+    settings.trusted-users = [ "root" mainUser ];
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
     channel.enable = false;
+    settings.auto-optimise-store = true;
   };
 
   # Use the systemd-boot EFI boot loader.
@@ -169,7 +170,7 @@
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = false;
+  networking.firewall.enable = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
@@ -211,8 +212,25 @@
     enable = true;
   };
 
+  programs.gamemode = {
+    enable = true;
+    settings = {
+      general = {
+        renice = 10;
+      };
+
+      custom = {
+        start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+        end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+      };
+    };
+  };
+
   # Load nvidia driver for Xorg and Wayland
   services.xserver.videoDrivers = [ "nvidia" ];
+
+  services.fstrim.enable = true;
+  services.tlp.enable = true;
 
   hardware.nvidia = {
     # Modesetting is required.
@@ -240,9 +258,6 @@
     # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
     nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 }
 

@@ -4,7 +4,6 @@ require('snacks').setup({
     bigfile = { enabled = true },
     quickfile = { enabled = true },
     statuscolumn = { enabled = true },
-    words = { enabled = true },
 })
 
 require('debling.basic_options')
@@ -20,11 +19,6 @@ require('debling.telescope_config')
 require('debling.file_navigation_config')
 
 require('debling.vcs_config')
-
-require('snacks').setup({
-    bigfile = { enabled = true },
-    quickfile = { enabled = true },
-})
 
 -- vim-slime setup, default to tmux, using the pane in the bottom right
 vim.g.slime_target = 'tmux'

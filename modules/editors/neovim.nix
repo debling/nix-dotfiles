@@ -125,18 +125,18 @@ in
               hash = "sha256-4z8aL+ZyS8yeFdRY4+J+CHK2C0+2bJJeaEF+G840COU=";
             };
           };
-          hurl-nvim = pkgs.vimUtils.buildVimPlugin {
-            name = "hurl-nvim";
-
-            dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
-
-            src = pkgs.fetchFromGitHub {
-              owner = "jellydn";
-              repo = "hurl.nvim";
-              rev = "839784128048251ea9169264b72eaee171fbb1bd";
-              hash = "sha256-GSww1LYGw1m+OQB90fTtFgxNjUMnEMlIF3AD7LXVDlg=";
-            };
-          };
+          # hurl-nvim = pkgs.vimUtils.buildVimPlugin {
+          #   name = "hurl-nvim";
+          #
+          #   dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
+          #
+          #     src = pkgs.fetchFromGitHub {
+          #       owner = "jellydn";
+          #       repo = "hurl.nvim";
+          #       rev = "v2.0.0";
+          #       hash = "sha256-4pVO/WzjucHGTDPUCqHW9SRnQwZoYeGtpsO4fp+aJ04=";
+          #     };
+          # };
 
           freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {
             name = "freeze-code-nvim";
@@ -157,6 +157,7 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
+            harpoon2
             base16-nvim
 
             snacks-nvim
@@ -164,7 +165,7 @@ in
             freeze-code-nvim
 
             hurl
-            hurl-nvim
+            # hurl-nvim
             render-markdown-nvim
 
             rainbow-delimiters-nvim

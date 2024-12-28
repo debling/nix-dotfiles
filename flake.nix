@@ -88,13 +88,17 @@
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
             kmonad = inputs.kmonad.packages.${prev.system}.default;
-          })
 
-          # (final: prev: {
-          #   nodePackages = prev.nodePackages // (prev.callPackage ./overlays/nodePackages {
-          #     pkgs = prev;
-          #   });
-          # })
+            wbg = prev.wbg.overrideAttrs {
+              src = prev.fetchFromGitea {
+                domain = "codeberg.org";
+                owner = "dnkl";
+                repo = "wbg";
+                rev = "38417d8172f6c9201495f6388d6d5f6334b19e02";
+                hash = "sha256-ikwOVtR5cXZGd2GE/O4ej6cOQZomyEKkPcKe08EtPw0=";
+              };
+            };
+          })
 
           inputs.android-nixpkgs.overlays.default
 
@@ -121,14 +125,14 @@
     in
     {
       # usb drive
-      nixosConfigurations.live = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.portable = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [
           "${nixpkgs}/nixos/modules/profiles/all-hardware.nix"
 
           inputs.disko.nixosModules.disko
-          ./disko.nix
+          ./hosts/portable/disko.nix
 
           ./hosts/portable/configuration.nix
 
@@ -182,14 +186,20 @@
       nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
         pkgs = import nixpkgs {
           config = { allowUnfree = true; };
-          system = flake-utils.lib.system.aarch64-darwin; 
+          system = flake-utils.lib.system.aarch64-darwin;
         };
         extraSpecialArgs = specialArgs;
-        modules = [ 
-          ./hosts/pixel-6/nix-on-droid.nix 
+        modules = [
+          ./hosts/pixel-6/nix-on-droid.nix
         ];
       };
 
       formatter = flake-utils.lib.eachDefaultSystemMap (sys: nixpkgs.legacyPackages.${sys}.nixpkgs-fmt);
+
+      packages = flake-utils.lib.eachDefaultSystemMap (sys:
+        import nixpkgs (nixpkgsConfig // {
+          system = sys;
+        })
+      );
     };
 }
