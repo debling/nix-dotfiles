@@ -22,13 +22,6 @@ in
 
   debling.alacritty.enable = true;
 
-  sops = {
-    defaultSopsFile = ./secrets/secrets.yaml;
-    defaultSopsFormat = "yaml";
-
-    age.keyFile = "${config.home.homeDirectory}/.age-key";
-  };
-
   services =
     let
       shouldEnable = pkgs.stdenv.isLinux;
@@ -96,20 +89,11 @@ in
   home = {
     enableNixpkgsReleaseCheck = true;
 
-    packages = with pkgs;
-      let
-        linuxPkgs = [
-          rofi-wayland
-          kdePackages.dolphin
-          wofi
-          sops
-          pavucontrol
-        ];
-        macosPkgs = [
-          m-cli # useful macOS CLI commands 
-        ];
-      in
-      [
+    packages = with pkgs; [
+      rofi-wayland
+      kdePackages.dolphin
+      wofi
+      pavucontrol
         jetbrains.idea-ultimate
         babashka
         gh
@@ -199,8 +183,7 @@ in
         # magic-wormhole # Send files over the network
 
         glow
-      ] ++ lib.optionals stdenv.isDarwin macosPkgs
-      ++ lib.optionals stdenv.isLinux linuxPkgs;
+      ];
 
     shellAliases = {
       g = "git";
@@ -218,10 +201,6 @@ in
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
-
-      # Neeed on darwin bcs sops looks by default on
-      # $HOME/Library/Application Support/sops/age/keys.txt
-      SOPS_AGE_KEY_FILE = config.sops.age.keyFile;
     };
 
     file = {

@@ -22,11 +22,6 @@
     darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -115,9 +110,6 @@
       };
 
       homeManagerConfiguration = {
-        sharedModules = [
-          inputs.sops-nix.homeManagerModules.sops
-        ];
         useGlobalPkgs = true;
         useUserPackages = true;
         extraSpecialArgs = specialArgs;
