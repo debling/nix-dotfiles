@@ -1,0 +1,103 @@
+#!/bin/sh
+
+set -e
+
+GPG_KEY="d.ebling8@gmail.com"
+SSH_KEY="id_ed25519"
+
+ENABLE_COLORS=true
+
+if [ ! -t 1 ] ; then 
+    ENABLE_COLORS=false
+fi
+
+ARCHIVED_GPG_PUB="gpg-pub-key"
+ARCHIVED_GPG_PVT="gpg-pvt-key"
+ARCHIVED_GPG_OWNERTRUST="gpg-pvt-ownertrust"
+
+log() {
+    RED='\033[0;31m'
+    NC='\033[0m' # No Color
+
+    level=$1
+    shift
+    if [ "$ENABLE_COLORS" = true ] && [ "$level" = "error" ]; then
+        printf  "${RED}%s: %s ${NC}\n" "${level}" "$*" 1>&2;
+    else 
+        echo "${level}: $*" 1>&2;
+    fi
+}
+
+archive() {
+    out_dir="$1"
+    if [ -z "$out_dir" ]; then
+        log "error" "empty path suplied";
+        exit 1
+    fi
+    if [ ! -d "$out_dir" ]; then
+        log "error" "Path \`${out_dir}\` does not exists or its not a valid directory."
+        exit 1
+    fi
+    out_dir="$(realpath "$out_dir")"
+
+    src_tmp_dir=$(mktemp --directory /tmp/copy-keys-XXXXXX)
+    # shellcheck disable=SC2064
+    # safety: expand src_tmp_dir now for cleanu0p
+    trap "rm -rf -- $src_tmp_dir" EXIT
+
+    key_dir="${src_tmp_dir}/keys"
+    mkdir "$key_dir"
+
+    gpg --armor --export "$GPG_KEY" > "${key_dir}/${ARCHIVED_GPG_PUB}"
+    gpg --armor --export-secret-key "$GPG_KEY" > "${key_dir}/${ARCHIVED_GPG_PVT}"
+    gpg --export-ownertrust > "${key_dir}/${ARCHIVED_GPG_OWNERTRUST}"
+    log info exporting gpg keys and ownertrust
+
+    cp "$HOME/.ssh/$SSH_KEY" "$HOME/.ssh/${SSH_KEY}.pub" "$key_dir"
+    log info copying ssh key
+
+
+    cd  "$src_tmp_dir"
+    tar -cf - "$(basename "$key_dir")" | gzip --stdout > "${out_dir}/keys.tar.gz"
+    log info "created archived ${out_dir}/keys.tar.xz"
+}
+
+import() {
+    archive_path="$1"
+    tmp_dir=$(mktemp --directory /tmp/copy-keys-XXXXXX)
+    # shellcheck disable=SC2064
+    trap "rm -rf -- $tmp_dir" EXIT
+
+    gzip --decompress --stdout "$archive_path" | tar -x --directory "$tmp_dir"
+
+    cp -v "${tmp_dir}/keys/$SSH_KEY" "${tmp_dir}/keys/$SSH_KEY.pub" ~/.ssh/
+    log info ssh keys copied!
+
+    gpg --import "${tmp_dir}/keys/${ARCHIVED_GPG_PUB}"
+    gpg --import "${tmp_dir}/keys/${ARCHIVED_GPG_PVT}"
+    gpg --import-ownertrust "${tmp_dir}/keys/${ARCHIVED_GPG_OWNERTRUST}"
+    log info gpg keys and ownertrust impoted!
+}
+
+
+if [ "$1" = "send" ]; then 
+    shift
+    log error TODO not implemented
+elif [ "$1" = "archive" ]; then 
+    shift
+    # shellcheck disable=SC2068
+    archive $@
+elif [ "$1" = "import" ]; then 
+    shift
+    # shellcheck disable=SC2068
+    import $@
+else
+    echo "copy-keys COMMAND ..."
+    echo
+    echo "Copy ssh and gpg keys to other machines"
+    echo
+    echo "Commands:"
+    printf "  send    HOST     \t send keys to HOST, copying over ssh compressing using xz\n"
+    printf "  archive DIR      \t only produce the xz archive inside DIR\n"
+    printf "  import  ARCHIVE  \t import keys from the file produced by the 'archive' subcommand \n"
+fi;
