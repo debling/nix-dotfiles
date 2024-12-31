@@ -22,39 +22,35 @@ in
 
   debling.alacritty.enable = true;
 
-  services =
-    let
-      shouldEnable = pkgs.stdenv.isLinux;
-    in
-    {
-      mako = with colorscheme.palette; {
-        enable = shouldEnable;
-        defaultTimeout = 10 * 1000;
-        layer = "overlay";
-        iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
-        backgroundColor = "#${base00}";
-        textColor = "#${base05}";
-        borderColor = "#${base0D}";
-        progressColor = "#${base02}";
-        extraConfig = ''
-          [urgency=low]
-          background-color=#${base00}
-          text-color=#${base0A}
-          border-color=#${base0D}
+  services = {
+    mako = with colorscheme.palette; {
+      enable = true;
+      defaultTimeout = 10 * 1000;
+      layer = "overlay";
+      iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
+      backgroundColor = "#${base00}";
+      textColor = "#${base05}";
+      borderColor = "#${base0D}";
+      progressColor = "#${base02}";
+      extraConfig = ''
+        [urgency=low]
+        background-color=#${base00}
+        text-color=#${base0A}
+        border-color=#${base0D}
 
-          [urgency=high]
-          background-color=#${base00}
-          text-color=#${base08}
-          border-color=#${base0D}
-        '';
-      };
-
-      # blueman-applet.enable = shouldEnable;
-
-      # network-manager-applet.enable = shouldEnable;
-
-      mpris-proxy.enable = shouldEnable;
+        [urgency=high]
+        background-color=#${base00}
+        text-color=#${base08}
+        border-color=#${base0D}
+      '';
     };
+
+    # blueman-applet.enable = shouldEnable;
+
+    # network-manager-applet.enable = shouldEnable;
+
+    mpris-proxy.enable = true;
+  };
 
   news.display = "show";
 
@@ -62,7 +58,6 @@ in
     checkConfig = true;
     settings = {
       experimental-features = "nix-command flakes";
-      # extra-platforms = "x86_64-darwin aarch64-darwin";
       substituters = "https://cache.nixos.org https://debling.cachix.org";
       trusted-public-keys =
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= debling.cachix.org-1:S2Zx2LNGAF1DIYoxKyVcqk7h/XMLLjxHLjfeHsOkgWo=";
@@ -91,89 +86,91 @@ in
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
-        pavucontrol
-        babashka
-        gh
+      anydesk
 
-        gnumake
-        snitch
-        maven
+      pavucontrol
+      babashka
+      gh
 
-        ### Editors/IDEs
-        # jetbrains.datagrip
-        # jetbrains.idea-ultimate
-        visualvm
+      gnumake
+      snitch
+      maven
 
-        ### Langs related
-        # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
-        # ansible
-        clojure # Lisp language with sane concurrency
-        nodejs
-        nodePackages.pnpm
-        pipenv
+      ### Editors/IDEs
+      # jetbrains.datagrip
+      # jetbrains.idea-ultimate
+      visualvm
 
-        # (python311.withPackages (ps: with ps; [
-        #   pandas
-        #   numpy
-        #   ipython
-        #   matplotlib
-        #   seaborn
-        #   # jupyterlab
-        #   pudb
-        #   # torch
-        #   boto3
-        #   scikit-learn
-        # ]))
-        poetry
+      ### Langs related
+      # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
+      # ansible
+      clojure # Lisp language with sane concurrency
+      nodejs
+      nodePackages.pnpm
+      pipenv
 
-        ### CLI utils
-        pinentry-tty
-        # bitwarden-cli
-        # awscli2
-        cloc
-        coreutils
-        entr # Run commands when files change
-        graphviz
-        jq
-        # texlive.combined.scheme-basic
-        # pandoc
-        # python310Packages.editorconfig
-        rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-        silver-searcher # A faster and more convenient grep. Executable is called `ag`
-        # terraform
-        tree
-        killall
+      # (python311.withPackages (ps: with ps; [
+      #   pandas
+      #   numpy
+      #   ipython
+      #   matplotlib
+      #   seaborn
+      #   # jupyterlab
+      #   pudb
+      #   # torch
+      #   boto3
+      #   scikit-learn
+      # ]))
+      poetry
 
-        # required by telescope.nvim  
-        ripgrep
-        fd
+      ### CLI utils
+      pinentry-tty
+      # bitwarden-cli
+      # awscli2
+      cloc
+      coreutils
+      entr # Run commands when files change
+      graphviz
+      jq
+      # texlive.combined.scheme-basic
+      # pandoc
+      # python310Packages.editorconfig
+      rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
+      silver-searcher # A faster and more convenient grep. Executable is called `ag`
+      # terraform
+      tree
+      killall
 
-        wget
-        # unrar
-        postgresql_15
+      # required by telescope.nvim  
+      ripgrep
+      fd
 
-        renameutils # adds qmv, and qmc utils for bulk move and copy
+      wget
+      # unrar
+      postgresql_15
 
-        taskwarrior-tui
-        timewarrior
+      renameutils # adds qmv, and qmc utils for bulk move and copy
 
-        # vagrant
-        ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
-        # https://github.com/mic92/nix-update
-        nurl # https://github.com/nix-community/nurl
-        # nix-init # https://github.com/nix-community/nix-init
-        oha # HTTP load generator https://github.com/hatoo/oha
+      taskwarrior-tui
+      timewarrior
 
-        trivy
-        cht-sh # https://github.com/chubin/cheat.sh
-        # nix-du
+      # vagrant
+      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
+      # https://github.com/mic92/nix-update
+      nurl # https://github.com/nix-community/nurl
+      # nix-init # https://github.com/nix-community/nix-init
+      oha # HTTP load generator https://github.com/hatoo/oha
 
-        # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
-        # magic-wormhole # Send files over the network
+      trivy
+      cht-sh # https://github.com/chubin/cheat.sh
+      # nix-du
 
-        glow
-      ];
-      
+      # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
+      # magic-wormhole # Send files over the network
+
+      glow
+    ];
+
 
     shellAliases = {
       g = "git";

@@ -111,6 +111,7 @@ in
         pkgs.foot
         pkgs.playerctl
         pkgs.brightnessctl
+        pkgs.wdisplays
       ];
       sessionVariables = {
         WLR_NO_HARDWARE_CURSORS = "1";

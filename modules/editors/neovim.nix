@@ -228,9 +228,6 @@ in
             lazydev-nvim
 
             ## UI
-            lualine-nvim
-            indent-blankline-nvim
-
             vim-slime
 
             vim-sleuth

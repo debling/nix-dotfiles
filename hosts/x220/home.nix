@@ -94,96 +94,96 @@ in
       kdePackages.dolphin
       wofi
       pavucontrol
-        jetbrains.idea-ultimate
-        babashka
-        gh
+      jetbrains.idea-ultimate
+      babashka
+      gh
 
-        gnumake
-        snitch
-        maven
+      gnumake
+      snitch
+      maven
 
-        ### Editors/IDEs
-        # jetbrains.datagrip
-        # jetbrains.idea-ultimate
-        visualvm
+      ### Editors/IDEs
+      # jetbrains.datagrip
+      # jetbrains.idea-ultimate
+      visualvm
 
-        ### Langs related
-        # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
-        # ansible
-        clojure # Lisp language with sane concurrency
-        cargo
-        nodejs
-        nodePackages.pnpm
-        pipenv
+      ### Langs related
+      # idris2 # A language with dependent types, XXX: compilation is broken on m1 for now https://github.com/NixOS/nixpkgs/issues/151223
+      # ansible
+      clojure # Lisp language with sane concurrency
+      cargo
+      nodejs
+      nodePackages.pnpm
+      pipenv
 
-        (python311.withPackages (ps: with ps; [
-          pandas
-          numpy
-          ipython
-          matplotlib
-          seaborn
-          # jupyterlab
-          pudb
-          # torch
-          boto3
-          scikit-learn
-        ]))
-        poetry
+      (python311.withPackages (ps: with ps; [
+        pandas
+        numpy
+        ipython
+        matplotlib
+        seaborn
+        # jupyterlab
+        pudb
+        # torch
+        boto3
+        scikit-learn
+      ]))
+      poetry
 
-        ### CLI utils
-        pinentry-tty
-        # bitwarden-cli
-        rbw ## a usable bitwarden cli
-        awscli2
-        cloc
-        coreutils
-        entr # Run commands when files change
-        graphviz
-        jq
-        texlive.combined.scheme-basic
-        pandoc
-        # python310Packages.editorconfig
-        rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-        silver-searcher # A faster and more convenient grep. Executable is called `ag`
-        terraform
-        tree
+      ### CLI utils
+      pinentry-tty
+      # bitwarden-cli
+      rbw ## a usable bitwarden cli
+      awscli2
+      cloc
+      coreutils
+      entr # Run commands when files change
+      graphviz
+      jq
+      texlive.combined.scheme-basic
+      pandoc
+      # python310Packages.editorconfig
+      rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
+      silver-searcher # A faster and more convenient grep. Executable is called `ag`
+      terraform
+      tree
 
-        hledger
-        hledger-ui
-        hledger-web
-        hledger-interest
+      hledger
+      hledger-ui
+      hledger-web
+      hledger-interest
 
-        cachix
+      cachix
 
-        # required by telescope.nvim  
-        ripgrep
-        fd
+      # required by telescope.nvim  
+      ripgrep
+      fd
 
-        wget
-        # unrar
-        postgresql_15
+      wget
+      # unrar
+      postgresql_15
 
-        renameutils # adds qmv, and qmc utils for bulk move and copy
+      renameutils # adds qmv, and qmc utils for bulk move and copy
 
-        taskwarrior-tui
-        timewarrior
+      taskwarrior-tui
+      timewarrior
 
-        # vagrant
-        ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
-        # https://github.com/mic92/nix-update
-        nurl # https://github.com/nix-community/nurl
-        # nix-init # https://github.com/nix-community/nix-init
-        oha # HTTP load generator https://github.com/hatoo/oha
+      # vagrant
+      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
+      # https://github.com/mic92/nix-update
+      nurl # https://github.com/nix-community/nurl
+      # nix-init # https://github.com/nix-community/nix-init
+      oha # HTTP load generator https://github.com/hatoo/oha
 
-        trivy
-        cht-sh # https://github.com/chubin/cheat.sh
-        # nix-du
+      trivy
+      cht-sh # https://github.com/chubin/cheat.sh
+      # nix-du
 
-        # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
-        # magic-wormhole # Send files over the network
+      # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
+      # magic-wormhole # Send files over the network
 
-        glow
-      ];
+      glow
+    ];
 
     shellAliases = {
       g = "git";
