@@ -6,6 +6,7 @@
 /* appearance */
 static const int sloppyfocus               = 1;  /* focus follows mouse */
 static const int bypass_surface_visibility = 0;  /* 1 means idle inhibitors will disable idle tracking even if it's surface isn't visible  */
+static const int smartborders              = 1;
 static const unsigned int borderpx         = 1;  /* border pixel of windows */
 static const float rootcolor[]             = COLOR(0x222222ff);
 static const float bordercolor[]           = COLOR(0x444444ff);
@@ -13,6 +14,9 @@ static const float focuscolor[]            = COLOR(0x005577ff);
 static const float urgentcolor[]           = COLOR(0xff0000ff);
 /* This conforms to the xdg-protocol. Set the alpha to zero to restore the old behavior */
 static const float fullscreen_bg[]         = {0.1f, 0.1f, 0.1f, 1.0f}; /* You can also use glsl colors */
+/* keyboard layout change notification for status bar */
+static const char  kblayout_file[] = "/tmp/dwl-keymap";
+static const char *kblayout_cmd[]  = {NULL};
 
 /* tagging - TAGCOUNT must be no greater than 31 */
 #define TAGCOUNT (9)
@@ -54,9 +58,9 @@ static const MonitorRule monrules[] = {
 /* keyboard */
 static const struct xkb_rule_names xkb_rules = {
 	/* can specify fields: rules, model, layout, variant, options */
-	.layout = "us",
-	// .variant = "thinkpad",
-	.options = "caps:swapescape",
+	.layout = "us,br",
+	.variant = ",thinkpad",
+	.options = "grp:alt_shift_toggle,caps:swapescape",
 };
 
 static const int repeat_rate = 25;
@@ -126,6 +130,7 @@ static const Key keys[] = {
 	/* modifier                  key                 function        argument */
 	{ MODKEY,                    XKB_KEY_p,          spawn,          {.v = menucmd} },
 	{ MODKEY|WLR_MODIFIER_SHIFT, XKB_KEY_Return,     spawn,          SHCMD(termcmd) },
+	{ MODKEY,                    XKB_KEY_b,          togglebar,      {0} },
 
 	{ 0, XKB_KEY_XF86AudioRaiseVolume, spawn, SHCMD("volume set 5%+") },
 	{ 0, XKB_KEY_XF86AudioLowerVolume, spawn, SHCMD("volume set 5%-") },

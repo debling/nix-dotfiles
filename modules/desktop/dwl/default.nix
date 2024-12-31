@@ -3,20 +3,22 @@
 
 let
   dwlb = pkgs.callPackage ./dwlb.nix { };
+  # main - 29-12-2024
   dwl-patches = pkgs.fetchFromGitea {
     domain = "codeberg.org";
     owner = "dwl";
     repo = "dwl-patches";
-    rev = "9dc4bb37dabedf0859aaee8102f739da2d51e05a";
-    hash = "sha256-D/2A5inrTXvaG54CBfn4Ff1zJnzYNpVylvZhy67HylI=";
+    rev = "e7752b138afcc4d8b43261d53458e1ae44359857";
+    hash = "sha256-DradTawxoDj96Qm4Hs1mErpdXTVIrQrBMQxhPvIIIIA=";
   };
   dwl-with-patches = pkgs.dwl.overrideAttrs (prev: {
+    # main - 29-12-2024
     src = pkgs.fetchFromGitea {
       domain = "codeberg.org";
       owner = "dwl";
       repo = "dwl";
-      rev = "1d08ade13225343890e3476f7c4003ab87dc266c";
-      hash = "sha256-MoPU8SeIBHEf9kNu0xyuW1F/wTPEgpcWMGSAje3PFEU=";
+      rev = "30f5063474a70835d0178ffc12521a3e0fb1ef8b";
+      hash = "sha256-oOJLsJMYNpQOIrbX8L0GNwg7U+JddaPBsSuI3I2Zf8Q=";
     };
     buildInputs = with pkgs; [
       libinput
@@ -33,6 +35,8 @@ let
 
     patches = [
       "${dwl-patches}/patches/ipc/ipc.patch"
+      "${dwl-patches}/patches/smartborders/smartborders.patch"
+      "${dwl-patches}/patches/kblayout/kblayout.patch"
     ];
 
     passthru = {

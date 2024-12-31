@@ -6,6 +6,7 @@ in
 {
   options.debling.editors.neovim = {
     enable = lib.mkEnableOption "Enable neovim and its configuration";
+    package = lib.mkPackageOption pkgs "neovim" { };
   };
 
   config =
@@ -153,6 +154,7 @@ in
         in
         {
           enable = true;
+          package = cfg.package;
           viAlias = true;
           vimAlias = true;
           vimdiffAlias = true;

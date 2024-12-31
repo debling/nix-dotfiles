@@ -111,6 +111,7 @@
     rose-pine-icon-theme
     firefox
     spotify
+    libreoffice
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

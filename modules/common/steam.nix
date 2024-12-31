@@ -4,7 +4,12 @@
   users.users.${mainUser}.extraGroups = [ "gamemode" ];
 
   programs = {
-    steam.enable = true;
+    gamescope.enable = true;
+
+    steam = {
+      enable = true;
+      gamescopeSession.enable = true;
+    };
 
     gamemode = {
       enable = true;

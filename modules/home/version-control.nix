@@ -7,7 +7,7 @@
       delta = {
         enable = true;
         options = {
-          syntax-theme = "base16-256";
+          syntax-theme = "gruvbox-dark";
           true-color = "always";
         };
       };
@@ -40,9 +40,13 @@
     lazygit = {
       enable = true;
       settings = {
+        gui = {
+          nerdFontsVersion = "3";
+          border = "hidden";
+        };
         git.paging = {
           colorArg = "always";
-          pager = "delta --dark --paging=never";
+          pager = "delta --syntax-theme=gruvbox-dark --paging=never";
         };
       };
     };

@@ -19,8 +19,10 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # Environment/system management
-    darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
@@ -29,16 +31,25 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-    nix-index-database.url = "github:Mic92/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database = {
+      url = "github:Mic92/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     alacritty-themes = {
       url = "github:alacritty/alacritty-theme";
       flake = false;
     };
 
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     zig-overlay = {
       url = "github:mitchellh/zig-overlay";
@@ -64,8 +75,7 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
+    { nixpkgs
     , darwin
     , nix-on-droid
     , home-manager
@@ -77,6 +87,9 @@
       nixpkgsConfig = {
         config = { allowUnfree = true; };
         overlays = [
+          inputs.android-nixpkgs.overlays.default
+          inputs.neovim-nightly-overlay.overlays.default
+          inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
 
           (final: prev: {
@@ -94,10 +107,6 @@
               };
             };
           })
-
-          inputs.android-nixpkgs.overlays.default
-
-          inputs.nixpkgs-wayland.overlays.default
         ];
       };
 
@@ -129,6 +138,7 @@
           ./hosts/portable/configuration.nix
 
           home-manager.nixosModules.home-manager
+
           {
             nixpkgs = nixpkgsConfig;
             home-manager = homeManagerConfiguration;
