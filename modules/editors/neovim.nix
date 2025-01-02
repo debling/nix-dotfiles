@@ -12,9 +12,16 @@ in
   config =
     let
       setups = {
+        sh = {
+          systemPkgs = with pkgs; [
+          nodePackages.bash-language-server
+          shellcheck
+          shfmt
+        ];
+        };
+
         rust = {
           systemPkgs = with pkgs; [ rust-analyzer cargo rustc clippy ];
-          plugins = [ ];
         };
 
         clojure = {
@@ -70,13 +77,11 @@ in
           # language servers
           # haskell-language-server
           gopls # go
-          nodePackages.bash-language-server
           nodePackages.dockerfile-language-server-nodejs
           nodePackages.typescript-language-server
           angular-language-server
           nodePackages.yaml-language-server
           nodePackages.vscode-langservers-extracted
-          shellcheck
           terraform-ls
 
           ### Lua
@@ -238,7 +243,7 @@ in
             nvim-lastplace
 
             nvim-web-devicons
-          ] ++ (lib.concatMap (s: s.plugins) (lib.attrValues setups));
+          ] ++ (lib.concatMap (s: s.plugins or []) (lib.attrValues setups));
 
           extraConfig = "lua require('debling')";
         };

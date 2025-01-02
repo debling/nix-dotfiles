@@ -1,60 +1,66 @@
 #!/bin/sh
 
+set -e
 
 ICON_SET="/run/current-system/sw/share/icons/rose-pine"
-ICON_VOLUME_HIGH="${ICON_SET}/16x16/actions/audio-volume-high.svg"
-ICON_VOLUME_MEDIUM="${ICON_SET}/16x16/actions/audio-volume-medium.svg"
-ICON_VOLUME_LOW="${ICON_SET}/16x16/actions/audio-volume-low.svg"
-ICON_VOLUME_MUTED="${ICON_SET}/16x16/actions/audio-volume-muted.svg"
+ICON_VOLUME_HIGH="${ICON_SET}/24x24/actions/audio-volume-high.svg"
+ICON_VOLUME_MEDIUM="${ICON_SET}/24x24/actions/audio-volume-medium.svg"
+ICON_VOLUME_LOW="${ICON_SET}/24x24/actions/audio-volume-low.svg"
+ICON_VOLUME_MUTED="${ICON_SET}/24x24/actions/audio-volume-muted.svg"
 
 getIcon() {
-    currLevel="$1"
-    if [ "$currLevel" -eq "0" ]; then
-        echo $ICON_VOLUME_MUTED
-    elif [ "$currLevel" -ge "60" ]; then
-        echo $ICON_VOLUME_HIGH
-    elif [ "$currLevel" -ge "30" ]; then
-        echo $ICON_VOLUME_MEDIUM
-    else
-        echo $ICON_VOLUME_LOW
-    fi
+	currLevel="$1"
+	if [ "$currLevel" -eq "0" ]; then
+		echo $ICON_VOLUME_MUTED
+	elif [ "$currLevel" -ge "60" ]; then
+		echo $ICON_VOLUME_HIGH
+	elif [ "$currLevel" -ge "30" ]; then
+		echo $ICON_VOLUME_MEDIUM
+	else
+		echo $ICON_VOLUME_LOW
+	fi
 }
 
+notify() {
+    level="$1"
+	notify-send  --app-name=volume \
+        --transient \
+		--urgency=low \
+		--hint=string:x-canonical-private-synchronous:volume \
+		--hint="int:value:${level}" \
+		--icon="$(getIcon "$level")" \
+        "Volume" "${level}%"
+}
 
 setVolumeImpl() {
-    amount="$1"
-    wpctl set-volume @DEFAULT_AUDIO_SINK@ "$amount";
+	amount="$1"
+	wpctl set-volume @DEFAULT_AUDIO_SINK@ "$amount"
 }
 
 # Returns the current level in a 0-100 range
 getCurrentLevel() {
-    wpctl get-volume @DEFAULT_AUDIO_SINK@ |  cut -d" " -f2 | tr -d '.'
+    # wpctl output = Volume: 0.05
+    # cut grabing second column = 0.05
+    # sed removing . and leading 0 = 05
+	wpctl get-volume @DEFAULT_AUDIO_SINK@ \
+        | cut -d" " -f2 \
+        | sed -e 's/\.//' -e 's/^0//'
 }
 
-
 setVolume() {
-    amount="$1"
-
-    setVolumeImpl "$amount"
-
-    newLevel="$(getCurrentLevel)"
-
-    notify-send --transient \
-        --urgency=low \
-        --expire-time=2000 \
-        --hint=string:x-canonical-private-synchronous:volume \
-        --hint="int:value:${newLevel}" \
-        --icon="$(getIcon "$newLevel")" \
-        "$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+	amount="$1"
+	setVolumeImpl "$amount"
+    notify "$(getCurrentLevel)"
 }
 
 help() {
-    echo "volume set 5%+"
+	echo "volume set 5%+"
 }
 
-
 if [ "$1" = "set" ]; then
-    setVolume "$2"
+	setVolume "$2"
+elif [ "$1" = "show" ]; then
+    notify "$(getCurrentLevel)"
 else
-    help
+	help
 fi

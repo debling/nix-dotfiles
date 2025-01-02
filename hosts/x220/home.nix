@@ -183,6 +183,8 @@ in
       # magic-wormhole # Send files over the network
 
       glow
+
+      zip
     ];
 
     shellAliases = {

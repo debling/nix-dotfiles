@@ -418,11 +418,10 @@ in
     #   package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
     # };
 
-    # yazi = {
-    #   enable = true;
-    #   enableBashIntegration = true;
-    #   enableZshIntegration = true;
-    # };
+    yazi = {
+      enable = true;
+      enableFishIntegration = true;
+    };
 
     tmux = {
       enable = true;
