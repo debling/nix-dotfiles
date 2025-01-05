@@ -1,5 +1,4 @@
 local lsp_setup = require('debling.lsp_server_setup')
-local cmp = require('cmp')
 
 local sqlfluff_args = {
     extra_args = { "--dialect", "postgres" },
@@ -11,13 +10,6 @@ lsp_setup.null_ls_register(function(builtins)
         builtins.formatting.sqlfluff.with(sqlfluff_args),
     }
 end)
-
-cmp.setup.filetype({ 'sql', 'mysql', 'plsql' }, {
-    sources = cmp.config.sources({
-        { name = 'vim-dadbod-completion' },
-    }),
-})
-
 
 -- vim-dadbod setup
 vim.g.db_ui_env_variable_url = 'DATABASE_URL'

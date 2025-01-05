@@ -7,9 +7,6 @@
 {
   imports =
     [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-
       ../../modules/common/containers.nix
       ../../modules/common/fonts.nix
       ../../modules/common/networking.nix
@@ -18,6 +15,23 @@
       ../../modules/desktop/dwl
       ../../modules/hardware/bluetooth.nix
     ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  zramSwap = {
+    enable = true;
+  };
+
+  # Swapp only used for hibernation
+  swapDevices = [
+    {
+      device = "/var/swapfile";
+      size = 8 * 1024;
+    }
+  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${mainUser} = {
@@ -31,6 +45,10 @@
     shell = pkgs.fish;
   };
   security.sudo.wheelNeedsPassword = false;
+
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
+  ];
 
   home-manager.users.${mainUser} = import ./home.nix;
 
@@ -51,25 +69,25 @@
     # Enable touchpad support (enabled default in most desktopManager).
     libinput.enable = true;
 
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        domain = true;
-        hinfo = true;
-        userServices = true;
-        workstation = true;
-      };
-    };
+    # avahi = {
+    #   enable = true;
+    #   nssmdns4 = true;
+    #   publish = {
+    #     enable = true;
+    #     addresses = true;
+    #     domain = true;
+    #     hinfo = true;
+    #     userServices = true;
+    #     workstation = true;
+    #   };
+    # };
 
     displayManager.autoLogin.user = mainUser;
 
     xserver = {
       enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
+      # displayManager.gdm.enable = true;
+      # desktopManager.gnome.enable = true;
 
       xkb = {
         layout = "br";
@@ -82,25 +100,20 @@
     power-profiles-daemon.enable = false;
   };
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  security.rtkit.enable = true;
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment = {
     systemPackages = with pkgs; [
-      uxplay
-      neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      # uxplay
+      # neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       tmux
       wget
-      alacritty
+      # alacritty
       git
 
-      bitwarden
-      bitwarden-cli
-      spotify
+      # bitwarden
+      # bitwarden-cli
+      # spotify
     ];
 
 
@@ -111,7 +124,7 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  # programs.mtr.enable = true;
+  programs.mtr.enable = true;
   programs = {
     firefox.enable = true;
     fish.enable = true;

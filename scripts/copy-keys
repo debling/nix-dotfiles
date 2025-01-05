@@ -6,7 +6,6 @@ GPG_KEY="d.ebling8@gmail.com"
 SSH_KEY="id_ed25519"
 
 ENABLE_COLORS=true
-
 if [ ! -t 1 ] ; then 
     ENABLE_COLORS=false
 fi
@@ -59,7 +58,7 @@ archive() {
 
     cd  "$src_tmp_dir"
     tar -cf - "$(basename "$key_dir")" | gzip --stdout > "${out_dir}/keys.tar.gz"
-    log info "created archived ${out_dir}/keys.tar.xz"
+    log info "created archived ${out_dir}/keys.tar.gz"
 }
 
 import() {
@@ -79,10 +78,36 @@ import() {
     log info gpg keys and ownertrust impoted!
 }
 
+send() {
+    this_script=$(realpath "$0")
+    remote_host="$1"
+    log info checking if host "\`${remote_host}\`" is reachable
+    if ssh "$remote_host" exit > /dev/null 2>&1; then
+        log info passed: "\`${remote_host}\`" is reachable
+    else
+        log error "\`${remote_host}\`" is NOT reachable
+        exit 1
+    fi
+
+    tmp_dir=$(mktemp --directory /tmp/copy-keys-XXXXXX)
+    # shellcheck disable=SC2064
+    trap "rm -rf -- $tmp_dir" EXIT
+    archive "$tmp_dir"
+    cp -v "$this_script" "$tmp_dir"
+
+    log info copying keys to host inside "${remote_host}:${tmp_dir}"
+    scp -r "$tmp_dir" "${remote_host}:${tmp_dir}"
+
+    log info running import subcommand inside host
+    # shellcheck disable=SC2029
+    ssh "${remote_host}"  "cd ${tmp_dir}; sh $(basename "$this_script") import ./keys.tar.gz"
+}
+
 
 if [ "$1" = "send" ]; then 
     shift
-    log error TODO not implemented
+    # shellcheck disable=SC2068
+    send $@
 elif [ "$1" = "archive" ]; then 
     shift
     # shellcheck disable=SC2068
@@ -97,7 +122,7 @@ else
     echo "Copy ssh and gpg keys to other machines"
     echo
     echo "Commands:"
-    printf "  send    HOST     \t send keys to HOST, copying over ssh compressing using xz\n"
+    printf "  send    HOST     \t send keys to HOST, where host is a ssh host (<user>@<ip>), copying over ssh compressing using xz\n"
     printf "  archive DIR      \t only produce the xz archive inside DIR\n"
     printf "  import  ARCHIVE  \t import keys from the file produced by the 'archive' subcommand \n"
 fi;

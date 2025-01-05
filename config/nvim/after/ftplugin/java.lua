@@ -45,8 +45,6 @@ local java_cmds_au = vim.api.nvim_create_augroup('DEblingJavaCmds', { clear = tr
 
 ---@param bufnr buffer
 local function jdtls_on_attach(_, bufnr)
-  lsp_setup.on_attach(_, bufnr)
-
   local opts = { buffer = bufnr }
   -- If using nvim-dap
   -- This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
@@ -78,12 +76,6 @@ local config = {
     vim.fs.normalize('~/.local/bin/jdtls'),
   },
   on_attach = jdtls_on_attach,
-  capabilities = lsp_setup.capabilities,
-  -- capabilities =vim.tbl_deep_extend(
-  --   'force',
-  --   lsp_setup.capabilities,
-  --   { actionableNotificationSupported = true }
-  -- ),
   init_options = {
     bundles = bundles,
   },

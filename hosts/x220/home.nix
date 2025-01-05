@@ -9,92 +9,23 @@ let
 in
 {
   imports = [
-    ../../modules/editors/neovim.nix
-    ../../modules/terminals/alacritty.nix
-    ../../modules/terminals/foot.nix
-    ../../modules/home/version-control.nix
-    ../../modules/home/gtk-qt.nix
     nix-index-database.hmModules.nix-index
-    android-nixpkgs.hmModule
+
+    # ../../modules/editors/neovim.nix
+    ../../modules/home/gtk-qt.nix
+    # ../../modules/home/version-control.nix
+    ../../modules/home/wayland-commons.nix
+    ../../modules/terminals/foot.nix
   ];
 
-  debling.editors.neovim.enable = true;
-
-  debling.alacritty.enable = true;
-
-  services =
-    let
-      shouldEnable = pkgs.stdenv.isLinux;
-    in
-    {
-      mako = with colorscheme.palette; {
-        enable = shouldEnable;
-        defaultTimeout = 10 * 1000;
-        layer = "overlay";
-        iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
-        backgroundColor = "#${base00}";
-        textColor = "#${base05}";
-        borderColor = "#${base0D}";
-        progressColor = "#${base02}";
-        extraConfig = ''
-          [urgency=low]
-          background-color=#${base00}
-          text-color=#${base0A}
-          border-color=#${base0D}
-
-          [urgency=high]
-          background-color=#${base00}
-          text-color=#${base08}
-          border-color=#${base0D}
-        '';
-      };
-
-      # blueman-applet.enable = shouldEnable;
-
-      # network-manager-applet.enable = shouldEnable;
-
-      mpris-proxy.enable = shouldEnable;
-    };
+  # debling.editors.neovim.enable = true;
 
   news.display = "show";
-
-  nix = {
-    checkConfig = true;
-    settings = {
-      experimental-features = "nix-command flakes";
-      # extra-platforms = "x86_64-darwin aarch64-darwin";
-      substituters = "https://cache.nixos.org https://debling.cachix.org";
-      trusted-public-keys =
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= debling.cachix.org-1:S2Zx2LNGAF1DIYoxKyVcqk7h/XMLLjxHLjfeHsOkgWo=";
-    };
-  };
-
-  android-sdk = {
-    enable = true;
-
-    path = "${config.home.homeDirectory}/SDKs/android";
-
-    packages = sdk: with sdk; [
-      build-tools-30-0-3
-      cmdline-tools-latest
-      emulator
-      platforms-android-33
-      platform-tools
-      sources-android-33
-      # ndk-23-1-7779620
-      # cmake-3-22-1
-    ];
-  };
 
   home = {
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
-      rofi-wayland
-      kdePackages.dolphin
-      wofi
-      pavucontrol
-      jetbrains.idea-ultimate
       babashka
       gh
 
@@ -116,25 +47,13 @@ in
       nodePackages.pnpm
       pipenv
 
-      (python311.withPackages (ps: with ps; [
-        pandas
-        numpy
-        ipython
-        matplotlib
-        seaborn
-        # jupyterlab
-        pudb
-        # torch
-        boto3
-        scikit-learn
-      ]))
       poetry
 
       ### CLI utils
       pinentry-tty
       # bitwarden-cli
       rbw ## a usable bitwarden cli
-      awscli2
+      # awscli2
       cloc
       coreutils
       entr # Run commands when files change
@@ -161,12 +80,8 @@ in
 
       wget
       # unrar
-      postgresql_15
 
-      renameutils # adds qmv, and qmc utils for bulk move and copy
-
-      taskwarrior-tui
-      timewarrior
+      # renameutils # adds qmv, and qmc utils for bulk move and copy
 
       # vagrant
       ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
@@ -241,7 +156,6 @@ in
   };
 
   programs = {
-    nushell.enable = true;
     fish = {
       enable = true;
       interactiveShellInit = ''
@@ -291,39 +205,7 @@ in
 
     nix-index.enable = true;
 
-    vscode = {
-      enable = true;
-      enableUpdateCheck = false;
-      mutableExtensionsDir = true;
-      package = pkgs.vscodium;
-      userSettings = {
-        "files.autoSave" = "afterDelay";
-        "vim.enableNeovim" = true;
-        "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
-        "editor.fontSize" = 14;
-        "editor.fontLigatures" = true;
-        "workbench.colorTheme" = "Solarized Light";
-        "vim.easymotion" = true;
-        "vim.incsearch" = true;
-        "vim.useSystemClipboard" = true;
-        "vim.useCtrlKeys" = true;
-        "vim.hlsearch" = true;
-        "vim.leader" = "<space>";
-        "extensions.experimental.affinity" = {
-          "vscodevim.vim" = 1;
-        };
-        "zig.path" = "zig";
-        "zig.zls.path" = "zig";
-      };
-    };
-
     htop.enable = true;
-
-    taskwarrior = {
-      enable = true;
-      colorTheme = "dark-16";
-      package = pkgs.taskwarrior3;
-    };
 
     # Used to have custom environment per project.
     # Very useful  to automaticly activate nix-shell when cd'ing to a
@@ -429,85 +311,73 @@ in
 
     gpg.enable = true;
 
-    # The true OS
-    emacs = {
-      enable = true;
-      package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
-    };
-
-    yazi = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-    };
-
-    zsh = {
-      enable = true;
-      defaultKeymap = "emacs";
-      autosuggestion = {
-        enable = true;
-      };
-      enableCompletion = true;
-      syntaxHighlighting = {
-        enable = true;
-      };
-      enableVteIntegration = true;
-      autocd = true;
-      history.size = 100000;
-      localVariables = {
-        TYPEWRITTEN_ARROW_SYMBOL = "➜";
-        TYPEWRITTEN_RELATIVE_PATH = "adaptive";
-        TYPEWRITTEN_SYMBOL = "$";
-      };
-      plugins = [
-        {
-          name = "typewritten";
-          src = pkgs.fetchFromGitHub {
-            owner = "reobin";
-            repo = "typewritten";
-            rev = "v1.5.1";
-            sha256 = "07zk6lvdwy9n0nlvg9z9h941ijqhc5vvfpbr98g8p95gp4hvh85a";
-          };
-        }
-        # build is currently failing on nixpkgs-unstable
-        { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
-      ];
-      initExtraBeforeCompInit = ''
-        if type brew &>/dev/null
-        then
-            fpath+="$(brew --prefix)/share/zsh/site-functions"
-        fi
-      '';
-      initExtra = ''
-        # Enable editing of the command line in an editor with Ctrl-X Ctrl-E
-        autoload -z edit-command-line
-        zle -N edit-command-line
-        bindkey "^X^E" edit-command-line
-
-        # load module for list-style selection
-        # zmodload zsh/complist
-
-        # use the module above for autocomplete selection
-        # zstyle ':completion:*' menu yes select
-
-        # now we can define keybindings for complist module
-        # you want to trigger search on autocomplete items
-        # so we'll bind some key to trigger history-incremental-search-forward function
-        # bindkey -M menuselect '?' history-incremental-search-forward
-
-        #### zfzf-tab config
-        # disable sort when completing `git checkout`
-        zstyle ':completion:*:git-checkout:*' sort false
-        # set descriptions format to enable group support
-        zstyle ':completion:*:descriptions' format '[%d]'
-        # set list-colors to enable filename colorizing
-        zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
-        # preview directory's content with exa when completing cd
-        zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-        # switch group using `,` and `.`
-        zstyle ':fzf-tab:*' switch-group ',' '.'
-      '';
-    };
+    # zsh = {
+    #   enable = true;
+    #   defaultKeymap = "emacs";
+    #   autosuggestion = {
+    #     enable = true;
+    #   };
+    #   enableCompletion = true;
+    #   syntaxHighlighting = {
+    #     enable = true;
+    #   };
+    #   enableVteIntegration = true;
+    #   autocd = true;
+    #   history.size = 100000;
+    #   localVariables = {
+    #     TYPEWRITTEN_ARROW_SYMBOL = "➜";
+    #     TYPEWRITTEN_RELATIVE_PATH = "adaptive";
+    #     TYPEWRITTEN_SYMBOL = "$";
+    #   };
+    #   plugins = [
+    #     {
+    #       name = "typewritten";
+    #       src = pkgs.fetchFromGitHub {
+    #         owner = "reobin";
+    #         repo = "typewritten";
+    #         rev = "v1.5.1";
+    #         sha256 = "07zk6lvdwy9n0nlvg9z9h941ijqhc5vvfpbr98g8p95gp4hvh85a";
+    #       };
+    #     }
+    #     # build is currently failing on nixpkgs-unstable
+    #     # { name = "fzf-tab"; src = "${pkgs.zsh-fzf-tab}/share/fzf-tab"; }
+    #   ];
+    #   initExtraBeforeCompInit = ''
+    #     if type brew &>/dev/null
+    #     then
+    #         fpath+="$(brew --prefix)/share/zsh/site-functions"
+    #     fi
+    #   '';
+    #   initExtra = ''
+    #     # Enable editing of the command line in an editor with Ctrl-X Ctrl-E
+    #     autoload -z edit-command-line
+    #     zle -N edit-command-line
+    #     bindkey "^X^E" edit-command-line
+    #
+    #     # load module for list-style selection
+    #     # zmodload zsh/complist
+    #
+    #     # use the module above for autocomplete selection
+    #     # zstyle ':completion:*' menu yes select
+    #
+    #     # now we can define keybindings for complist module
+    #     # you want to trigger search on autocomplete items
+    #     # so we'll bind some key to trigger history-incremental-search-forward function
+    #     # bindkey -M menuselect '?' history-incremental-search-forward
+    #
+    #     #### zfzf-tab config
+    #     # disable sort when completing `git checkout`
+    #     zstyle ':completion:*:git-checkout:*' sort false
+    #     # set descriptions format to enable group support
+    #     zstyle ':completion:*:descriptions' format '[%d]'
+    #     # set list-colors to enable filename colorizing
+    #     zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+    #     # preview directory's content with exa when completing cd
+    #     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+    #     # switch group using `,` and `.`
+    #     zstyle ':fzf-tab:*' switch-group ',' '.'
+    #   '';
+    # };
 
     tmux = {
       enable = true;
@@ -548,8 +418,6 @@ in
         bind-key -r f run-shell "tmux neww tmux-sessionizer"
       '';
     };
-
-    gh-dash.enable = true;
   };
 
 

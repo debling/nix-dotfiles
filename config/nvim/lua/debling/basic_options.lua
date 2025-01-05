@@ -60,4 +60,5 @@ local leaderKey = " "
 vim.g.mapleader = leaderKey
 vim.g.maplocalleader = leaderKey
 
-vim.o.conceallevel = 0
+-- better completion menu
+vim.o.completeopt = "menu,preview,longest,noinsert"

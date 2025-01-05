@@ -1,16 +1,13 @@
 local lsp = require('lspconfig')
 
-local lsp_setup = require('debling.lsp_server_setup')
 local utils = require('debling.config_utils')
 
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-utils.nmap('<space>e', vim.diagnostic.open_float)
-utils.nmap('[d', vim.diagnostic.goto_prev)
-utils.nmap(']d', vim.diagnostic.goto_next)
-utils.nmap('<space>q', vim.diagnostic.setloclist)
-
-vim.lsp.set_log_level('DEBUG')
+-- utils.nmap('<space>e', vim.diagnostic.open_float)
+-- utils.nmap('[d', vim.diagnostic.goto_prev)
+-- utils.nmap(']d', vim.diagnostic.goto_next)
+-- utils.nmap('<space>q', vim.diagnostic.setloclist)
 
 local simple_servers = {
   'angularls',
@@ -41,18 +38,13 @@ local simple_servers = {
 vim.g.zig_fmt_autosave = 0
 
 for _, server in pairs(simple_servers) do
-  lsp[server].setup({
-    on_attach = lsp_setup.on_attach,
-    capabilities = lsp_setup.capabilities,
-  })
+  lsp[server].setup({})
 end
 
 local schemaStore = require('schemastore')
 
 -- from vscode-langservers-extracted
 lsp.jsonls.setup({
-  on_attach = lsp_setup.on_attach,
-  capabilities = lsp_setup.capabilities,
   settings = {
     json = {
       schemas = schemaStore.json.schemas(),
@@ -62,8 +54,6 @@ lsp.jsonls.setup({
 })
 
 lsp.yamlls.setup({
-  on_attach = lsp_setup.on_attach,
-  capabilities = lsp_setup.capabilities,
   settings = {
     yaml = {
       schemaStore = {
@@ -88,7 +78,6 @@ lsp.yamlls.setup({
 })
 
 lsp.ltex.setup({
-  capabilities = lsp_setup.capabilities,
   -- removed html and xhtml for now, since the support for it isnt great,
   -- currently, its trying the spellcheck the xml tags it self, ending up
   -- reporting a lot of errors
@@ -109,7 +98,6 @@ lsp.ltex.setup({
     'text',
   },
   on_attach = function(client, bufnr)
-    lsp_setup.on_attach(client, bufnr)
     -- your other on_attach functions.
     require('ltex_extra').setup({
       load_langs = { 'en-US', 'pt-BR' }, -- table <string> : languages for witch dictionaries will be loaded
@@ -128,6 +116,25 @@ lsp.ltex.setup({
     },
   },
 })
+
+require('lazydev').setup({
+  library = {
+    -- Load luvit types when the `vim.uv` word is found
+    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+  },
+})
+
+lsp.lua_ls.setup({
+  settings = {
+    Lua = {
+      telemetry = {
+        enable = false,
+      },
+      hint = { enable = true },
+    },
+  },
+})
+
 
 local null_ls = require('null-ls')
 
@@ -151,6 +158,8 @@ null_ls.setup({
 
     null_ls.builtins.diagnostics.checkmake,
 
-    null_ls.builtins.formatting.shfmt
+    null_ls.builtins.formatting.shfmt,
+
+    null_ls.builtins.formatting.stylua,
   },
 })

@@ -2,8 +2,15 @@
   description = "";
 
   inputs = {
-    # Package sets
+    # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+
+    # Environment/system management
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -16,20 +23,18 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    nixos-hardware.url = "github:NixOS/nixos-hardware";
-
-    # Environment/system management
-    darwin = {
-      url = "github:LnL7/nix-darwin";
+    disko = {
+      url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
 
+
+    # Modules
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    flake-utils.url = "github:numtide/flake-utils";
 
     nix-index-database = {
       url = "github:Mic92/nix-index-database";
@@ -41,11 +46,12 @@
       flake = false;
     };
 
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nix-colors.url = "github:misterio77/nix-colors";
 
+    flake-utils.url = "github:numtide/flake-utils";
+   
+
+    # overlays
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -71,7 +77,10 @@
 
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
-    nix-colors.url = "github:misterio77/nix-colors";
+    nix-alien = {
+      url = "github:thiagokokada/nix-alien";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -91,6 +100,7 @@
           inputs.neovim-nightly-overlay.overlays.default
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
+          inputs.nix-alien.overlays.default
 
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
@@ -150,7 +160,19 @@
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [
+          inputs.disko.nixosModules.disko
+          ./hosts/x220/disko.nix
           ./hosts/x220/configuration.nix
+          inputs.nixos-facter-modules.nixosModules.facter
+          {
+            config.facter.reportPath = let
+              reportPath = ./hosts/x220/facter.json;
+            in
+              if builtins.pathExists reportPath then
+                reportPath 
+              else
+                throw "Have you forgotten to run nixos-anywhere with `--generate-hardware-config nixos-facter ${reportPath}`?";
+          }
           home-manager.nixosModules.home-manager
           {
             nixpkgs = nixpkgsConfig;

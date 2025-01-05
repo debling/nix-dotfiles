@@ -26,7 +26,7 @@ in
 
         clojure = {
           systemPkgs = with pkgs; [ clojure-lsp clj-kondo ];
-          plugins = with pkgs.vimPlugins; [ conjure cmp-conjure ];
+          plugins = with pkgs.vimPlugins; [ conjure ];
         };
 
         java = {
@@ -165,6 +165,7 @@ in
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
             harpoon2
+
             base16-nvim
 
             snacks-nvim
@@ -206,18 +207,6 @@ in
             nvim-dap-ui
 
             vim-table-mode
-
-            ## Snippets
-            nvim-snippets
-            friendly-snippets
-
-            ## Completion
-            nvim-cmp
-            cmp-buffer
-            cmp-nvim-lsp
-            cmp-path
-
-            lspkind-nvim
 
             # Language specific
             plantuml-syntax

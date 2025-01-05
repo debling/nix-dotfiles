@@ -1,7 +1,4 @@
-# TODO: separate linux and darwin stuff
-# TODO: check programs.lf
-# TODO: setup plantuml
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, colorscheme, ... }:
+{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -13,6 +10,7 @@ in
     ../../modules/terminals/alacritty.nix
     ../../modules/terminals/foot.nix
     ../../modules/home/version-control.nix
+    ../../modules/home/wayland-commons.nix
     ../../modules/home/gtk-qt.nix
     nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
@@ -22,47 +20,7 @@ in
 
   debling.alacritty.enable = true;
 
-  services = {
-    mako = with colorscheme.palette; {
-      enable = true;
-      defaultTimeout = 10 * 1000;
-      layer = "overlay";
-      iconPath = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
-      backgroundColor = "#${base00}";
-      textColor = "#${base05}";
-      borderColor = "#${base0D}";
-      progressColor = "#${base02}";
-      extraConfig = ''
-        [urgency=low]
-        background-color=#${base00}
-        text-color=#${base0A}
-        border-color=#${base0D}
-
-        [urgency=high]
-        background-color=#${base00}
-        text-color=#${base08}
-        border-color=#${base0D}
-      '';
-    };
-
-    # blueman-applet.enable = shouldEnable;
-
-    # network-manager-applet.enable = shouldEnable;
-
-    mpris-proxy.enable = true;
-  };
-
   news.display = "show";
-
-  nix = {
-    checkConfig = true;
-    settings = {
-      experimental-features = "nix-command flakes";
-      substituters = "https://cache.nixos.org https://debling.cachix.org";
-      trusted-public-keys =
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= debling.cachix.org-1:S2Zx2LNGAF1DIYoxKyVcqk7h/XMLLjxHLjfeHsOkgWo=";
-    };
-  };
 
   android-sdk = {
     enable = false;
@@ -88,7 +46,6 @@ in
     packages = with pkgs; [
       anydesk
 
-      pavucontrol
       babashka
       gh
 
@@ -123,33 +80,9 @@ in
       # ]))
       poetry
 
-      ### CLI utils
-      pinentry-tty
-      # bitwarden-cli
-      # awscli2
-      cloc
-      coreutils
-      entr # Run commands when files change
-      graphviz
-      jq
-      # texlive.combined.scheme-basic
-      # pandoc
-      # python310Packages.editorconfig
-      rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-      silver-searcher # A faster and more convenient grep. Executable is called `ag`
-      # terraform
-      tree
-      killall
 
-      # required by telescope.nvim  
-      ripgrep
-      fd
-
-      wget
       # unrar
       postgresql_15
-
-      renameutils # adds qmv, and qmc utils for bulk move and copy
 
       taskwarrior-tui
       timewarrior
@@ -157,7 +90,6 @@ in
       # vagrant
       ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
       # https://github.com/mic92/nix-update
-      nurl # https://github.com/nix-community/nurl
       # nix-init # https://github.com/nix-community/nix-init
       oha # HTTP load generator https://github.com/hatoo/oha
 
