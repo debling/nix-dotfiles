@@ -1,5 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, mainUser, ... }:
 {
+  home-manager.users.${mainUser} = import ./home.nix;
+
   # documentation = {
   #   enable = false;
   #   doc.enable = false;
@@ -53,7 +55,7 @@
   services = {
     nix-daemon.enable = true;
 
-    # karabiner-elements.enable = true;
+    karabiner-elements.enable = true;
 
     jankyborders = {
       enable = false;

@@ -6,6 +6,7 @@ require('snacks').setup({
   statuscolumn = { enabled = true },
   input = { enabled = true },
   indent = { enabled = true },
+  notifier = { enabled = true },
 })
 
 require('debling.basic_options')

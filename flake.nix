@@ -116,6 +116,14 @@
                 hash = "sha256-ikwOVtR5cXZGd2GE/O4ej6cOQZomyEKkPcKe08EtPw0=";
               };
             };
+
+            karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
+              version = "14.13.0";
+              src = prev.fetchurl {
+                inherit (old.src) url;
+                hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
+              };
+            });
           })
         ];
       };
@@ -185,6 +193,7 @@
       # My `nix-darwin` configs
       darwinConfigurations."air-m1" = darwin.lib.darwinSystem {
         system = flake-utils.lib.system.aarch64-darwin;
+        specialArgs = specialArgs;
         modules = [
           # Main `nix-darwin` config
           ./hosts/air/configuration.nix
