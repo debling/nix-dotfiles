@@ -14,6 +14,7 @@
       ../../modules/common/pipewire.nix
       ../../modules/desktop/dwl
       ../../modules/hardware/bluetooth.nix
+      ../../modules/home-assistant.nix
     ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -69,25 +70,25 @@
     # Enable touchpad support (enabled default in most desktopManager).
     libinput.enable = true;
 
-    # avahi = {
-    #   enable = true;
-    #   nssmdns4 = true;
-    #   publish = {
-    #     enable = true;
-    #     addresses = true;
-    #     domain = true;
-    #     hinfo = true;
-    #     userServices = true;
-    #     workstation = true;
-    #   };
-    # };
+    avahi = {
+      enable = true;
+      nssmdns4 = true;
+      publish = {
+        enable = true;
+        addresses = true;
+        domain = true;
+        hinfo = true;
+        userServices = true;
+        workstation = true;
+      };
+    };
 
     displayManager.autoLogin.user = mainUser;
 
     xserver = {
       enable = true;
-      # displayManager.gdm.enable = true;
-      # desktopManager.gnome.enable = true;
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
 
       xkb = {
         layout = "br";
@@ -104,6 +105,7 @@
   # $ nix search wget
   environment = {
     systemPackages = with pkgs; [
+      bluez
       # uxplay
       # neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       tmux

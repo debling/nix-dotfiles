@@ -11,14 +11,14 @@ in
   imports = [
     nix-index-database.hmModules.nix-index
 
-    # ../../modules/editors/neovim.nix
+    ../../modules/editors/neovim.nix
     ../../modules/home/gtk-qt.nix
-    # ../../modules/home/version-control.nix
+    ../../modules/home/version-control.nix
     ../../modules/home/wayland-commons.nix
     ../../modules/terminals/foot.nix
   ];
 
-  # debling.editors.neovim.enable = true;
+  debling.editors.neovim.enable = true;
 
   news.display = "show";
 
@@ -383,7 +383,7 @@ in
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "alacritty";
+      terminal = "xterm-256color";
       sensibleOnTop = false;
       tmuxp.enable = true;
       extraConfig = ''
