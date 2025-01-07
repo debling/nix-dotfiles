@@ -1,4 +1,4 @@
-{ lib, ...}:
+{ lib, ... }:
 {
   disko.devices = {
     disk = {
@@ -44,7 +44,8 @@
                     # enabled as well
                     # - compression, enable transparent compression, also
                     # requires the extra_attr
-                    "-O" "extra_attr,inode_checksum,sb_checksum,compression"
+                    "-O"
+                    "extra_attr,inode_checksum,sb_checksum,compression"
                   ];
                   mountOptions = [
                     # "compress_algorithm=zstd:6"

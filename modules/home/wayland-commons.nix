@@ -1,4 +1,4 @@
-{ pkgs, colorscheme, ...}: 
+{ pkgs, colorscheme, ... }:
 
 {
   home.packages = with pkgs; [
@@ -33,7 +33,7 @@
     # Others
     zoom-us
   ];
-  
+
 
   services.mako = with colorscheme.palette; {
     enable = true;
@@ -45,15 +45,15 @@
     borderColor = "#${base0D}";
     progressColor = "#${base02}";
     extraConfig = ''
-        [urgency=low]
-        background-color=#${base00}
-        text-color=#${base0A}
-        border-color=#${base0D}
+      [urgency=low]
+      background-color=#${base00}
+      text-color=#${base0A}
+      border-color=#${base0D}
 
-        [urgency=high]
-        background-color=#${base00}
-        text-color=#${base08}
-        border-color=#${base0D}
+      [urgency=high]
+      background-color=#${base00}
+      text-color=#${base08}
+      border-color=#${base0D}
     '';
   };
 }

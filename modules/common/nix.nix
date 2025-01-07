@@ -34,7 +34,7 @@
   #
   # $ nix-alien myapp            
   # Run the binary inside a FHS shell with all needed shared dependencies to execute the binary
-  environment.systemPackages = [pkgs.nix-alien];
+  environment.systemPackages = [ pkgs.nix-alien ];
   programs.nix-ld.enable = true;
 
 }

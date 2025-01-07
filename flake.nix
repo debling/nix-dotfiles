@@ -49,7 +49,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
 
     flake-utils.url = "github:numtide/flake-utils";
-   
+
 
     # overlays
     neovim-nightly-overlay = {
@@ -165,11 +165,12 @@
           ./hosts/x220/configuration.nix
           inputs.nixos-facter-modules.nixosModules.facter
           {
-            config.facter.reportPath = let
-              reportPath = ./hosts/x220/facter.json;
-            in
+            config.facter.reportPath =
+              let
+                reportPath = ./hosts/x220/facter.json;
+              in
               if builtins.pathExists reportPath then
-                reportPath 
+                reportPath
               else
                 throw "Have you forgotten to run nixos-anywhere with `--generate-hardware-config nixos-facter ${reportPath}`?";
           }

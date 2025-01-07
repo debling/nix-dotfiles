@@ -14,10 +14,10 @@ in
       setups = {
         sh = {
           systemPkgs = with pkgs; [
-          nodePackages.bash-language-server
-          shellcheck
-          shfmt
-        ];
+            nodePackages.bash-language-server
+            shellcheck
+            shfmt
+          ];
         };
 
         rust = {
@@ -232,7 +232,7 @@ in
             nvim-lastplace
 
             nvim-web-devicons
-          ] ++ (lib.concatMap (s: s.plugins or []) (lib.attrValues setups));
+          ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
           extraConfig = "lua require('debling')";
         };

@@ -7,32 +7,33 @@
       "esphome"
       "met"
       "radio_browser"
-       "upnp"
+      "upnp"
       "google_assistant"
       "google"
       "cast"
       "bluetooth"
-"media_source"
-"ffmpeg"
+      "media_source"
+      "ffmpeg"
     ];
     config = {
       # Includes dependencies for a basic setup
       # https://www.home-assistant.io/integrations/default_config/
-      default_config = {};
-        homeassistant = {
+      default_config = { };
+      homeassistant = {
 
 
-        media_dirs =  {
-        media = "/media";
-        recormedia_sourceding = "/mnt/recordings";
+        media_dirs = {
+          media = "/media";
+          recormedia_sourceding = "/mnt/recordings";
+        };
       };
-    };
-        camera = [
-        { platform = "ffmpeg";
+      camera = [
+        {
+          platform = "ffmpeg";
 
-        name = "webcam";
-    input = "/dev/video1"; 
-          }
+          name = "webcam";
+          input = "/dev/video1";
+        }
       ];
     };
   };
