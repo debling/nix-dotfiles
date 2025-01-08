@@ -101,12 +101,12 @@ lsp.ltex.setup({
     -- your other on_attach functions.
     require('ltex_extra').setup({
       load_langs = { 'en-US', 'pt-BR' }, -- table <string> : languages for witch dictionaries will be loaded
-      init_check = true,                 -- boolean : whether to load dictionaries on startup
+      init_check = true, -- boolean : whether to load dictionaries on startup
     })
   end,
   settings = {
     ltex = {
-      language =  "auto",
+      language = 'auto',
       additionalRules = {
         motherTongue = 'pt-BR',
         enablePickyRules = true,
@@ -134,7 +134,6 @@ lsp.lua_ls.setup({
     },
   },
 })
-
 
 local null_ls = require('null-ls')
 

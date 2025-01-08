@@ -56,9 +56,9 @@ vim.o.undodir = os.getenv('HOME') .. '/.cache/nvim'
 vim.o.undolevels = 10000
 
 -- Map leader key to <space>
-local leaderKey = " "
+local leaderKey = ' '
 vim.g.mapleader = leaderKey
 vim.g.maplocalleader = leaderKey
 
 -- better completion menu
-vim.o.completeopt = "menu,preview,longest,noinsert"
+vim.o.completeopt = 'menu,preview,longest,noinsert'

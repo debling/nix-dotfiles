@@ -10,9 +10,7 @@ local M = {}
 function M.null_ls_register(select_sources_fn)
   local sources = select_sources_fn(null_ls.builtins)
   for _, s in ipairs(sources) do
-    if not null_ls.is_registered(s.name) then
-      null_ls.register(s)
-    end
+    if not null_ls.is_registered(s.name) then null_ls.register(s) end
   end
 end
 

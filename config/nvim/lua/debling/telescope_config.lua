@@ -22,9 +22,10 @@ local tel_builtin = require('telescope.builtin')
 utils.nmap('<Leader>ff', tel_builtin.find_files)
 utils.nmap('<Leader>fg', tel_builtin.live_grep)
 utils.nmap('<Leader>fb', tel_builtin.buffers)
-utils.nmap('<Leader>fd', function()
-  require('telescope.builtin').diagnostics({ sort_by = 'severity' })
-end)
+utils.nmap(
+  '<Leader>fd',
+  function() require('telescope.builtin').diagnostics({ sort_by = 'severity' }) end
+)
 utils.nmap('<Leader>fh', tel_builtin.help_tags)
 utils.nmap('<Leader>fs', tel_builtin.lsp_dynamic_workspace_symbols)
 

@@ -1,11 +1,11 @@
 -- vim.loader.enable()
 
 require('snacks').setup({
-    bigfile = { enabled = true },
-    quickfile = { enabled = true },
-    statuscolumn = { enabled = true },
-    input = { enabled = true },
-    indent = { enabled = true },
+  bigfile = { enabled = true },
+  quickfile = { enabled = true },
+  statuscolumn = { enabled = true },
+  input = { enabled = true },
+  indent = { enabled = true },
 })
 
 require('debling.basic_options')
@@ -37,9 +37,7 @@ vim.g.slime_default_config = {
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+  callback = function() vim.highlight.on_yank() end,
 })
 
 -- TODO: setup obsidian on linux
@@ -79,7 +77,7 @@ require('freeze-code').setup({
   copy = true,
   dir = '/tmp',
   freeze_config = { -- configuration options for `freeze` command
-    theme = "catppuccin-mocha",
+    theme = 'catppuccin-mocha',
   },
 })
 
@@ -90,4 +88,4 @@ require('quarto').setup({
   },
 })
 
-require("ts-comments").setup()
+require('ts-comments').setup()

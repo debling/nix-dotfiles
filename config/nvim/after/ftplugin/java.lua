@@ -1,7 +1,7 @@
 -- TODO: check https://gist.github.com/JoelWi/c6c50e05d33d6adf79b12671ceeb60f3
-local utils = require('debling.config_utils')
-local lsp_setup = require('debling.lsp_server_setup')
 local jdtls = require('jdtls')
+local lsp_setup = require('debling.lsp_server_setup')
+local utils = require('debling.config_utils')
 
 ---@param jdk_version string
 ---@return string
@@ -67,8 +67,7 @@ end
 ---@param ctx lsp.HandlerContext
 ---@param result lsp.Result
 ---@param result lsp.Confuig
-local function actionable_notification_handler(err, result, ctx, config)
-end
+local function actionable_notification_handler(err, result, ctx, config) end
 
 local config = {
   cmd = {
@@ -83,8 +82,8 @@ local config = {
     java = {
       compile = {
         nullAnalysis = {
-          mode= "automatic",
-        }
+          mode = 'automatic',
+        },
       },
       configuration = {
         runtimes = runtimes,

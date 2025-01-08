@@ -7,30 +7,24 @@ local default_opts = { silent = true, noremap = true }
 ---@param effect function | string
 ---@param opts table | nil
 function M.map(modes, key, effect, opts)
-    local mergedOpts = vim.tbl_extend('keep', opts or {}, default_opts)
-    vim.keymap.set(modes, key, effect, mergedOpts)
+  local mergedOpts = vim.tbl_extend('keep', opts or {}, default_opts)
+  vim.keymap.set(modes, key, effect, mergedOpts)
 end
 
 ---@param key string
 ---@param effect function | string
 ---@param opts table | nil
-function M.nmap(key, effect, opts)
-    M.map({ 'n' }, key, effect, opts)
-end
+function M.nmap(key, effect, opts) M.map({ 'n' }, key, effect, opts) end
 
 ---@param key string
 ---@param effect function | string
 ---@param opts table | nil
-function M.vmap(key, effect, opts)
-    M.map({ 'v' }, key, effect, opts)
-end
+function M.vmap(key, effect, opts) M.map({ 'v' }, key, effect, opts) end
 
 ---@param key string
 ---@param effect function | string
 ---@param opts table | nil
-function M.imap(key, effect, opts)
-    M.map({ 'i' }, key, effect, opts)
-end
+function M.imap(key, effect, opts) M.map({ 'i' }, key, effect, opts) end
 
 ---@tag lazy-require
 
@@ -56,15 +50,11 @@ end
 --- Will only require the module after the first index of a module.
 --- Only works for modules that export a table.
 M.require_on_index = function(require_path)
-    return setmetatable({}, {
-        __index = function(_, key)
-            return require(require_path)[key]
-        end,
+  return setmetatable({}, {
+    __index = function(_, key) return require(require_path)[key] end,
 
-        __newindex = function(_, key, value)
-            require(require_path)[key] = value
-        end,
-    })
+    __newindex = function(_, key, value) require(require_path)[key] = value end,
+  })
 end
 
 --- Requires only when you call the _module_ itself.
@@ -72,11 +62,9 @@ end
 --- If you want to require an exported value from the module,
 --- see instead |lazy.require_on_exported_call()|
 M.require_on_module_call = function(require_path)
-    return setmetatable({}, {
-        __call = function(_, ...)
-            return require(require_path)(...)
-        end,
-    })
+  return setmetatable({}, {
+    __call = function(_, ...) return require(require_path)(...) end,
+  })
 end
 
 --- Require when an exported method is called.
@@ -95,41 +83,34 @@ end
 ---
 --- </pre>
 M.require_on_exported_call = function(require_path)
-    return setmetatable({}, {
-        __index = function(_, k)
-            return function(...)
-                return require(require_path)[k](...)
-            end
-        end,
-    })
+  return setmetatable({}, {
+    __index = function(_, k)
+      return function(...) return require(require_path)[k](...) end
+    end,
+  })
 end
 
 ---@generic T : table
 ---@param req_fn fun(): T functions that returns the module
 ---@return T
 function M.lazy_require(req_fn)
-    local module = nil
-    return setmetatable({}, {
-        __index = function(_, k)
-            return function(...)
-                if module == nil then
-                    module = req_fn()
-                end
-                return module[k](...)
-            end
-        end,
-    })
+  local module = nil
+  return setmetatable({}, {
+    __index = function(_, k)
+      return function(...)
+        if module == nil then module = req_fn() end
+        return module[k](...)
+      end
+    end,
+  })
 end
 
 ---@alias PathSeparator '/' | '\'
 ---@type PathSeparator
 M.path_sep = vim.loop.os_uname().sysname:match('Windows') and '\\' or '/' --[[@as PathSeparator]]
 
-
 ---@param ... string[]
 ---@return string
-function M.path_join(...)
-    return table.concat(vim.tbl_flatten({ ... }), M.path_sep)
-end
+function M.path_join(...) return table.concat(vim.tbl_flatten({ ... }), M.path_sep) end
 
 return M
