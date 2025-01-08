@@ -17,22 +17,18 @@
       ../../modules/home-assistant.nix
     ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+    kernel.sysctl."vm.swappiness" = 200;
+
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+  };
 
   zramSwap = {
     enable = true;
   };
-
-  # Swapp only used for hibernation
-  swapDevices = [
-    {
-      device = "/var/swapfile";
-      size = 8 * 1024;
-    }
-  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${mainUser} = {

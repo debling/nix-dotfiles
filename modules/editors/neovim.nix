@@ -12,8 +12,25 @@ in
   config =
     let
       setups = {
+        c = {
+          systemPkgs = with pkgs; [
+            checkmake
+            clang-tools_18 # C/C++
+            bear # wrap make to generate compile_commands.json
+          ];
+        };
+
+        zig = {
+          systemPkgs = with pkgs; [
+            zigpkgs.master
+            zls
+          ];
+        };
+
         sh = {
           systemPkgs = with pkgs; [
+            hadolint
+            nodePackages.dockerfile-language-server-nodejs
             nodePackages.bash-language-server
             shellcheck
             shfmt
@@ -56,6 +73,21 @@ in
             vim-dadbod-completion
           ];
         };
+
+        web = {
+          systemPkgs = with pkgs; [
+            nodePackages.typescript-language-server
+            angular-language-server
+            nodePackages.yaml-language-server
+            nodePackages.vscode-langservers-extracted
+            nodePackages.eslint_d
+            nodePackages.prettier
+            nodePackages."@tailwindcss/language-server"
+            emmet-ls
+          ];
+          plugins = with pkgs.vimPlugins; [
+          ];
+        };
       };
     in
     lib.mkIf cfg.enable {
@@ -65,54 +97,17 @@ in
         };
 
         packages = with pkgs; [
-          zigpkgs.master
-          zls
-          checkmake
-          clang-tools_18 # C/C++
-          bear # wrap make to generate compile_commands.json
-
-          # arduino-language-server
-          arduino-cli
-
-          # language servers
-          # haskell-language-server
           gopls # go
-          nodePackages.dockerfile-language-server-nodejs
-          nodePackages.typescript-language-server
-          angular-language-server
-          nodePackages.yaml-language-server
-          nodePackages.vscode-langservers-extracted
           terraform-ls
-
           ### Lua
           sumneko-lua-language-server
           stylua
-
           ltex-ls
-
-          ### Kotlin
-          kotlin-language-server
-
           ### nix
           nixd # language server
           statix #  static analysis
           nixfmt-rfc-style
-
-          nodePackages.eslint_d
-          nodePackages.prettier
-
-          nodePackages."@tailwindcss/language-server"
-
           hurl
-
-          ### Dockerfile
-          hadolint
-
-          # ### R
-          # rPackages.languageserver
-
-          ### Web
-          emmet-ls
         ] ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));
 
         sessionVariables = {
@@ -122,15 +117,6 @@ in
 
       programs.neovim =
         let
-          arduino-nvim = pkgs.vimUtils.buildVimPlugin {
-            name = "arduino-nvim";
-            src = pkgs.fetchFromGitHub {
-              owner = "edKotinsky";
-              repo = "Arduino.nvim";
-              rev = "38559b12dee24e8680565f669e6abac8d11f705d";
-              hash = "sha256-4z8aL+ZyS8yeFdRY4+J+CHK2C0+2bJJeaEF+G840COU=";
-            };
-          };
           # hurl-nvim = pkgs.vimUtils.buildVimPlugin {
           #   name = "hurl-nvim";
           #
@@ -164,6 +150,9 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
+            blink-cmp
+            friendly-snippets # used by blink.cmp
+
             harpoon2
 
             base16-nvim
@@ -179,8 +168,6 @@ in
             rainbow-delimiters-nvim
 
             obsidian-nvim
-
-            arduino-nvim
 
             vim-multiple-cursors
 
@@ -209,10 +196,6 @@ in
             vim-table-mode
 
             # Language specific
-            plantuml-syntax
-
-            kotlin-vim
-
             ltex_extra-nvim
 
             ## Git

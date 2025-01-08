@@ -16,6 +16,7 @@ in
     ../../modules/home/version-control.nix
     ../../modules/home/wayland-commons.nix
     ../../modules/terminals/foot.nix
+    ../../modules/home/nixos-common-pkgs.nix
   ];
 
   debling.editors.neovim.enable = true;

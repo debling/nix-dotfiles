@@ -14,7 +14,7 @@
       nerd-fonts.iosevka-term
     ];
     fontconfig.defaultFonts = {
-      monospace = [ "IosevkaTerm Nerd Font" ];
+      monospace = [ "JetBrainsMonoNL NF" ];
       sansSerif = [ "Source Sans Pro" ];
       serif = [ "Source Serif Pro" ];
     };

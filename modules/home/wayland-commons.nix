@@ -6,7 +6,6 @@
     cloc
     coreutils
     entr # Run commands when files change
-    graphviz
     jq
     killall
     pinentry-tty
@@ -23,15 +22,6 @@
     # required by telescope.nvim  
     ripgrep
     fd
-
-    # Image viewer
-    imv
-
-    # Video player
-    mpv
-
-    # Others
-    zoom-us
   ];
 
 
