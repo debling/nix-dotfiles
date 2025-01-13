@@ -33,19 +33,19 @@ utils.map(
 )
 
 require('blink.cmp').setup({
-  completion = {
-    menu = {
-      auto_show = function(ctx) return ctx.mode ~= 'cmdline' end,
-    },
-  },
   sources = {
     -- add lazydev to your completion providers
-    default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+    default = { 'lazydev', 'dadbod', 'lsp', 'path', 'snippets', 'buffer' },
     providers = {
       lazydev = {
         name = 'LazyDev',
         module = 'lazydev.integrations.blink',
         -- make lazydev completions top priority (see `:h blink.cmp`)
+        score_offset = 100,
+      },
+      dadbod = {
+        name = "Dadbod",
+        module = "vim_dadbod_completion.blink",
         score_offset = 100,
       },
     },

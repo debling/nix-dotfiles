@@ -1,12 +1,10 @@
--- vim.loader.enable()
+vim.loader.enable()
 
 require('snacks').setup({
   bigfile = { enabled = true },
   quickfile = { enabled = true },
-  statuscolumn = { enabled = true },
   input = { enabled = true },
   indent = { enabled = true },
-  notifier = { enabled = true },
 })
 
 require('debling.basic_options')
