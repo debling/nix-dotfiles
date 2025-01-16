@@ -47,7 +47,19 @@ in
         };
 
         java = {
-          systemPkgs = with pkgs; [ pmd checkstyle ];
+          systemPkgs = with pkgs;
+            let
+              jdtls-with-lombok = pkgs.writeShellScriptBin "jdtls-with-lombok" ''
+                ${lib.getExe jdt-language-server} \
+                  --jvm-arg=-javaagent:${lombok}/share/java/lombok.jar \
+                  --jvm-arg=-Dlog.level=ALL \
+                  $@
+                  '';
+            in [ 
+              pmd
+              checkstyle
+              jdtls-with-lombok
+            ];
           plugins = [ pkgs.vimPlugins.nvim-jdtls ];
         };
 

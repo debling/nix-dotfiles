@@ -1,7 +1,7 @@
 -- TODO: check https://gist.github.com/JoelWi/c6c50e05d33d6adf79b12671ceeb60f3
 local jdtls = require('jdtls')
-local lsp_setup = require('debling.lsp_server_setup')
 local utils = require('debling.config_utils')
+local Path = require('plenary.path')
 
 ---@param jdk_version string
 ---@return string
@@ -41,38 +41,38 @@ vim.list_extend(
   vim.split(vim.fn.glob(jdtls_extensions_path .. '/java-test/*.jar', true), '\n')
 )
 
-local java_cmds_au = vim.api.nvim_create_augroup('DEblingJavaCmds', { clear = true })
-
----@param bufnr buffer
+---@param bufnr number
 local function jdtls_on_attach(_, bufnr)
   local opts = { buffer = bufnr }
   -- If using nvim-dap
   -- This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
   utils.nmap('<leader>tc', jdtls.test_class, opts)
   utils.nmap('<leader>tm', jdtls.test_nearest_method, opts)
-
-  -- pcall(vim.lsp.codelens.refresh)
-
-  -- vim.api.nvim_create_autocmd('BufWritePost', {
-  --   buffer = bufnr,
-  --   group = java_cmds_au,
-  --   desc = 'refresh codelens',
-  --   callback = function()
-  --     pcall(vim.lsp.codelens.refresh)
-  --   end,
-  -- })
 end
 
----@param err table | nil
----@param ctx lsp.HandlerContext
----@param result lsp.Result
----@param result lsp.Confuig
-local function actionable_notification_handler(err, result, ctx, config) end
+
+local function get_data_dir()
+  local proj_dir = vim.fs.root(0, {".git", "mvnw", "gradlew"}) or vim.fn.getcwd()
+  local escaped_dir = proj_dir:gsub(Path.path.sep, '%%')
+
+  local state_dir = vim.fn.stdpath('state')
+
+  if (type(state_dir) ~= "string") then
+      vim.notify("Failed to get state dir, expected string, got: " .. type(state_dir), vim.log.levels.ERROR)
+  end
+
+  return vim.fs.joinpath(
+    state_dir --[[@as string]],
+    'jdtls-workspace',
+    escaped_dir
+  )
+end
+
 
 local config = {
   cmd = {
-    -- FIXME: hardcoded, use nix to build
-    vim.fs.normalize('~/.local/bin/jdtls'),
+    'jdtls-with-lombok',
+    '-data', get_data_dir()
   },
   on_attach = jdtls_on_attach,
   init_options = {
@@ -88,12 +88,6 @@ local config = {
       configuration = {
         runtimes = runtimes,
       },
-      -- implementationsCodeLens = {
-      --   enabled = true,
-      -- },
-      -- referencesCodeLens = {
-      --   enabled = true,
-      -- },
       references = {
         includeDecompiledSources = true,
       },
