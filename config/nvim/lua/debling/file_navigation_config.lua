@@ -15,12 +15,6 @@ local function load_setup_treesitter()
         -- Set to false if you have an `updatetime` of ~100.
         clear_on_cursor_move = true,
       },
-      smart_rename = {
-        enable = true,
-        keymaps = {
-          smart_rename = 'grr',
-        },
-      },
       navigation = {
         enable = true,
         keymaps = {

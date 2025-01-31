@@ -150,6 +150,29 @@ in
       "SDKs/Java/17".source = pkgs.jdk17;
       "SDKs/Java/8".source = pkgs.jdk8;
       # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
+
+      # TODO: migrate to common
+      ".psqlrc".text = ''
+        \pset null '(null)'
+
+        \pset linestyle unicode
+        \pset border 2
+
+        -- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
+        \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
+        
+        -- PROMPT2 is printed when the prompt expects more input, like when you type
+        -- SELECT * FROM<enter>. %R shows what type of input it expects.
+        \set PROMPT2 '[more] %R > '
+
+        -- Show how long each query takes to execute
+        \timing
+
+        \x auto
+        \set VERBOSITY verbose
+        \set HISTCONTROL ignoredups
+        \set COMP_KEYWORD_CASE upper
+      '';
     };
 
   };
@@ -211,7 +234,7 @@ in
     nix-index.enable = true;
 
     vscode = {
-      enable = false;
+      enable = true;
       enableUpdateCheck = false;
       mutableExtensionsDir = true;
       package = pkgs.vscodium;
@@ -250,8 +273,13 @@ in
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+      config = {
+        global = {
+          load_dotenv = true;
+          strict_env = true;
+        };
+      };
       stdlib = /* sh */ ''
-        # PUT this here
         layout_poetry() {
           if [[ ! -f pyproject.toml ]]; then
             log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
@@ -349,10 +377,10 @@ in
     gpg.enable = true;
 
     # The true OS
-    # emacs = {
-    #   enable = true;
-    #   package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
-    # };
+    emacs = {
+      enable = true;
+      package = pkgs.emacs-macport;
+    };
 
     yazi = {
       enable = true;

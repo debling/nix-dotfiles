@@ -3,6 +3,22 @@ local jdtls = require('jdtls')
 local utils = require('debling.config_utils')
 local Path = require('plenary.path')
 
+local lsp_setup = require('debling.lsp_server_setup')
+
+
+lsp_setup.null_ls_register(
+  function(builtins)
+    return {
+      builtins.diagnostics.pmd.with({
+        extra_args = {
+          "-cache", "/tmp/pmd",
+          "-R", "rulesets/java/quickstart.xml"
+        },
+      }),
+    }
+  end
+)
+
 ---@param jdk_version string
 ---@return string
 local function jdk_path(jdk_version)
