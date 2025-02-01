@@ -6,7 +6,8 @@ let
 in
 {
   imports = [
-      ../../modules/home/nixos-common-pkgs.nix
+    ../../modules/home/common-packages.nix
+    ../../modules/home/nixos-common-pkgs.nix
     ../../modules/editors/neovim.nix
     ../../modules/terminals/alacritty.nix
     ../../modules/terminals/foot.nix

@@ -54,8 +54,9 @@ in
                   --jvm-arg=-javaagent:${lombok}/share/java/lombok.jar \
                   --jvm-arg=-Dlog.level=ALL \
                   $@
-                  '';
-            in [ 
+              '';
+            in
+            [
               pmd
               checkstyle
               jdtls-with-lombok

@@ -25,7 +25,8 @@
 
         # from https://stackoverflow.com/a/30998048       
         find-merge = "!sh -c 'commit=$0 && branch=\${1:-HEAD} && (git rev-list $commit..$branch --ancestry-path | cat -n; git rev-list $commit..$branch --first-parent | cat -n) | sort -k2 -s | uniq -f1 -d | sort -n | tail -1 | cut -f2'";
-        show-merge = "!sh -c 'merge=$(git find-merge $0 $1) && [ -n \"$merge\" ] && git show $merge'"; };
+        show-merge = "!sh -c 'merge=$(git find-merge $0 $1) && [ -n \"$merge\" ] && git show $merge'";
+      };
       ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
       extraConfig = {
         status = {

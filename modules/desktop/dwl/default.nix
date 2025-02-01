@@ -142,7 +142,7 @@ in
       enable = true;
       serviceConfig = {
         ExecStart = with colorscheme.palette; ''
-          ${lib.getExe dwlb} -ipc -font 'mono:size=10' \
+          ${lib.getExe dwlb} -ipc -font 'mono:size=8' \
             -inactive-bg-color '#${base00}' \
             -middle-bg-color '#${base00}' \
             -middle-bg-color-selected '#${base01}' \

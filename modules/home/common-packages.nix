@@ -1,7 +1,8 @@
-{ pkgs, ...}:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
+    btop
     cloc
     coreutils
     entr # Run commands when files change

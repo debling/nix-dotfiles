@@ -2,16 +2,19 @@
 
 {
   home.packages = with pkgs; [
-    spotify
-    zoom-us
-    anydesk
-
     # Image viewer
     imv
     # Video player
     mpv
     # Others
+    anydesk
+    libreoffice
+    obsidian
+    spotify
     zoom-us
+
+    # experimental
+    logseq
   ];
 }
 

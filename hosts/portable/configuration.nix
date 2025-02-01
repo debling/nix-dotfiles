@@ -33,6 +33,8 @@
 
   home-manager.users.${mainUser} = import ./home.nix;
 
+  boot.kernel.sysctl."vm.swappiness" = 200;
+
   boot.loader.grub = {
     enable = true;
     efiSupport = true;
@@ -110,8 +112,6 @@
   environment.systemPackages = with pkgs; [
     rose-pine-icon-theme
     firefox
-    spotify
-    libreoffice
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
