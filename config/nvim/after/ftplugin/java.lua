@@ -11,7 +11,7 @@ lsp_setup.null_ls_register(
     return {
       builtins.diagnostics.pmd.with({
         extra_args = {
-          "-cache", "/tmp/pmd",
+          "--cache", "/tmp/pmd",
           "-R", "rulesets/java/quickstart.xml"
         },
       }),

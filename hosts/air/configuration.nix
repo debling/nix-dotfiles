@@ -2,14 +2,6 @@
 {
   home-manager.users.${mainUser} = import ./home.nix;
 
-  # documentation = {
-  #   enable = false;
-  #   doc.enable = false;
-  #   info.enable = false;
-  # };
-
-  # Enable experimental nix command and flakes
-  # nix.package = pkgs.nixUnstable;
   nix = {
     package = pkgs.nixVersions.latest;
     configureBuildUsers = true;
@@ -146,11 +138,13 @@
       "bitwarden"
       "docker"
       "iterm2"
+      "keycastr"
+      "logseq"
       "maccy"
       "obsidian"
       "slack"
       "spotify"
-      "keycastr"
+      "stremio"
     ];
   };
 }

@@ -29,7 +29,6 @@ vim.g.slime_default_config = {
 }
 
 -- From kicksart.nvim, see: https://github.com/nvim-lua/kickstart.nvim/blob/master/init.lua
-
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
@@ -39,22 +38,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.highlight.on_yank() end,
 })
 
--- TODO: setup obsidian on linux
-if vim.loop.os_uname().sysname == 'Darwin' then
-  require('obsidian').setup({
-    workspaces = {
-      {
-        name = 'obsidian-vault',
-        path = '/Users/debling/Library/CloudStorage/GoogleDrive-d.ebling8@gmail.com/My Drive/obsidian-vault',
-      },
+require('obsidian').setup({
+  workspaces = {
+    {
+      name = 'obsidian-vault',
+      path = '~/Workspace/debling/obsidian-vault',
     },
-  })
+    {
+      name = 'zeit-docs',
+      path = '~/Workspace/zeit/docs-projetos/',
+    },
+  },
+})
 
-  local utils = require('debling.config_utils')
+local utils = require('debling.config_utils')
 
-  utils.nmap('<leader>of', '<cmd>ObsidianFollowLink<CR>')
-  utils.nmap('<leader>of', '<cmd>ObsidianSearch<CR>')
-end
+utils.nmap('<leader>oq', '<cmd>ObsidianSearch<CR>')
 
 vim.g['conjure#mapping#doc_word'] = 'gk'
 
