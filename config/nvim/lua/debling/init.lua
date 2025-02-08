@@ -49,6 +49,9 @@ require('obsidian').setup({
       path = '~/Workspace/zeit/docs-projetos/',
     },
   },
+  ui = {
+    enable = false;
+  },
 })
 
 local utils = require('debling.config_utils')

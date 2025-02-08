@@ -168,8 +168,6 @@ in
 
             harpoon2
 
-            base16-nvim
-
             snacks-nvim
 
             freeze-code-nvim

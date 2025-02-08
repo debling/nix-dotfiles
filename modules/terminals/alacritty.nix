@@ -14,8 +14,12 @@ in
       let
         generic_setting = {
           general = {
+            import = [
+              "${alacritty-themes}/themes/solarized_osaka.toml"
+            ];
+
             ipc_socket = false;
-            live_config_reload = false;
+            live_config_reload = true;
           };
 
           scrolling = {

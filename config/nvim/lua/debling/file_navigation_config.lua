@@ -2,7 +2,11 @@ local utils = require('debling.config_utils')
 
 local function load_setup_treesitter()
   require('nvim-treesitter.configs').setup({
+    modules = {},
     ensure_installed = {},
+    ignore_install = { "all" },
+    sync_install = false,
+    auto_install = false,
     highlight = {
       enable = true,
     },
