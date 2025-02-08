@@ -71,7 +71,7 @@
     };
 
     kmonad = {
-      url = "git+https://github.com/kmonad/kmonad?dir=nix";
+      url = "github:kmonad/kmonad?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

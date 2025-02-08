@@ -444,16 +444,16 @@
         "dir": "nix",
         "lastModified": 1738565510,
         "narHash": "sha256-xmr17yq6/wlcF/69GkRlKKkWAUC8ZjPeZMIuHdJnpfk=",
-        "ref": "refs/heads/master",
+        "owner": "kmonad",
+        "repo": "kmonad",
         "rev": "7784e590405429f5105d9d038cbe13f887160805",
-        "revCount": 913,
-        "type": "git",
-        "url": "https://github.com/kmonad/kmonad"
+        "type": "github"
       },
       "original": {
         "dir": "nix",
-        "type": "git",
-        "url": "https://github.com/kmonad/kmonad"
+        "owner": "kmonad",
+        "repo": "kmonad",
+        "type": "github"
       }
     },
     "lib-aggregate": {

@@ -1,0 +1,19 @@
+{:tasks
+ {switch  {:doc "Applies changes to the system right now"
+           :requires ([babashka.process :as p])
+           :task (let [rebuild-cmd (if (= (System/getProperty "os.name") "Linux")
+                                     "sudo nixos-rebuild"
+                                     "darwin-rebuild")]
+                   (run! p/check
+                         (p/pipeline
+                          (p/pb {:in :inherit  :err :out}
+                                (str rebuild-cmd " switch --flake . --log-format internal-json -v"))
+                          (p/pb {:out :inherit :err :inherit}
+                                "nom --json"))))}
+
+  update  {:doc "Update flake dependencies"
+           :task (shell "nix flake update")}
+
+  vm-build (shell "nix build .#nixosConfigurations.live.config.system.build.vm")
+  ;
+  }}
