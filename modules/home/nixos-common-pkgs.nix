@@ -2,11 +2,15 @@
 
 {
   home.packages = with pkgs; [
-    # Image viewer
+    ### Image viewer
     imv
-    # Video player
+    ### Video player
     mpv
-    # Others
+    ### Music player
+    cmus
+    spotify-player
+
+    ### Others
     anydesk
     libreoffice
     obsidian

@@ -22,5 +22,10 @@
       border-color=#${base0D}
     '';
   };
+
+  xdg.configFile."electron-flags.conf".text = ''
+    --enable-features=UseOzonePlatform,WaylandWindowDecorations
+    --ozone-platform=wayland
+  '';
 }
 

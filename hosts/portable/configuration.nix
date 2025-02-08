@@ -21,6 +21,8 @@
       ../../modules/hardware/bluetooth.nix
     ];
 
+  documentation.dev.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
     isNormalUser = true;

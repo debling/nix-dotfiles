@@ -97,7 +97,12 @@
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
-        config = { allowUnfree = true; };
+        config = {
+          allowUnfree = true;
+          permittedInsecurePackages = [
+            "electron-27.3.11"
+          ];
+        };
         overlays = [
           inputs.android-nixpkgs.overlays.default
           inputs.neovim-nightly-overlay.overlays.default
@@ -108,7 +113,7 @@
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
-            kmonad = inputs.kmonad.packages.${prev.system}.default;
+            # kmonad = inputs.kmonad.packages.${prev.system}.default;
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {
@@ -119,6 +124,15 @@
                 hash = "sha256-ikwOVtR5cXZGd2GE/O4ej6cOQZomyEKkPcKe08EtPw0=";
               };
             };
+
+            logseq = prev.logseq.overrideAttrs (oldAttrs: {
+              postFixup = ''
+                makeWrapper ${prev.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
+                  --add-flags $out/share/${oldAttrs.pname}/resources/app \
+                  --add-flags "--use-gl=desktop" \
+                  --prefix LD_LIBRARY_PATH : "${prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ]}"
+              '';
+            });
 
             karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
               version = "14.13.0";
@@ -147,7 +161,7 @@
     in
     {
       # usb drive
-      nixosConfigurations.portable = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.nixos-portable = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [

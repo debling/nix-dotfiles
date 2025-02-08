@@ -104,52 +104,6 @@ in
 
       glow
     ];
-
-
-    shellAliases = {
-      g = "git";
-      e = "emacs -nw";
-      v = "nvim";
-      ni = "nix profile install";
-      ns = "nix-shell --pure";
-      nsp = "nix-shell -p";
-    };
-
-    sessionPath = [
-      "$HOME/${customScriptsDir}"
-      "$HOME/${globalNodePackagesDir}/bin"
-    ];
-
-    sessionVariables = {
-      GRAALVM_HOME = pkgs.graalvm-ce.home;
-    };
-
-    file = {
-      "${config.programs.taskwarrior.dataLocation}/hooks/on-modify.timewarrior" = {
-        executable = true;
-        source = "${pkgs.timewarrior.out}/share/doc/timew/ext/on-modify.timewarrior";
-      };
-
-      ${customScriptsDir} = {
-        source = ../../scripts;
-        recursive = true;
-      };
-
-      ".npmrc".text = ''
-        prefix=~/${globalNodePackagesDir}
-        global-bin-dir=~/${globalNodePackagesDir}
-      '';
-
-      ".ideavimrc".source = ../../config/.ideavimrc;
-
-      # Stable SDK symlinks
-      "SDKs/Java/current".source = pkgs.jdk;
-      "SDKs/Java/11".source = pkgs.jdk11;
-      "SDKs/Java/17".source = pkgs.jdk17;
-      "SDKs/Java/8".source = pkgs.jdk8;
-      # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
-    };
-
   };
 
   xdg.configFile = {
@@ -161,6 +115,7 @@ in
 
   programs = {
     nushell.enable = true;
+
     fish = {
       enable = true;
       interactiveShellInit = ''
@@ -202,174 +157,19 @@ in
           '';
     };
 
-    dircolors.enable = true;
-
-    nix-index-database.comma.enable = true;
-
-    nix-index.enable = true;
-
-    vscode = {
-      enable = false;
-      enableUpdateCheck = false;
-      mutableExtensionsDir = true;
-      package = pkgs.vscodium;
-      userSettings = {
-        "files.autoSave" = "afterDelay";
-        "vim.enableNeovim" = true;
-        "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
-        "editor.fontSize" = 14;
-        "editor.fontLigatures" = true;
-        "workbench.colorTheme" = "Solarized Light";
-        "vim.easymotion" = true;
-        "vim.incsearch" = true;
-        "vim.useSystemClipboard" = true;
-        "vim.useCtrlKeys" = true;
-        "vim.hlsearch" = true;
-        "vim.leader" = "<space>";
-        "extensions.experimental.affinity" = {
-          "vscodevim.vim" = 1;
-        };
-        "zig.path" = "zig";
-        "zig.zls.path" = "zig";
-      };
-    };
-
-    htop.enable = true;
-
-    taskwarrior = {
-      enable = true;
-      colorTheme = "dark-16";
-      package = pkgs.taskwarrior3;
-    };
-
-    # Used to have custom environment per project.
-    # Very useful  to automaticly activate nix-shell when cd'ing to a
-    # project folder.
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-      stdlib = /* sh */ ''
-        # PUT this here
-        layout_poetry() {
-          if [[ ! -f pyproject.toml ]]; then
-            log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
-            exit 2
-          fi
-        
-          local VENV=$(dirname $(poetry run which python))
-          export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
-          export POETRY_ACTIVE=1
-          PATH_add "$VENV"
-        }
-      '';
-    };
-
-    # A modern replacement for ls.
-    eza = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      git = true;
-    };
-
-    # A modern replacement for cat, with sintax hilghting
-    bat = {
-      enable = true;
-      config = {
-        theme = "base16-256";
-      };
-    };
-
-    # Terminal fuzzy finder
-    fzf = {
-      enable = true;
-      enableZshIntegration = true;
-      changeDirWidgetOptions = [ "--preview 'tree -C {} | head -n 100'" ];
-      fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
-      fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
-    };
-
-    # GitHub's cli tool
-    # gh.enable = true;
-
-    java.enable = true;
-
-    # JSON query tool, but its mainly used for pretty-printing
-    jq.enable = true;
-
-    ssh = {
-      enable = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "15m";
-      matchBlocks = {
-        "cvm1" = {
-          hostname = "rabapp.cvm.ncsu.edu";
-          user = "debling";
-        };
-
-        "cvm2" = {
-          hostname = "rabapp-test.cvm.ncsu.edu";
-          user = "debling";
-        };
-
-        "pdsa.aws" = {
-          hostname = "ec2-54-232-138-185.sa-east-1.compute.amazonaws.com";
-          user = "centos";
-          identityFile = "~/.ssh/identities/pdsa-aws.pem";
-        };
-
-        "pdsa.review" = {
-          hostname = "200.18.45.230";
-          user = "admin";
-          port = 222;
-        };
-
-        "pdsa.dev" = {
-          hostname = "200.18.45.231";
-          user = "admin";
-          port = 222;
-        };
-
-        "pdsa.xen" = {
-          hostname = "200.18.45.229";
-          user = "admin";
-        };
-
-        "zeit-ryzen" = {
-          hostname = "10.0.0.44";
-          user = "debling";
-          port = 443;
-        };
-      };
-    };
-
-    gpg.enable = true;
-
-    # The true OS
-    # emacs = {
-    #   enable = true;
-    #   package = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs;
-    # };
-
-    yazi = {
-      enable = true;
-      enableFishIntegration = true;
-    };
-
     tmux = {
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "alacritty";
+      terminal = "foot";
       sensibleOnTop = false;
       tmuxp.enable = true;
-      extraConfig = ''
+      extraConfig = /* tmux */ ''
         # Terminal config for TrueColor support
         # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
-        set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
-        set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
-        set -as terminal-overrides ",*:RGB"  # true-color support
+        # set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+        # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+        # set -as terminal-overrides ",*:RGB"  # true-color support
 
 
         set -g focus-events on
@@ -396,8 +196,6 @@ in
         bind-key -r f run-shell "tmux neww tmux-sessionizer"
       '';
     };
-
-    gh-dash.enable = true;
   };
 
 

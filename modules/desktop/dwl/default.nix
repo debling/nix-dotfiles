@@ -8,17 +8,16 @@ let
     domain = "codeberg.org";
     owner = "dwl";
     repo = "dwl-patches";
-    rev = "e7752b138afcc4d8b43261d53458e1ae44359857";
-    hash = "sha256-DradTawxoDj96Qm4Hs1mErpdXTVIrQrBMQxhPvIIIIA=";
+    rev = "919741ee198dc2894d14ff9d1131ac36dc8d39d7";
+    hash = "sha256-WPnoE7y2H5vhLbNAU6vrz0YZa6gN9WcikRDYxFfXO7M=";
   };
   dwl-with-patches = pkgs.dwl.overrideAttrs (prev: {
-    # main - 29-12-2024
     src = pkgs.fetchFromGitea {
       domain = "codeberg.org";
       owner = "dwl";
       repo = "dwl";
-      rev = "30f5063474a70835d0178ffc12521a3e0fb1ef8b";
-      hash = "sha256-oOJLsJMYNpQOIrbX8L0GNwg7U+JddaPBsSuI3I2Zf8Q=";
+      rev = "aa69ed81b558f74e470e69cdcd442f9048ee624c";
+      hash = "sha256-qO7k2Sj4nWrXrM2FwNkgnAK2D76bIWa2q625k3jDBUA=";
     };
     buildInputs = with pkgs; [
       libinput
@@ -84,7 +83,7 @@ let
 
     runtimeInputs = with pkgs; [ grim slurp satty ];
 
-    text = ''
+    text = /* sh */ ''
       grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
         | satty --filename - \
                 --fullscreen \
@@ -218,8 +217,17 @@ in
       ];
     };
 
+    # TODO: find a way to modularize this config
     home-manager.users.${mainUser} = {
-      services.cliphist.enable = true;
+      services = {
+        cliphist.enable = true;
+        wlsunset = {
+          enable = true;
+          latitude = -29.6;
+          longitude = -53.7;
+          temperature.night = 5000;
+        };
+      };
     };
 
     # Window manager only sessions (unlike DEs) don't handle XDG

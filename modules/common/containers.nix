@@ -21,7 +21,7 @@
       defaultNetwork.settings.dns_enabled = true;
     };
     # virtualbox.host.enable = true;
-    libvirtd.enable = true;
+    # libvirtd.enable = true;
     # waydroid.enable = true;
   };
 }
