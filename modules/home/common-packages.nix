@@ -271,4 +271,6 @@ in
     };
 
   };
+
+  xdg.configFile."emacs/init.el".source = config.lib.file.mkOutOfStoreSymlink ../../config/emacs/init.el;
 }
