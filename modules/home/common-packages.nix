@@ -1,10 +1,15 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
+
 
 let
   customScriptsDir = ".local/bin";
   globalNodePackagesDir = ".local/share/node_packages";
 in
 {
+  imports = [
+    ../editors/emacs.nix
+  ];
+
   home = {
     packages = with pkgs; [
       btop
@@ -38,11 +43,7 @@ in
 
     shellAliases = {
       g = "git";
-      e = "emacs -nw";
       v = "nvim";
-      ni = "nix profile install";
-      ns = "nix-shell --pure";
-      nsp = "nix-shell -p";
     };
 
     sessionPath = [
@@ -107,6 +108,14 @@ in
   };
 
   programs = {
+    rbw = {
+      enable = true;
+      settings = {
+        email = "d.ebling8@gmail.com";
+        pinentry = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+      };
+    };
+
     htop.enable = true;
 
     taskwarrior = {
@@ -201,18 +210,6 @@ in
       fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
     };
 
-    gpg.enable = true;
-
-    # The true OS
-    emacs = {
-      enable = true;
-      package = (pkgs.emacsPackagesFor pkgs.emacs30-pgtk).emacsWithPackages (epkgs: with epkgs; [
-        nix-mode
-        vterm
-        treesit-grammars.with-all-grammars
-      ]);
-    };
-
     yazi = {
       enable = true;
       enableFishIntegration = true;
@@ -269,8 +266,15 @@ in
         };
       };
     };
-
   };
 
-  xdg.configFile."emacs/init.el".source = config.lib.file.mkOutOfStoreSymlink ../../config/emacs/init.el;
+   programs.gpg.enable = true;
+   home.file.".gnupg/gpg-agent.conf".text = let
+     pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+   in ''
+     allow-preset-passphrase
+     max-cache-ttl 60480000
+     default-cache-ttl 60480000
+     pinentry-program ${lib.getExe pinentryPkgs}
+   '';
 }

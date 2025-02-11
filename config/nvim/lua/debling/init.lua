@@ -55,8 +55,9 @@ require('obsidian').setup({
 })
 
 local utils = require('debling.config_utils')
-
-utils.nmap('<leader>oq', '<cmd>ObsidianSearch<CR>')
+utils.nmap('<leader>og', '<cmd>ObsidianSearch<CR>')
+utils.nmap('<leader>of', '<cmd>ObsidianQuickSwitch<CR>')
+utils.nmap('<leader>ow', '<cmd>ObsidianWorkspace<CR>')
 
 vim.g['conjure#mapping#doc_word'] = 'gk'
 

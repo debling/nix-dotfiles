@@ -1,4 +1,6 @@
-;; Kickstart.emacs is *not* a distribution.
+;; -*- lexical-binding: t; -*-
+
+;; Kickstart.emacs is *not* a distribution. 
 ;; It's a template for your own configuration.
 
 ;; It is *recommeded* to configure it from the *config.org* file.
@@ -119,7 +121,7 @@
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers")))
 
 (use-package emacs
-	  :diminish eldoc-mode hs-minor-mode
+      :diminish eldoc-mode hs-minor-mode
       :custom
       (menu-bar-mode nil)         ;; Disable the menu bar
       (scroll-bar-mode nil)       ;; Disable the scroll bar
@@ -128,7 +130,7 @@
 
       (delete-selection-mode t)   ;; Select text and delete it by typing.
       (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
-      (electric-pair-mode t)      ;; Turns on automatic parens pairing
+      ;; (electric-pair-mode nil)      ;; Turns on automatic parens pairing
 
       (blink-cursor-mode nil)     ;; Don't blink cursor
       (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
@@ -170,9 +172,13 @@
 (load-theme 'leuven t) ;; We need to add t to trust this package
 
 (set-face-attribute 'default nil
-                    ;; :font "JetBrains Mono" ;; Set your favorite type of font or download JetBrains Mono
-                    :height 110
+                    :font "JetBrainsMono Nerd Font" ;; Set your favorite type of font or download JetBrains Mono
+                    :height
+                    (if (eq system-type 'darwin)
+                      140
+                      110)
                     :weight 'medium)
+
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
 ;; are not right unless I also add this method of setting the default font.
@@ -211,11 +217,11 @@
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
   :hook ((c-mode c++-mode ;; Autostart lsp servers for a given mode
-				 java-mode
-				 nix-mode
-				 ;
-				 )
-		 . eglot-ensure)
+    			 java-mode
+    			 nix-mode
+    			 ;
+    			 )
+    	 . eglot-ensure)
   :custom
   ;; Good default
   (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
@@ -224,7 +230,7 @@
   ;; Manual lsp servers
   :config
   (add-to-list 'eglot-server-programs
-			   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
+    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
   )
 
 (use-package yasnippet-snippets
@@ -234,34 +240,6 @@
 (use-package nix-mode)
 
 (use-package cider)
-
-(use-package org
-  :ensure nil
-  :diminish org-indent-mode
-  :custom
-  (org-edit-src-content-indentation 4) ;; Set src block automatic indent to 4 instead of 2.
-
-  :hook
-  (org-mode . org-indent-mode) ;; Indent text
-  ;; The following prevents <> from auto-pairing when electric-pair-mode is on.
-  ;; Otherwise, org-tempo is broken when you try to <s TAB...
-  (org-mode . (lambda ()
-                (setq-local electric-pair-inhibit-predicate
-                            `(lambda (c)
-                               (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-  )
-
-(use-package toc-org
-  :commands toc-org-enable
-  :hook (org-mode . toc-org-mode))
-
-(use-package org-superstar
-  :after org
-  :hook (org-mode . org-superstar-mode))
-
-(use-package org-tempo
-  :ensure nil
-  :after org)
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
@@ -408,6 +386,7 @@
    ;;;; 4. projectile.el (projectile-project-root)
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root)))
+
    ;;;; 5. No project support
   ;; (setq consult-project-function nil)
   )
@@ -430,6 +409,50 @@
   (which-key-idle-delay 0.8)       ;; Set the time delay (in seconds) for the which-key popup to appear
   (which-key-max-description-length 25)
   (which-key-allow-imprecise-window-fit nil)) ;; Fixes which-key window slipping out in Emacs Daemon
+
+
+
+(use-package mu4e
+  :ensure nil
+  :custom 
+  ;; use mu4e for e-mail in emacs
+  (mail-user-agent 'mu4e-user-agent)
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (mu4e-sent-messages-behavior 'delete)
+  (mu4e-contexts
+   (list
+   	(make-mu4e-context
+     :name "gmail"
+     :enter-func (lambda () (mu4e-message "Enter gmail context"))
+     :leave-func (lambda () (mu4e-message "Leave gmail context"))
+     :match-func
+     (lambda (msg)
+       (when msg
+         (mu4e-message-contact-field-matches msg
+                                             :to "d.ebling8@gmail.com")))
+     :vars '((user-mail-address . "d.ebling8@gmail.com" )
+             (user-full-name . "Denilson S. Ebling")
+             (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+             (mu4e-refile-folder . "/personal/[Gmail]/Archive")
+             (mu4e-sent-folder . "/personal/[Gmail]/Sent")
+             (mu4e-trash-folder . "/personal/[Gmail]/Trash")))
+    (make-mu4e-context
+     :name "zeit"
+     :enter-func (lambda () (mu4e-message "Enter zeit context"))
+     :leave-func (lambda () (mu4e-message "Leave zeit context"))
+     :match-func
+     (lambda (msg)
+       (when msg
+         (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
+     :vars '((user-mail-address . "denilson@zeit.com.br")
+             (user-full-name . "Denilson dos Santos Ebling")
+             (mu4e-drafts-folder . "/zeit/Drafts")
+             (mu4e-refile-folder . "/zeit/Archive")
+             (mu4e-sent-folder . "/zeit/Sent")
+             (mu4e-trash-folder . "/zeit/Trash")))))
+  (mu4e-compose-context-policy 'ask) ;; ask for context if no context matches;
+  )
+
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
