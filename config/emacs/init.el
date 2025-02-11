@@ -434,7 +434,7 @@
              (user-full-name . "Denilson S. Ebling")
              (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
              (mu4e-refile-folder . "/personal/[Gmail]/Archive")
-             (mu4e-sent-folder . "/personal/[Gmail]/Sent")
+             (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
              (mu4e-trash-folder . "/personal/[Gmail]/Trash")))
     (make-mu4e-context
      :name "zeit"
