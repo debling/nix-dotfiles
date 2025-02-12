@@ -52,6 +52,11 @@
 
 
     # overlays
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -114,6 +119,7 @@
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
             # kmonad = inputs.kmonad.packages.${prev.system}.default;
+            zen-browser = inputs.zen-browser.packages.${prev.system}.default;
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {

@@ -412,46 +412,52 @@
 
 
 
-(use-package mu4e
-  :ensure nil
-  :custom 
-  ;; use mu4e for e-mail in emacs
-  (mail-user-agent 'mu4e-user-agent)
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-sent-messages-behavior 'delete)
-  (mu4e-contexts
-   (list
-   	(make-mu4e-context
-     :name "gmail"
-     :enter-func (lambda () (mu4e-message "Enter gmail context"))
-     :leave-func (lambda () (mu4e-message "Leave gmail context"))
-     :match-func
-     (lambda (msg)
-       (when msg
-         (mu4e-message-contact-field-matches msg
-                                             :to "d.ebling8@gmail.com")))
-     :vars '((user-mail-address . "d.ebling8@gmail.com" )
-             (user-full-name . "Denilson S. Ebling")
-             (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-             (mu4e-refile-folder . "/personal/[Gmail]/Archive")
-             (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-             (mu4e-trash-folder . "/personal/[Gmail]/Trash")))
-    (make-mu4e-context
-     :name "zeit"
-     :enter-func (lambda () (mu4e-message "Enter zeit context"))
-     :leave-func (lambda () (mu4e-message "Leave zeit context"))
-     :match-func
-     (lambda (msg)
-       (when msg
-         (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
-     :vars '((user-mail-address . "denilson@zeit.com.br")
-             (user-full-name . "Denilson dos Santos Ebling")
-             (mu4e-drafts-folder . "/zeit/Drafts")
-             (mu4e-refile-folder . "/zeit/Archive")
-             (mu4e-sent-folder . "/zeit/Sent")
-             (mu4e-trash-folder . "/zeit/Trash")))))
-  (mu4e-compose-context-policy 'ask) ;; ask for context if no context matches;
-  )
+(require 'mu4e)
+
+(setq mu4e-contexts
+	  (list
+   	   (make-mu4e-context
+		:name "gmail"
+		:enter-func (lambda () (mu4e-message "Enter gmail context"))
+		:leave-func (lambda () (mu4e-message "Leave gmail context"))
+		:match-func
+		(lambda (msg)
+		  (when msg
+			(mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
+		:vars '((user-mail-address . "d.ebling8@gmail.com" )
+				(mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+				(mu4e-refile-folder . "/personal/[Gmail]/Archive")
+				(mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+				(mu4e-trash-folder . "/personal/[Gmail]/Trash")))
+       (make-mu4e-context
+		:name "zeit"
+		:enter-func (lambda () (mu4e-message "Enter zeit context"))
+		:leave-func (lambda () (mu4e-message "Leave zeit context"))
+		:match-func
+		(lambda (msg)
+		  (when msg
+			(mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
+		:vars '((user-mail-address . "denilson@zeit.com.br")
+				(mu4e-drafts-folder . "/zeit/Drafts")
+				(mu4e-refile-folder . "/zeit/Archive")
+				(mu4e-sent-folder . "/zeit/Sent")
+				(mu4e-trash-folder . "/zeit/Trash")))))
+
+(setq user-full-name "Denilson S. Ebling"
+	  mu4e-compose-context-policy 'ask ;; ask for context if no context matches;
+	  mu4e-context-policy 'pick-first ;; ask for context if no context matches;
+	  ;; use mu4e for e-mail in emacs
+	  mail-user-agent 'mu4e-user-agent
+	  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+	  mu4e-sent-messages-behavior 'delete
+	  mu4e-get-mail-command "mbsync -a"
+	  mu4e-update-interval 500
+	  mu4e-change-filenames-when-moving t
+	  ;; use 'fancy' non-ascii characters in various places in mu4e
+	  mu4e-use-fancy-chars t
+	  ;; save attachment to my desktop (this can also be a function)
+	  mu4e-attachment-dir "~/Download/mail-attachments"
+	  message-send-mail-function 'smtpmail-send-it)
 
 
 ;; Make gc pauses faster by decreasing the threshold.

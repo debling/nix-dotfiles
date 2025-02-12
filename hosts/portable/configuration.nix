@@ -114,6 +114,7 @@
   environment.systemPackages = with pkgs; [
     rose-pine-icon-theme
     firefox
+    zen-browser
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
