@@ -55,6 +55,7 @@
       mbsync = {
         enable = true;
         create = "both";
+        expunge = "both";
       };
       mu.enable = true;
     };
@@ -81,6 +82,7 @@
       mbsync = {
         enable = true;
         create = "both";
+        expunge = "both";
       };
       mu.enable = true;
     };
