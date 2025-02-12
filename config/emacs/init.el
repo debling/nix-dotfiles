@@ -428,7 +428,8 @@
 				(mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
 				(mu4e-refile-folder . "/personal/[Gmail]/Archive")
 				(mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-				(mu4e-trash-folder . "/personal/[Gmail]/Trash")))
+				(mu4e-trash-folder . "/personal/[Gmail]/Trash")
+				(message-sendmail-extra-arguments . '("-a" "personal"))))
        (make-mu4e-context
 		:name "zeit"
 		:enter-func (lambda () (mu4e-message "Enter zeit context"))
@@ -441,7 +442,11 @@
 				(mu4e-drafts-folder . "/zeit/Drafts")
 				(mu4e-refile-folder . "/zeit/Archive")
 				(mu4e-sent-folder . "/zeit/Sent")
-				(mu4e-trash-folder . "/zeit/Trash")))))
+				(mu4e-trash-folder . "/zeit/Trash")
+				(message-sendmail-extra-arguments . '("-a" "zeit"))))))
+
+(require 'smtpmail)
+
 
 (setq user-full-name "Denilson S. Ebling"
 	  mu4e-compose-context-policy 'ask ;; ask for context if no context matches;
@@ -451,13 +456,18 @@
 	  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
 	  mu4e-sent-messages-behavior 'delete
 	  mu4e-get-mail-command "mbsync -a"
-	  mu4e-update-interval 500
+	  mu4e-update-interval 300
 	  mu4e-change-filenames-when-moving t
 	  ;; use 'fancy' non-ascii characters in various places in mu4e
 	  mu4e-use-fancy-chars t
 	  ;; save attachment to my desktop (this can also be a function)
 	  mu4e-attachment-dir "~/Download/mail-attachments"
-	  message-send-mail-function 'smtpmail-send-it)
+
+	  sendmail-program (executable-find "msmtp")
+	  send-mail-function 'sendmail-send-it
+      message-send-mail-function 'sendmail-send-it
+	  message-kill-buffer-on-exit t)
+
 
 
 ;; Make gc pauses faster by decreasing the threshold.

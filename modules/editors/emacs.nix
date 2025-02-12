@@ -29,6 +29,7 @@
     
     mbsync.enable = true;
     mu.enable = true;
+    msmtp.enable = true;
   };
   
 
@@ -45,6 +46,7 @@
       address = "d.ebling8@gmail.com";
       flavor = "gmail.com";
 
+
       passwordCommand = "${lib.getExe pkgs.rbw} get mbsync-gmail";
 
       gpg = {
@@ -58,6 +60,7 @@
         expunge = "both";
       };
       mu.enable = true;
+      msmtp.enable = true;
     };
 
     zeit = let
@@ -68,15 +71,22 @@
       userName = addr;
       passwordCommand = "${lib.getExe pkgs.rbw} get 'email zeit'";
 
+      msmtp.enable = true;
       imap = {
         host = "imap.kinghost.net";
         port = 993;
-        tls.enable = true;
+        tls = {
+          enable = true;
+          useStartTls = true;
+        };
       };
       smtp = {
         host = "smtp.kinghost.net";
         port = 465;
-        tls.enable = true;
+        tls = {
+          enable = true;
+          useStartTls = true;
+        };
       };
 
       mbsync = {
