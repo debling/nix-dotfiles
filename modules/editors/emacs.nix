@@ -45,8 +45,6 @@
       realName = "Denilson S. Ebling";
       address = "d.ebling8@gmail.com";
       flavor = "gmail.com";
-
-
       passwordCommand = "${lib.getExe pkgs.rbw} get mbsync-gmail";
 
       gpg = {
@@ -75,18 +73,12 @@
       imap = {
         host = "imap.kinghost.net";
         port = 993;
-        tls = {
-          enable = true;
-          useStartTls = true;
-        };
+        tls.enable = true;
       };
       smtp = {
         host = "smtp.kinghost.net";
         port = 465;
-        tls = {
-          enable = true;
-          useStartTls = true;
-        };
+        tls.enable = true;
       };
 
       mbsync = {
