@@ -140,11 +140,10 @@
 
       ;;(global-visual-line-mode t)           ;; Enable truncated lines
       (display-line-numbers-type 'relative) ;; Relative line numbers
-      (global-display-line-numbers-mode t)  ;; Display line numbers
 
       (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
       (scroll-conservatively 10) ;; Smooth scrolling
-       (scroll-margin 5)
+      (scroll-margin 5)
 
       (tab-width 4)
 
@@ -152,11 +151,11 @@
       (auto-save-default nil) ;; Stop creating # auto save files
       :hook
       (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+      (prog-mode . display-line-numbers--turn-on)
       :config
       ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
       (setq custom-file (locate-user-emacs-file "custom-vars.el"))
-      (load custom-file 'noerror 'nomessage
-)
+      (load custom-file 'noerror 'nomessage)
       :bind (
              ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
              )
@@ -172,12 +171,12 @@
 (load-theme 'leuven t) ;; We need to add t to trust this package
 
 (set-face-attribute 'default nil
-                    :font "JetBrainsMono Nerd Font" ;; Set your favorite type of font or download JetBrains Mono
-                    :height
-                    (if (eq system-type 'darwin)
-                      140
-                      110)
-                    :weight 'medium)
+					:font "JetBrainsMono Nerd Font" ;; Set your favorite type of font or download JetBrains Mono
+					:height
+					(if (eq system-type 'darwin)
+						140
+					  110)
+					:weight 'medium)
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -205,14 +204,21 @@
           ("NOTE"       success bold)
           ("DEPRECATED" font-lock-doc-face bold))))
 
-(use-package projectile
-  :init
-  (projectile-mode)
+(use-package project
   :custom
-  (projectile-run-use-comint-mode t) ;; Interactive run dialog when running projects inside emacs (like giving input)
-  (projectile-switch-project-action #'projectile-dired) ;; Open dired when switching to a project
-  (projectile-project-search-path '(("~/Workspace" . 2)))) ;; . 1 means only search the first subdirectory level for projects
-;; Use Bookmarks for smaller, not standard projects
+  (project-list-file nil)
+  (project--list
+   (let* ((work-dir "~/Workspace/")
+		  (expanded-work-dir (expand-file-name work-dir)))
+	 (mapcar (lambda (path) (list (concat work-dir path)))
+			 (process-lines "fd" "\.git$"
+							"--prune"
+							"--unrestricted"
+							"--type=d"
+							"--max-depth=4"
+							(concat "--base-directory=" expanded-work-dir)
+							"--format={//}")))))
+
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
@@ -357,6 +363,9 @@
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
+
+  (setq consult-async-min-input 1
+		consult-async-input-debounce 0.1)
   :config
   ;; Optionally configure preview. The default value
   ;; is 'any, such that any key triggers the preview.
@@ -384,8 +393,8 @@
    ;;;; 3. locate-dominating-file
   ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
    ;;;; 4. projectile.el (projectile-project-root)
-  (autoload 'projectile-project-root "projectile")
-  (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;(autoload 'projectile-project-root "projectile")
+  ;(setq consult-project-function (lambda (_) (projectile-project-root)))
 
    ;;;; 5. No project support
   ;; (setq consult-project-function nil)
@@ -444,9 +453,6 @@
 				(mu4e-sent-folder . "/zeit/Sent")
 				(mu4e-trash-folder . "/zeit/Trash")
 				(message-sendmail-extra-arguments . '("-a" "zeit"))))))
-
-(require 'smtpmail)
-
 
 (setq user-full-name "Denilson S. Ebling"
 	  mu4e-compose-context-policy 'ask ;; ask for context if no context matches;

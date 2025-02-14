@@ -116,6 +116,7 @@ in
           sumneko-lua-language-server
           stylua
           ltex-ls
+          texlab
           ### nix
           nixd # language server
           statix #  static analysis
