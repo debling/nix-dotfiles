@@ -12,14 +12,6 @@
 ;; The default is 800 kilobytes. Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
-(defun start/org-babel-tangle-config ()
-  "Automatically tangle our Emacs.org config file when we save it. Credit to Emacs From Scratch for this one!"
-  (when (string-equal (file-name-directory (buffer-file-name))
-                      (expand-file-name user-emacs-directory))
-    ;; Dynamic scoping to the rescue
-    (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
-
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'start/org-babel-tangle-config)))
 
 (require 'use-package-ensure) ;; Load use-package-always-ensure
@@ -70,7 +62,7 @@
 
   (start/leader-keys
     "f" '(:ignore t :wk "Find")
-    "f c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
+    "f c" '((lambda () (interactive) (find-file "~/Workspace/debling/nix-dotfiles/config/emacs/init.el")) :wk "Edit emacs config")
     "f r" '(consult-recent-file :wk "Recent files")
     "f f" '(consult-fd :wk "Fd search for files")
     "f g" '(consult-ripgrep :wk "Ripgrep search in files")
@@ -204,21 +196,18 @@
           ("NOTE"       success bold)
           ("DEPRECATED" font-lock-doc-face bold))))
 
-(use-package project
-  :custom
-  (project-list-file nil)
-  (project--list
-   (let* ((work-dir "~/Workspace/")
-		  (expanded-work-dir (expand-file-name work-dir)))
-	 (mapcar (lambda (path) (list (concat work-dir path)))
-			 (process-lines "fd" "\.git$"
-							"--prune"
-							"--unrestricted"
-							"--type=d"
-							"--max-depth=4"
-							(concat "--base-directory=" expanded-work-dir)
-							"--format={//}")))))
-
+(require 'project)
+(setq project--list
+      (let ((work-dir (expand-file-name "~/Workspace/")))
+        (mapcar (lambda (path) (list (abbreviate-file-name path)))
+                (process-lines "fd" "\.git$"
+                               "--prune"
+                               "--absolute-path"
+                               "--unrestricted"
+                               "--type=d"
+                               "--max-depth=4"
+                               (concat "--base-directory=" work-dir)
+                               "--format={//}"))))
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in

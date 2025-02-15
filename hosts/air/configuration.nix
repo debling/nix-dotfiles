@@ -4,7 +4,6 @@
 
   nix = {
     package = pkgs.nixVersions.latest;
-    configureBuildUsers = true;
     settings = {
       trusted-users = [ "debling" "@admin" ];
       # auto-optimise-store = true;
@@ -45,8 +44,6 @@
   security.pam.enableSudoTouchIdAuth = true;
 
   services = {
-    nix-daemon.enable = true;
-
     karabiner-elements.enable = true;
 
     jankyborders = {
