@@ -399,33 +399,31 @@
 
 
 
-(use-package mu4e
-  :ensure nil
-  :commands (mu4e)
-  :hook (dired-mode-hook . turn-on-gnus-dired-mode)
-  :custom
-  (user-full-name "Denilson S. Ebling")
-  ;; ask for context if no context matches
-  (mu4e-compose-context-policy 'ask)
-  ;; ask for context if no context matches
-  (mu4e-context-policy 'pick-first)
-  ;; use mu4e for e-mail in emacs
-  (mail-user-agent 'mu4e-user-agent)
-  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-  (mu4e-sent-messages-behavior 'delete)
-  (mu4e-get-mail-command "mbsync -a")
-  (mu4e-update-interval 600)
-  (mu4e-change-filenames-when-moving t)
-  ;; use 'fancy' non-ascii characters in various places in mu4e
-  (mu4e-use-fancy-chars t)
-  ;; save attachment to my desktop (this can also be a function)
-  (mu4e-attachment-dir "~/Download/mail-attachments")
-  (mu4e-notification-support t)
-  (sendmail-program (executable-find "msmtp"))
-  (send-mail-function 'sendmail-send-it)
-  (message-send-mail-function 'sendmail-send-it)
-  (message-kill-buffer-on-exit t)
-  (mu4e-contexts
+(require 'mu4e)
+
+(setq user-full-name "Denilson S. Ebling"
+	  ;; ask for context if no context matches
+	  mu4e-compose-context-policy 'ask
+	  ;; ask for context if no context matches
+	  mu4e-context-policy 'pick-first
+	  ;; use mu4e for e-mail in emacs
+	  mail-user-agent 'mu4e-user-agent
+	  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+	  mu4e-sent-messages-behavior 'delete
+	  mu4e-get-mail-command "mbsync -a"
+	  mu4e-update-interval 600
+	  mu4e-change-filenames-when-moving t
+	  ;; use 'fancy' non-ascii characters in various places in mu4e
+	  mu4e-use-fancy-chars t
+	  ;; save attachment to my desktop (this can also be a function)
+	  mu4e-attachment-dir "~/Download/mail-attachments"
+	  mu4e-notification-support t
+	  sendmail-program (executable-find "msmtp")
+	  send-mail-function 'sendmail-send-it
+	  message-send-mail-function 'sendmail-send-it
+	  message-kill-buffer-on-exit t)
+
+(setq mu4e-contexts
    (list
 	(make-mu4e-context
 	 :name "gmail"
@@ -455,17 +453,18 @@
 			 (mu4e-sent-folder . "/zeit/Sent")
 			 (mu4e-trash-folder . "/zeit/Trash")
 			 (message-sendmail-extra-arguments . '("-a" "zeit"))))))
-  :config
-  (setf (alist-get 'trash mu4e-marks)
-		'(:char ("d" . "▼")
-				:prompt "dtrash"
-				:dyn-target (lambda (target msg) (mu4e-get-trash-folder msg))
-				;; Here's the main difference to the regular trash mark, no +T
-				;; before -N so the message is not marked as IMAP-deleted:
-				:action (lambda (docid msg target)
-						  (mu4e~proc-move docid
-										  (mu4e~mark-check-target target) "+S-u-N")))))
 
+(add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
+
+(setf (alist-get 'trash mu4e-marks)
+	  '(:char ("d" . "▼")
+			  :prompt "dtrash"
+			  :dyn-target (lambda (target msg) (mu4e-get-trash-folder msg))
+			  ;; Here's the main difference to the regular trash mark, no +T
+			  ;; before -N so the message is not marked as IMAP-deleted:
+			  :action (lambda (docid msg target)
+						(mu4e~proc-move docid
+										(mu4e~mark-check-target target) "+S-u-N"))))
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
