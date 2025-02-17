@@ -68,18 +68,18 @@ in
       nodePackages.pnpm
       pipenv
 
-      # (python311.withPackages (ps: with ps; [
-      #   pandas
-      #   numpy
-      #   ipython
-      #   matplotlib
-      #   seaborn
-      #   # jupyterlab
-      #   pudb
-      #   # torch
-      #   boto3
-      #   scikit-learn
-      # ]))
+      (python311.withPackages (ps: with ps; [
+        pandas
+        numpy
+        ipython
+        matplotlib
+        seaborn
+        # jupyterlab
+        pudb
+        # torch
+        boto3
+        scikit-learn
+      ]))
       poetry
 
 

@@ -1,18 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Kickstart.emacs is *not* a distribution. 
-;; It's a template for your own configuration.
-
-;; It is *recommeded* to configure it from the *config.org* file.
-;; The goal is that you read every line, top-to-bottom, understand
-;; what your configuration is doing, and modify it to suit your needs.
-
-;; You can delete this when you're done. It's your config now. :)
-
 ;; The default is 800 kilobytes. Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
-
-(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'start/org-babel-tangle-config)))
 
 (require 'use-package-ensure) ;; Load use-package-always-ensure
 (setq use-package-always-ensure t) ;; Always ensures that a package is installed
@@ -142,8 +131,8 @@
       (make-backup-files nil) ;; Stop creating ~ backup files
       (auto-save-default nil) ;; Stop creating # auto save files
       :hook
-      (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
-      (prog-mode . display-line-numbers--turn-on)
+      ((prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+       (prog-mode . display-line-numbers-mode))
       :config
       ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
       (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -160,15 +149,15 @@
               nil nil t)
       )
 
-(load-theme 'leuven t) ;; We need to add t to trust this package
-
+(load-theme 'modus-vivendi t) 
 (set-face-attribute 'default nil
-					:font "JetBrainsMono Nerd Font" ;; Set your favorite type of font or download JetBrains Mono
-					:height
-					(if (eq system-type 'darwin)
-						140
-					  110)
+					:font "JetBrainsMono Nerd Font"
+					:height (if (eq system-type 'darwin) 140 110)
 					:weight 'medium)
+(set-face-attribute 'line-number nil
+					:background (face-background 'default))
+(set-face-attribute 'line-number-current-line nil
+					:background (face-background 'default))
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -410,59 +399,72 @@
 
 
 
-(require 'mu4e)
-
-(setq mu4e-contexts
-	  (list
-   	   (make-mu4e-context
-		:name "gmail"
-		:enter-func (lambda () (mu4e-message "Enter gmail context"))
-		:leave-func (lambda () (mu4e-message "Leave gmail context"))
-		:match-func
-		(lambda (msg)
-		  (when msg
-			(mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
-		:vars '((user-mail-address . "d.ebling8@gmail.com" )
-				(mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-				(mu4e-refile-folder . "/personal/[Gmail]/Archive")
-				(mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-				(mu4e-trash-folder . "/personal/[Gmail]/Trash")
-				(message-sendmail-extra-arguments . '("-a" "personal"))))
-       (make-mu4e-context
-		:name "zeit"
-		:enter-func (lambda () (mu4e-message "Enter zeit context"))
-		:leave-func (lambda () (mu4e-message "Leave zeit context"))
-		:match-func
-		(lambda (msg)
-		  (when msg
-			(mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
-		:vars '((user-mail-address . "denilson@zeit.com.br")
-				(mu4e-drafts-folder . "/zeit/Drafts")
-				(mu4e-refile-folder . "/zeit/Archive")
-				(mu4e-sent-folder . "/zeit/Sent")
-				(mu4e-trash-folder . "/zeit/Trash")
-				(message-sendmail-extra-arguments . '("-a" "zeit"))))))
-
-(setq user-full-name "Denilson S. Ebling"
-	  mu4e-compose-context-policy 'ask ;; ask for context if no context matches;
-	  mu4e-context-policy 'pick-first ;; ask for context if no context matches;
-	  ;; use mu4e for e-mail in emacs
-	  mail-user-agent 'mu4e-user-agent
-	  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-	  mu4e-sent-messages-behavior 'delete
-	  mu4e-get-mail-command "mbsync -a"
-	  mu4e-update-interval 300
-	  mu4e-change-filenames-when-moving t
-	  ;; use 'fancy' non-ascii characters in various places in mu4e
-	  mu4e-use-fancy-chars t
-	  ;; save attachment to my desktop (this can also be a function)
-	  mu4e-attachment-dir "~/Download/mail-attachments"
-
-	  sendmail-program (executable-find "msmtp")
-	  send-mail-function 'sendmail-send-it
-      message-send-mail-function 'sendmail-send-it
-	  message-kill-buffer-on-exit t)
-
+(use-package mu4e
+  :ensure nil
+  :commands (mu4e)
+  :hook (dired-mode-hook . turn-on-gnus-dired-mode)
+  :custom
+  (user-full-name "Denilson S. Ebling")
+  ;; ask for context if no context matches
+  (mu4e-compose-context-policy 'ask)
+  ;; ask for context if no context matches
+  (mu4e-context-policy 'pick-first)
+  ;; use mu4e for e-mail in emacs
+  (mail-user-agent 'mu4e-user-agent)
+  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+  (mu4e-sent-messages-behavior 'delete)
+  (mu4e-get-mail-command "mbsync -a")
+  (mu4e-update-interval 600)
+  (mu4e-change-filenames-when-moving t)
+  ;; use 'fancy' non-ascii characters in various places in mu4e
+  (mu4e-use-fancy-chars t)
+  ;; save attachment to my desktop (this can also be a function)
+  (mu4e-attachment-dir "~/Download/mail-attachments")
+  (mu4e-notification-support t)
+  (sendmail-program (executable-find "msmtp"))
+  (send-mail-function 'sendmail-send-it)
+  (message-send-mail-function 'sendmail-send-it)
+  (message-kill-buffer-on-exit t)
+  (mu4e-contexts
+   (list
+	(make-mu4e-context
+	 :name "gmail"
+	 :enter-func (lambda () (mu4e-message "Enter gmail context"))
+	 :leave-func (lambda () (mu4e-message "Leave gmail context"))
+	 :match-func
+	 (lambda (msg)
+	   (when msg
+		 (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
+	 :vars '((user-mail-address . "d.ebling8@gmail.com" )
+			 (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+			 (mu4e-refile-folder . "/personal/[Gmail]/Archive")
+			 (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+			 (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+			 (message-sendmail-extra-arguments . '("-a" "personal"))))
+	(make-mu4e-context
+	 :name "zeit"
+	 :enter-func (lambda () (mu4e-message "Enter zeit context"))
+	 :leave-func (lambda () (mu4e-message "Leave zeit context"))
+	 :match-func
+	 (lambda (msg)
+	   (when msg
+		 (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
+	 :vars '((user-mail-address . "denilson@zeit.com.br")
+			 (mu4e-drafts-folder . "/zeit/Drafts")
+			 (mu4e-refile-folder . "/zeit/Archive")
+			 (mu4e-sent-folder . "/zeit/Sent")
+			 (mu4e-trash-folder . "/zeit/Trash")
+			 (message-sendmail-extra-arguments . '("-a" "zeit"))))))
+  :config
+  (setf (alist-get 'trash mu4e-marks)
+		'(:char ("d" . "▼")
+				:prompt "dtrash"
+				:dyn-target (lambda (target msg) (mu4e-get-trash-folder msg))
+				;; Here's the main difference to the regular trash mark, no +T
+				;; before -N so the message is not marked as IMAP-deleted:
+				:action (lambda (docid msg target)
+						  (mu4e~proc-move docid
+										  (mu4e~mark-check-target target) "+S-u-N")))))
 
 
 ;; Make gc pauses faster by decreasing the threshold.

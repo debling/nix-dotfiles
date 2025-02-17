@@ -74,7 +74,7 @@ in
       ".ideavimrc".source = ./../../config/.ideavimrc;
 
       # Stable SDK symlinks
-      "SDKs/Java/current".source = pkgs.jdk;
+      "SDKs/Java/current".source = pkgs.jdk23;
       "SDKs/Java/11".source = pkgs.jdk11;
       "SDKs/Java/17".source = pkgs.jdk17;
       "SDKs/Java/8".source = pkgs.jdk8;
@@ -215,7 +215,10 @@ in
       enableFishIntegration = true;
     };
 
-    java.enable = true;
+    java = {
+      enable = true;
+      package = pkgs.jdk23;
+    };
 
     # JSON query tool, but its mainly used for pretty-printing
     jq.enable = true;
