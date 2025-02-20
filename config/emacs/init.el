@@ -399,6 +399,26 @@
 
 
 
+(use-package org-msg 
+  :custom
+  (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
+  (org-msg-startup "hidestars indent inlineimages")
+  (org-msg-greeting-fmt "\nHi%s,\n\n")
+  (org-msg-greeting-name-limit 3)
+  (org-msg-default-alternatives '((new		. (text html))
+								  (reply-to-html	. (text html))
+								  (reply-to-text	. (text))))
+  (org-msg-convert-citation t)
+  (org-msg-signature "
+ Regards,
+
+ #+begin_signature
+ --
+ *Denilson*
+ /One Emacs to rule them all/
+ #+end_signature")
+  )
+ ; (org-msg-mode)
 (require 'mu4e)
 
 (setq user-full-name "Denilson S. Ebling"
@@ -416,7 +436,7 @@
 	  ;; use 'fancy' non-ascii characters in various places in mu4e
 	  mu4e-use-fancy-chars t
 	  ;; save attachment to my desktop (this can also be a function)
-	  mu4e-attachment-dir "~/Download/mail-attachments"
+	  mu4e-attachment-dir "~/Downloads/mail-attachments"
 	  mu4e-notification-support t
 	  sendmail-program (executable-find "msmtp")
 	  send-mail-function 'sendmail-send-it

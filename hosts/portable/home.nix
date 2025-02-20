@@ -25,7 +25,7 @@ in
   news.display = "show";
 
   android-sdk = {
-    enable = false;
+    enable = true;
 
     path = "${config.home.homeDirectory}/SDKs/android";
 
@@ -37,7 +37,7 @@ in
       platforms-android-33
       platform-tools
       sources-android-33
-      ndk-23-1-7779620
+      # ndk-23-1-7779620
       cmake-3-22-1
     ];
   };

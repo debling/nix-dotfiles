@@ -225,7 +225,7 @@ in
           enable = true;
           latitude = -29.6;
           longitude = -53.7;
-          temperature.night = 5000;
+          temperature.night = 4500;
         };
       };
     };
