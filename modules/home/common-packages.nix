@@ -8,6 +8,7 @@ in
 {
   imports = [
     ../editors/emacs.nix
+    ./java
   ];
 
   home = {
@@ -72,13 +73,6 @@ in
       '';
 
       ".ideavimrc".source = ./../../config/.ideavimrc;
-
-      # Stable SDK symlinks
-      "SDKs/Java/current".source = pkgs.jdk23;
-      "SDKs/Java/11".source = pkgs.jdk11;
-      "SDKs/Java/17".source = pkgs.jdk17;
-      "SDKs/Java/8".source = pkgs.jdk8;
-      # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
 
       # TODO: migrate to common
       ".psqlrc".text = ''
@@ -213,11 +207,6 @@ in
     yazi = {
       enable = true;
       enableFishIntegration = true;
-    };
-
-    java = {
-      enable = true;
-      package = pkgs.jdk23;
     };
 
     # JSON query tool, but its mainly used for pretty-printing

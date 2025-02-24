@@ -117,9 +117,6 @@ in
       "$HOME/${globalNodePackagesDir}/bin"
     ];
 
-    sessionVariables = {
-      GRAALVM_HOME = pkgs.graalvm-ce.home;
-    };
 
     file = {
       "${config.programs.taskwarrior.dataLocation}/hooks/on-modify.timewarrior" = {
@@ -138,13 +135,6 @@ in
       '';
 
       ".ideavimrc".source = ../../config/.ideavimrc;
-
-      # Stable SDK symlinks
-      "SDKs/Java/current".source = pkgs.jdk;
-      "SDKs/Java/11".source = pkgs.jdk11;
-      "SDKs/Java/17".source = pkgs.jdk17;
-      "SDKs/Java/8".source = pkgs.jdk8;
-      # "SDKs/graalvm".source = pkgs.graalvm-ce.home;
     };
 
   };
@@ -257,8 +247,6 @@ in
 
     # GitHub's cli tool
     # gh.enable = true;
-
-    java.enable = true;
 
     # JSON query tool, but its mainly used for pretty-printing
     jq.enable = true;

@@ -221,15 +221,27 @@
   :diminish yas-minor-mode
   :hook (prog-mode . yas-minor-mode))
 
-(use-package nix-mode)
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown")
+  :config (use-package edit-indirect))
+
+(use-package nix-mode
+  :diminish nix-prettify-mode
+  :mode "\\.nix\\'"
+  :config 
+  (nix-prettify-global-mode))
 
 (use-package cider)
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
 
-(use-package nerd-icons
-  :if (display-graphic-p))
+;(use-package nerd-icons
+;  :if (display-graphic-p))
 
 (use-package nerd-icons-dired
   :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
@@ -247,7 +259,9 @@
   :init (global-diff-hl-mode))
 
 (use-package corfu
-  ;; Optional customizations
+  :bind
+  (:map corfu-map
+		("C-y" . corfu-complete))
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
