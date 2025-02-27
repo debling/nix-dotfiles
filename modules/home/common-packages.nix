@@ -126,10 +126,11 @@ in
 
     vscode = {
       enable = true;
-      enableUpdateCheck = false;
       mutableExtensionsDir = true;
       package = pkgs.vscodium;
-      userSettings = {
+      profiles.default = {
+      enableUpdateCheck = false;
+        userSettings = {
         "files.autoSave" = "afterDelay";
         "vim.enableNeovim" = true;
         "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
@@ -147,6 +148,7 @@ in
         };
         "zig.path" = "zig";
         "zig.zls.path" = "zig";
+      };
       };
     };
 
