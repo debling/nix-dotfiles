@@ -124,7 +124,6 @@
   # started in user sessions.
   programs.mtr.enable = true;
   programs = {
-    firefox.enable = true;
     fish.enable = true;
     gnupg.agent = {
       enable = true;

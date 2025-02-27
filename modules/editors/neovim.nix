@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, colorscheme, ... }:
 
 let
   cfg = config.debling.editors.neovim;
@@ -97,18 +97,16 @@ in
             nodePackages.prettier
             nodePackages."@tailwindcss/language-server"
             emmet-ls
+            hurl
           ];
           plugins = with pkgs.vimPlugins; [
+            hurl
           ];
         };
       };
     in
     lib.mkIf cfg.enable {
       home = {
-        sessionVariables = {
-          MANPAGER = "nvim +Man!";
-        };
-
         packages = with pkgs; [
           gopls # go
           terraform-ls
@@ -121,7 +119,6 @@ in
           nixd # language server
           statix #  static analysis
           nixfmt-rfc-style
-          hurl
         ] ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));
 
         sessionVariables = {
@@ -131,19 +128,6 @@ in
 
       programs.neovim =
         let
-          # hurl-nvim = pkgs.vimUtils.buildVimPlugin {
-          #   name = "hurl-nvim";
-          #
-          #   dependencies = with pkgs.vimPlugins; [ nui-nvim plenary-nvim nvim-treesitter ];
-          #
-          #     src = pkgs.fetchFromGitHub {
-          #       owner = "jellydn";
-          #       repo = "hurl.nvim";
-          #       rev = "v2.0.0";
-          #       hash = "sha256-4pVO/WzjucHGTDPUCqHW9SRnQwZoYeGtpsO4fp+aJ04=";
-          #     };
-          # };
-
           freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {
             name = "freeze-code-nvim";
 
@@ -167,14 +151,14 @@ in
             blink-cmp
             friendly-snippets # used by blink.cmp
 
+            base16-nvim
+
             harpoon2
 
             snacks-nvim
 
             freeze-code-nvim
 
-            hurl
-            # hurl-nvim
             render-markdown-nvim
 
             rainbow-delimiters-nvim
@@ -229,7 +213,10 @@ in
             nvim-web-devicons
           ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
-          extraConfig = "lua require('debling')";
+          extraConfig = /* vim */ ''
+            colorscheme base16-${colorscheme.name}
+            lua require('debling')
+          '';
         };
 
       xdg = {

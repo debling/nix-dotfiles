@@ -113,7 +113,6 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     rose-pine-icon-theme
-    firefox
     zen-browser
   ];
 

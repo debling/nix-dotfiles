@@ -137,21 +137,25 @@ in
     };
 
     systemd.user.services.dwlb = {
-      description = "Service to run the dwlb status bar";
       enable = true;
+      description = "Service to run the dwlb status bar";
       serviceConfig = {
         ExecStart = with colorscheme.palette; ''
           ${lib.getExe dwlb} -ipc -font 'mono:size=8' \
-            -inactive-bg-color '#${base00}' \
+            -inactive-fg-color '#${base06}' \
+            -inactive-bg-color '#${base04}' \
             -middle-bg-color '#${base00}' \
-            -middle-bg-color-selected '#${base01}' \
-            -active-bg-color '#${base01}' \
-            -occupied-bg-color '#${base00}'
+            -middle-bg-color-selected '#${base00}' \
+            -active-fg-color '#${base06}' \
+            -active-bg-color '#${base00}' \
+            -occupied-fg-color '#${base06}' \
+            -occupied-bg-color '#${base04}'
         '';
       };
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
       restartIfChanged = true;
+      restartTriggers = [ dwlb colorscheme.name ];
     };
 
     systemd.user.services.status-bar = {
@@ -160,7 +164,6 @@ in
       script = "${lib.getExe slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
       bindsTo = [ "dwlb.service" ];
       wantedBy = [ "dwlb.service" ];
-      reloadTriggers = [ dwlb slstatus ];
       restartTriggers = [ dwlb slstatus ];
     };
 
@@ -185,6 +188,7 @@ in
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
       restartIfChanged = true;
+      restartTriggers = [ pkgs.wbg colorscheme.name ];
     };
 
     security = {

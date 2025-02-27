@@ -53,7 +53,7 @@
 
     # overlays
     zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -167,7 +167,7 @@
       specialArgs = {
         inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
         mainUser = username;
-        colorscheme = inputs.nix-colors.colorschemes.gruvbox-dark-hard;
+        colorscheme = inputs.nix-colors.colorschemes.selenized-light;
       };
 
       homeManagerConfiguration = {
