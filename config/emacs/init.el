@@ -47,7 +47,7 @@
   (start/leader-keys
     "." '(find-file :wk "Find file")
     "TAB" '(comment-line :wk "Comment lines")
-    "p" '(projectile-command-map :wk "Projectile command map"))
+    "p" '(project-prefix-map :wk "Projectile command map"))
 
   (start/leader-keys
     "f" '(:ignore t :wk "Find")
@@ -154,10 +154,10 @@
 					:font "JetBrainsMono Nerd Font"
 					:height (if (eq system-type 'darwin) 140 110)
 					:weight 'medium)
-(set-face-attribute 'line-number nil
-					:background (face-background 'default))
-(set-face-attribute 'line-number-current-line nil
-					:background (face-background 'default))
+; (set-face-attribute 'line-number nil
+; 					:background (face-background 'default))
+; (set-face-attribute 'line-number-current-line nil
+; 					:background (face-background 'default))
 
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
@@ -234,6 +234,18 @@
   :mode "\\.nix\\'"
   :config 
   (nix-prettify-global-mode))
+
+(use-package zig-mode
+  :mode "\\.zig\\'"
+  :config 
+  (if (>= emacs-major-version 28)
+	  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+	(progn
+	  (defun colorize-compilation-buffer ()
+		(let ((inhibit-read-only t))
+		  (ansi-color-apply-on-region compilation-filter-start (point))))
+	  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)))
+  )
 
 (use-package cider)
 
@@ -469,7 +481,7 @@
 		 (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
 	 :vars '((user-mail-address . "d.ebling8@gmail.com" )
 			 (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-			 (mu4e-refile-folder . "/personal/[Gmail]/Archive")
+			 (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
 			 (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
 			 (mu4e-trash-folder . "/personal/[Gmail]/Trash")
 			 (message-sendmail-extra-arguments . '("-a" "personal"))))
@@ -490,15 +502,11 @@
 
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
-(setf (alist-get 'trash mu4e-marks)
-	  '(:char ("d" . "▼")
-			  :prompt "dtrash"
-			  :dyn-target (lambda (target msg) (mu4e-get-trash-folder msg))
-			  ;; Here's the main difference to the regular trash mark, no +T
-			  ;; before -N so the message is not marked as IMAP-deleted:
-			  :action (lambda (docid msg target)
-						(mu4e~proc-move docid
-										(mu4e~mark-check-target target) "+S-u-N"))))
+(setq mu4e-bookmarks 
+'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed " :key 117)
+ (:name "Today's messages" :query "date:today..now AND NOT flag:trashed" :key 116)
+ (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
+ (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
