@@ -131,6 +131,17 @@
               };
             };
 
+            vimPlugins = prev.vimPlugins // {
+              none-ls-nvim = prev.vimPlugins.none-ls-nvim.overrideAttrs {
+                src = prev.fetchFromGitHub {
+                  owner = "nvimtools";
+                  repo = "none-ls.nvim";
+                  rev = "a66b5b9ad8d6a3f3dd8c0677a80eb27412fa5056";
+                  hash = "sha256-xMb+wSwTAsI5EEfiyHFUpFDOl4WsK/dDqm8WUKm/L74=";
+                };
+              };
+            };
+
             logseq = prev.logseq.overrideAttrs (oldAttrs: {
               postFixup = ''
                 makeWrapper ${prev.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
