@@ -30,6 +30,12 @@
     mbsync.enable = true;
     mu.enable = true;
     msmtp.enable = true;
+    neomutt = {
+      enable = true;
+      sidebar.enable = true;
+      vimKeys = true;
+      sort = "reverse-date";
+    };
   };
   
 
@@ -59,6 +65,8 @@
       };
       mu.enable = true;
       msmtp.enable = true;
+      neomutt.enable = true;
+      notmuch.neomutt.enable = true;
     };
 
     zeit = let
@@ -87,6 +95,8 @@
         expunge = "both";
       };
       mu.enable = true;
+      neomutt.enable = true;
+      notmuch.neomutt.enable = true;
     };
    };
 }
