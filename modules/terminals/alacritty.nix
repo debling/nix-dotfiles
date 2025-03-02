@@ -1,4 +1,4 @@
-{ config, lib, pkgs, alacritty-themes, ... }:
+{ config, lib, pkgs, alacritty-themes, colorscheme, ... }:
 
 let
   cfg = config.debling.alacritty;
@@ -15,7 +15,7 @@ in
         generic_setting = {
           general = {
             import = [
-              "${alacritty-themes}/themes/solarized_osaka.toml"
+              "${alacritty-themes}/themes/${builtins.replaceStrings ["-"] ["_"] colorscheme.name}.toml"
             ];
 
             ipc_socket = false;

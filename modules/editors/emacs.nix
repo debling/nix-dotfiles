@@ -36,6 +36,7 @@
       vimKeys = true;
       sort = "reverse-date";
     };
+    notmuch.enable = true;
   };
   
 
@@ -46,10 +47,13 @@
   
 
   accounts.email.accounts = {
-    personal = {
+    personal = let
+      addr = "d.ebling8@gmail.com";
+    in {
       primary = true;
       realName = "Denilson S. Ebling";
-      address = "d.ebling8@gmail.com";
+      address = addr;
+      userName = addr;
       flavor = "gmail.com";
       passwordCommand = "${lib.getExe pkgs.rbw} get mbsync-gmail";
 
@@ -62,11 +66,18 @@
         enable = true;
         create = "both";
         expunge = "both";
+        patterns=  [ "*" "![Gmail]/All Mail" ];
       };
       mu.enable = true;
       msmtp.enable = true;
-      neomutt.enable = true;
-      notmuch.neomutt.enable = true;
+      neomutt = {
+        enable = true;
+        mailboxName = "personal";
+      };
+      notmuch = {
+        enable = true;
+        neomutt.enable = true;
+      };
     };
 
     zeit = let
@@ -95,8 +106,14 @@
         expunge = "both";
       };
       mu.enable = true;
-      neomutt.enable = true;
-      notmuch.neomutt.enable = true;
+      neomutt = {
+        enable = true;
+        mailboxName = "zeit";
+      };
+      notmuch = {
+        enable = true;
+        neomutt.enable = true;
+      };
     };
    };
 }

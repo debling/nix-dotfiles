@@ -454,8 +454,6 @@
 	  mu4e-context-policy 'pick-first
 	  ;; use mu4e for e-mail in emacs
 	  mail-user-agent 'mu4e-user-agent
-	  ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-	  mu4e-sent-messages-behavior 'delete
 	  mu4e-get-mail-command "mbsync -a"
 	  mu4e-update-interval 600
 	  mu4e-change-filenames-when-moving t
@@ -481,9 +479,11 @@
 		 (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
 	 :vars '((user-mail-address . "d.ebling8@gmail.com" )
 			 (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-			 (mu4e-refile-folder . "/personal/[Gmail]/All Mail")
+			 (mu4e-refile-folder . "/personal/[Gmail]/Archive")
 			 (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
 			 (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+			 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+			 (mu4e-sent-messages-behavior . 'delete)
 			 (message-sendmail-extra-arguments . '("-a" "personal"))))
 	(make-mu4e-context
 	 :name "zeit"
@@ -498,7 +498,15 @@
 			 (mu4e-refile-folder . "/zeit/Archive")
 			 (mu4e-sent-folder . "/zeit/Sent")
 			 (mu4e-trash-folder . "/zeit/Trash")
-			 (message-sendmail-extra-arguments . '("-a" "zeit"))))))
+			 (mu4e-sent-messages-behavior . 'sent)
+			 (message-sendmail-extra-arguments . '("-a" "zeit"))
+			 (message-signature . "
+Denilson dos Santos Ebling
+CTO
+Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
+Av. Roraima 1000, prédio 2, sala 22
+(55) 99645-5313")
+			 ))))
 
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
