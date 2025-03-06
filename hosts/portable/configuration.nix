@@ -68,6 +68,10 @@
 
   # Configure keymap in X11
   services = {
+    udev.extraRules = ''
+      KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
+    '';
+
     greetd = {
       enable = true;
       settings =
@@ -114,6 +118,8 @@
   environment.systemPackages = with pkgs; [
     rose-pine-icon-theme
     zen-browser
+    man-pages
+    man-pages-posix
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -129,29 +129,61 @@ in
       mutableExtensionsDir = true;
       package = pkgs.vscodium;
       profiles.default = {
-      enableUpdateCheck = false;
+        enableUpdateCheck = false;
         userSettings = {
-        "files.autoSave" = "afterDelay";
-        "vim.enableNeovim" = true;
-        "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
-        "editor.fontSize" = 14;
-        "editor.fontLigatures" = true;
-        "workbench.colorTheme" = "Solarized Light";
-        "vim.easymotion" = true;
-        "vim.incsearch" = true;
-        "vim.useSystemClipboard" = true;
-        "vim.useCtrlKeys" = true;
-        "vim.hlsearch" = true;
-        "vim.leader" = "<space>";
-        "extensions.experimental.affinity" = {
-          "vscodevim.vim" = 1;
+          "files.autoSave" = "afterDelay";
+          "vim.enableNeovim" = true;
+          "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
+          "editor.fontSize" = 14;
+          "editor.fontLigatures" = true;
+          "workbench.colorTheme" = "Solarized Light";
+          "vim.easymotion" = true;
+          "vim.incsearch" = true;
+          "vim.useSystemClipboard" = true;
+          "vim.useCtrlKeys" = true;
+          "vim.hlsearch" = true;
+          "vim.leader" = "<space>";
+          "extensions.experimental.affinity" = {
+            "vscodevim.vim" = 1;
+          };
+          "zig.path" = "zig";
+          "zig.zls.path" = "zig";
         };
-        "zig.path" = "zig";
-        "zig.zls.path" = "zig";
-      };
       };
     };
 
+
+    irssi = {
+      enable = true;
+      networks =
+        let
+          nick = "debling";
+          sslOpts = {
+            port = 6697;
+            autoConnect = true;
+          };
+        in
+        {
+          liberachat = {
+            inherit nick;
+            server = {
+              address = "irc.libera.chat";
+            } // sslOpts;
+            channels = {
+              nixos.autoJoin = true;
+              nixos-dev.autoJoin = true;
+              zig.autoJoin = true;
+            };
+          };
+          oftc = {
+            inherit nick;
+            server = {
+              address = "irc.oftc.net";
+            } // sslOpts;
+            channels.home-manager.autoJoin = true;
+          };
+        };
+    };
 
 
     # Used to have custom environment per project.
@@ -262,13 +294,15 @@ in
     };
   };
 
-   programs.gpg.enable = true;
-   home.file.".gnupg/gpg-agent.conf".text = let
-     pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
-   in ''
-     allow-preset-passphrase
-     max-cache-ttl 60480000
-     default-cache-ttl 60480000
-     pinentry-program ${lib.getExe pinentryPkgs}
-   '';
+  programs.gpg.enable = true;
+  home.file.".gnupg/gpg-agent.conf".text =
+    let
+      pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+    in
+    ''
+      allow-preset-passphrase
+      max-cache-ttl 60480000
+      default-cache-ttl 60480000
+      pinentry-program ${lib.getExe pinentryPkgs}
+    '';
 }

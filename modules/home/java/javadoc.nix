@@ -1,7 +1,7 @@
-{
-  pkgs,
-  jdk ? pkgs.jdk,
-}: 
+{ pkgs
+, jdk ? pkgs.jdk
+,
+}:
 
 with pkgs;
 
@@ -10,14 +10,14 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ makeWrapper ];
   buildInputs = [ jdk unzip ];
-  phases = [ "buildPhase" "installPhase"];
+  phases = [ "buildPhase" "installPhase" ];
 
   buildPhase = ''
-      unzip -q "${jdk}/lib/src.zip" -d src/
-      pushd src 
-      java_modules=$(for module in *; do echo --module "$module"; done)
-      javadoc -d ../javadoc --module-source-path . $java_modules || true
-      popd
+    unzip -q "${jdk}/lib/src.zip" -d src/
+    pushd src 
+    java_modules=$(for module in *; do echo --module "$module"; done)
+    javadoc -d ../javadoc --module-source-path . $java_modules || true
+    popd
   '';
 
   installPhase = ''

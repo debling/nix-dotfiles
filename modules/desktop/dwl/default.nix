@@ -143,19 +143,17 @@ in
         ExecStart = with colorscheme.palette; ''
           ${lib.getExe dwlb} -ipc -font 'mono:size=8' \
             -inactive-fg-color '#${base06}' \
-            -inactive-bg-color '#${base04}' \
+            -inactive-bg-color '#${base03}' \
             -middle-bg-color '#${base00}' \
             -middle-bg-color-selected '#${base00}' \
             -active-fg-color '#${base06}' \
             -active-bg-color '#${base00}' \
             -occupied-fg-color '#${base06}' \
-            -occupied-bg-color '#${base04}'
+            -occupied-bg-color '#${base03}'
         '';
       };
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
-      restartIfChanged = true;
-      restartTriggers = [ dwlb colorscheme.name ];
     };
 
     systemd.user.services.status-bar = {
@@ -187,8 +185,6 @@ in
       };
       bindsTo = [ "dwl-session.target" ];
       wantedBy = [ "dwl-session.target" ];
-      restartIfChanged = true;
-      restartTriggers = [ pkgs.wbg colorscheme.name ];
     };
 
     security = {

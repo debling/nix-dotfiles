@@ -5,7 +5,6 @@
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
-
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -89,6 +88,11 @@
       url = "github:thiagokokada/nix-alien";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    blink-cmp = {
+      url = "github:Saghen/blink.cmp";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -132,6 +136,8 @@
             };
 
             vimPlugins = prev.vimPlugins // {
+              blink-cmp = inputs.blink-cmp.packages.${prev.system}.blink-cmp;
+
               none-ls-nvim = prev.vimPlugins.none-ls-nvim.overrideAttrs {
                 src = prev.fetchFromGitHub {
                   owner = "nvimtools";
@@ -167,7 +173,7 @@
       specialArgs = {
         inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
         mainUser = username;
-        colorscheme = inputs.nix-colors.colorschemes.selenized-light;
+        colorscheme = inputs.nix-colors.colorschemes.tomorrow-night;
       };
 
       homeManagerConfiguration = {
