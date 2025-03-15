@@ -18,8 +18,14 @@
       package =
         let
           emacsPkg = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs30-pgtk;
+          buildOpts = emacsPkg.overrideAttrs (prev: {
+            NIX_CFLAGS_COMPILE = "-march=native -O3";
+          });
+          finalPkg = buildOpts.override {
+            withImageMagick = true;
+          };
         in
-        (pkgs.emacsPackagesFor emacsPkg).emacsWithPackages (epkgs: with epkgs; [
+        (pkgs.emacsPackagesFor finalPkg).emacsWithPackages (epkgs: with epkgs; [
           nix-mode
           vterm
           treesit-grammars.with-all-grammars
