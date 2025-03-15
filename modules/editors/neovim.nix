@@ -159,8 +159,6 @@ in
 
             freeze-code-nvim
 
-            render-markdown-nvim
-
             rainbow-delimiters-nvim
 
             obsidian-nvim

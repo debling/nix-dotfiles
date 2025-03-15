@@ -16,9 +16,6 @@
     obsidian
     spotify
     zoom-us
-
-    # experimental
-    logseq
   ];
 }
 
