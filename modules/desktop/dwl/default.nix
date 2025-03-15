@@ -132,8 +132,9 @@ in
       description = "dwl compositor session";
       documentation = [ "man:systemd.special(7)" ];
       bindsTo = [ "graphical-session.target" ];
-      wants = [ "graphical-session-pre.target" ];
+      wants = [ "graphical-session-pre.target" "xdg-desktop-autostart.target" ];
       after = [ "graphical-session-pre.target" ];
+      before = [ "xdg-desktop-autostart.target" ];
     };
 
     systemd.user.services.dwlb = {
@@ -219,6 +220,26 @@ in
 
     # TODO: find a way to modularize this config
     home-manager.users.${mainUser} = {
+
+      systemd.user.services.wbg = {
+        Unit = {
+          Description = "Service to set the wallpapper";
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service.ExecStart =
+          let
+            nix-colors-lib = nix-colors.lib.contrib { inherit pkgs; };
+            wallpaper = nix-colors-lib.nixWallpaperFromScheme {
+              scheme = colorscheme;
+              width = 3840;
+              height = 2160;
+              logoScale = 4.0;
+            };
+          in
+          "${lib.getExe pkgs.wbg} --stretch ${wallpaper}";
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
+
       services = {
         cliphist.enable = true;
         wlsunset = {

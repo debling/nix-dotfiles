@@ -516,6 +516,9 @@ Av. Roraima 1000, prédio 2, sala 22
  (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
  (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
 
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+;; erc-nickserv-get-password is a native-comp-function in
+
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 ;; Increase the amount of data which Emacs reads from the process

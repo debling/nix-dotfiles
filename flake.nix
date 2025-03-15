@@ -4,6 +4,7 @@
   inputs = {
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # Environment/system management
     darwin = {
@@ -124,6 +125,11 @@
             zls = inputs.zls.packages.${prev.system}.default;
             # kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
+            foot = let
+              pkgs = import inputs.nixpkgs-master {
+                system = prev.system;
+              };
+            in pkgs.foot;
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {
@@ -148,15 +154,6 @@
               };
             };
 
-            logseq = prev.logseq.overrideAttrs (oldAttrs: {
-              postFixup = ''
-                makeWrapper ${prev.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
-                  --add-flags $out/share/${oldAttrs.pname}/resources/app \
-                  --add-flags "--use-gl=desktop" \
-                  --prefix LD_LIBRARY_PATH : "${prev.lib.makeLibraryPath [ prev.stdenv.cc.cc.lib ]}"
-              '';
-            });
-
             karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
               version = "14.13.0";
               src = prev.fetchurl {
@@ -173,7 +170,7 @@
       specialArgs = {
         inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
         mainUser = username;
-        colorscheme = inputs.nix-colors.colorschemes.tomorrow-night;
+        colorscheme = inputs.nix-colors.colorschemes.gruvbox-dark-hard;
       };
 
       homeManagerConfiguration = {
