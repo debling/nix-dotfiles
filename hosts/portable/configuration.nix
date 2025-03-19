@@ -16,7 +16,8 @@
       ../../modules/common/nix.nix
       ../../modules/common/pipewire.nix
       ../../modules/common/steam.nix
-      ../../modules/desktop/dwl
+      # ../../modules/desktop/dwl
+      ../../modules/desktop/river
       ../../modules/hardware/nvidia.nix
       ../../modules/hardware/bluetooth.nix
     ];

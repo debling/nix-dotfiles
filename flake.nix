@@ -129,11 +129,13 @@
             zls = inputs.zls.packages.${prev.system}.default;
             # kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
-            foot = let
-              pkgs = import inputs.nixpkgs-master {
-                system = prev.system;
-              };
-            in pkgs.foot;
+            foot =
+              let
+                pkgs = import inputs.nixpkgs-master {
+                  system = prev.system;
+                };
+              in
+              pkgs.foot;
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {
