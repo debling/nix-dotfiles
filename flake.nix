@@ -108,9 +108,13 @@
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
         config = {
+          allowBroken = true;
           allowUnfree = true;
           permittedInsecurePackages = [
-            "electron-27.3.11"
+            "emacs-mac-macport-with-packages-with-packages-29.1"
+            "emacs-mac-macport-with-packages-29.1"
+            "emacs-mac-macport-29.1"
+            "xpdf-4.05"
           ];
         };
         overlays = [

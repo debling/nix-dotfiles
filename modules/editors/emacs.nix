@@ -4,6 +4,16 @@
   home = {
     packages = with pkgs; [
       emacsclient-commands
+      # used by doc-view-mode to render pdfs
+      mupdf
+      xpdf
+      ghostscript
+      # used by org-excalidraw to generate svg images from drawings
+
+      # build failling on darwin
+      # excalidraw_export 
+
+      plantuml-c4
     ];
 
     shellAliases = {

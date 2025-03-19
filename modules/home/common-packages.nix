@@ -25,6 +25,7 @@ in
       silver-searcher # A faster and more convenient grep. Executable is called `ag`
       tree
       wget
+      taskwarrior-tui
 
       ### media tools
       ffmpeg
@@ -183,6 +184,12 @@ in
             channels.home-manager.autoJoin = true;
           };
         };
+      extraConfig = ''
+        ignores = (
+          { level = "JOINS PARTS QUITS NICKS"; }
+        );
+      '';
+
     };
 
 

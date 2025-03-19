@@ -69,8 +69,8 @@ in
             pyright
             ruff-lsp
             ruff
-            python311Packages.black
-            python311Packages.isort
+            python312Packages.black
+            python312Packages.isort
           ];
           plugins = with pkgs.vimPlugins; [
             otter-nvim ## quarto dependency

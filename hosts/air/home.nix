@@ -30,7 +30,7 @@
   };
 
   android-sdk = {
-    enable = false;
+    enable = true;
 
     path = "${config.home.homeDirectory}/SDKs/android";
 
@@ -48,6 +48,10 @@
   };
 
   home = {
+    sessionVariables = {
+      TERMINAL = lib.getExe pkgs.alacritty;
+    };
+
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
@@ -71,7 +75,7 @@
       nodePackages.pnpm
       pipenv
 
-      (python311.withPackages (ps: with ps; [
+      (python312.withPackages (ps: with ps; [
         pandas
         numpy
         ipython

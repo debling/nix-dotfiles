@@ -1,5 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 
+;;; initial setup
 ;; The default is 800 kilobytes. Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -10,6 +11,7 @@
                          ("elpa" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
 
+;;; Evil mode
 (use-package evil
   :init ;; Execute code Before a package is loaded
   (evil-mode)
@@ -47,7 +49,8 @@
   (start/leader-keys
     "." '(find-file :wk "Find file")
     "TAB" '(comment-line :wk "Comment lines")
-    "p" '(project-prefix-map :wk "Projectile command map"))
+    "p" '(project-prefix-map :wk "Projectile command map")
+    "m" '(mu4e :wk "Projectile command map"))
 
   (start/leader-keys
     "f" '(:ignore t :wk "Find")
@@ -127,6 +130,8 @@
       (scroll-margin 5)
 
       (tab-width 4)
+	  (indent-tabs-mode nil)
+
 
       (make-backup-files nil) ;; Stop creating ~ backup files
       (auto-save-default nil) ;; Stop creating # auto save files
@@ -221,6 +226,8 @@
   :diminish yas-minor-mode
   :hook (prog-mode . yas-minor-mode))
 
+
+;;; Text document languages
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -229,12 +236,15 @@
   :init (setq markdown-command "multimarkdown")
   :config (use-package edit-indirect))
 
+
+;;; Nix
 (use-package nix-mode
   :diminish nix-prettify-mode
   :mode "\\.nix\\'"
   :config 
   (nix-prettify-global-mode))
 
+;;; Zig
 (use-package zig-mode
   :mode "\\.zig\\'"
   :config 
@@ -247,13 +257,11 @@
 	  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)))
   )
 
+;;; Clojure setup
 (use-package cider)
 
 (use-package eat
   :hook ('eshell-load-hook #'eat-eshell-mode))
-
-;(use-package nerd-icons
-;  :if (display-graphic-p))
 
 (use-package nerd-icons-dired
   :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
@@ -310,20 +318,16 @@
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
   ;; The functions that are added later will be the first in the list
-
   (add-to-list 'completion-at-point-functions #'cape-dabbrev) ;; Complete word from current buffers
   (add-to-list 'completion-at-point-functions #'cape-dict) ;; Dictionary completion
   (add-to-list 'completion-at-point-functions #'cape-file) ;; Path completion
   (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete elisp in Org or Markdown mode
   (add-to-list 'completion-at-point-functions #'cape-keyword) ;; Keyword/Snipet completion
-
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev) ;; Complete abbreviation
-  ;;(add-to-list 'completion-at-point-functions #'cape-history) ;; Complete from Eshell, Comint or minibuffer history
-  ;;(add-to-list 'completion-at-point-functions #'cape-line) ;; Complete entire line from current buffer
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol) ;; Complete Elisp symbol
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex) ;; Complete Unicode char from TeX command, e.g. \hbar
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml) ;; Complete Unicode char from SGML entity, e.g., &alpha
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345) ;; Complete Unicode char using RFC 1345 mnemonics
+  (add-to-list 'completion-at-point-functions #'cape-history) ;; Complete from Eshell, Comint or minibuffer history
+  (add-to-list 'completion-at-point-functions #'cape-elisp-symbol) ;; Complete Elisp symbol
+  (add-to-list 'completion-at-point-functions #'cape-tex) ;; Complete Unicode char from TeX command, e.g. \hbar
+  (add-to-list 'completion-at-point-functions #'cape-sgml) ;; Complete Unicode char from SGML entity, e.g., &alpha
+  (add-to-list 'completion-at-point-functions #'cape-rfc1345) ;; Complete Unicode char using RFC 1345 mnemonics
   )
 
 (use-package orderless
@@ -370,39 +374,7 @@
 
   (setq consult-async-min-input 1
 		consult-async-input-debounce 0.1)
-  :config
-  ;; Optionally configure preview. The default value
-  ;; is 'any, such that any key triggers the preview.
-  ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key "M-.")
-  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
-
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  ;; (consult-customize
-  ;; consult-theme :preview-key '(:debounce 0.2 any)
-  ;; consult-ripgrep consult-git-grep consult-grep
-  ;; consult-bookmark consult-recent-file consult-xref
-  ;; consult--source-bookmark consult--source-file-register
-  ;; consult--source-recent-file consult--source-project-recent-file
-  ;; :preview-key "M-."
-  ;; :preview-key '(:debounce 0.4 any))
-
-  ;; By default `consult-project-function' uses `project-root' from project.el.
-  ;; Optionally configure a different project root function.
-   ;;;; 1. project.el (the default)
-  ;; (setq consult-project-function #'consult--default-project--function)
-   ;;;; 2. vc.el (vc-root-dir)
-  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
-   ;;;; 3. locate-dominating-file
-  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
-   ;;;; 4. projectile.el (projectile-project-root)
-  ;(autoload 'projectile-project-root "projectile")
-  ;(setq consult-project-function (lambda (_) (projectile-project-root)))
-
-   ;;;; 5. No project support
-  ;; (setq consult-project-function nil)
-  )
+  :config)
 
 (use-package diminish)
 
@@ -424,7 +396,63 @@
   (which-key-allow-imprecise-window-fit nil)) ;; Fixes which-key window slipping out in Emacs Daemon
 
 
+;;; Org-mode
+(use-package org
+  :delight org-indent-mode
+  :hook ((org-mode	              . org-indent-mode)
+         (org-babel-after-execute . org-redisplay-inline-images))
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture))
+  :custom
+  (org-default-notes-file	(concat org-directory "notes.org"))
+  (org-agenda-files       (mapc (lambda (s) (concat org-directory s)) '("email.org" "todo.org" "roam/daily/")))
+  (org-export-with-smart-quotes t)
+  (org-capture-templates '(("p" "TODO - Personal" entry (file+headline "~/org/todo.org" "Personal")
+                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                           ("w" "TODO - Work" entry (file+headline "~/org/todo.org" "Work")
+                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                           ("u" "TODO - Uni" entry (file+headline "~/org/todo.org" "University")
+                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                           ("n" "Note" entry (file "~/Org/notes.org")
+                            "* %? :NOTE:\n%U\n%a\n" :empty-lines 1)
+                           ("j" "Journal" entry (file+datetree "~/org/jornal.org")
+                            "* %?\n%U\n" :clock-resume t)))
+  (org-plantuml-exec-mode 'plantuml)
+  (org-babel-confirm-evaluate nil)
+  :config
+  (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
+                                                           (java . t)
+                                                           (plantuml . t)))
+)
 
+(use-package org-bullets
+  :hook (org-mode . org-bullets-mode))
+
+(use-package org-excalidraw
+  :config
+  (org-excalidraw-directory "~/org/excalidraw"))
+
+(use-package org-roam
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :custom 
+  (org-roam-directory (expand-file-name (concat org-directory "/roam")))
+  (org-roam-completion-everywhere t)
+  (org-roam-dailies-capture-templates '(("d" "default" entry "* %?\n%U\n"
+                                         :target (file+head "%<%Y-%m-%d>.org" "#+filetags: needs_review daily_notes\n#+title: %<%Y-%m-%d>\n"))))
+
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:80}" 'face 'org-tag)))
+  :config
+  (org-roam-db-autosync-mode)
+
+
+;;; EMAIL
 (use-package org-msg 
   :custom
   (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
@@ -508,6 +536,14 @@ Av. Roraima 1000, prédio 2, sala 22
 (55) 99645-5313")
 			 ))))
 
+(require 'mu4e-icalendar)
+(mu4e-icalendar-setup)
+(setq gnus-icalendar-org-capture-file "~/org/calendar.org")
+(setq gnus-icalendar-org-capture-headline '("Email"))
+(gnus-icalendar-org-setup)
+
+(setq mu4e-icalendar-diary-file "/tmp/testdiary")
+
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
 (setq mu4e-bookmarks 
@@ -517,8 +553,8 @@ Av. Roraima 1000, prédio 2, sala 22
  (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
 
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-;; erc-nickserv-get-password is a native-comp-function in
 
+;;; Setup gc back
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 ;; Increase the amount of data which Emacs reads from the process
