@@ -12,6 +12,14 @@
     wayland.windowManager.river = {
       enable = true;
       settings = with colorscheme.palette; {
+        rule-add = {
+          "-app-id" = {
+            zen = [ "ssd" { tags = 4; }];
+            emacs = [ "ssd" { tags = 1; }];
+            Spotify = { tags = 256; };
+          };
+        };
+
         map = {
           normal = {
             "Super+Shift Return" = "spawn footclient";
@@ -24,7 +32,8 @@
         spawn = [
           "yambar"
           "zen"
-          "footclient"
+          "emacs"
+          "spotify"
         ];
 
         default-layout = "rivertile";

@@ -154,7 +154,16 @@
               nil nil t)
       )
 
-(load-theme 'modus-vivendi t) 
+
+(use-package doom-themes
+  :custom
+  (doom-gruvbox-dark-variant "hard")
+  :config
+  (load-theme 'doom-gruvbox t)
+  (doom-themes-org-config))
+
+(push '(undecorated . t) default-frame-alist)
+
 (set-face-attribute 'default nil
 					:font "JetBrainsMono Nerd Font"
 					:height (if (eq system-type 'darwin) 140 110)
@@ -261,7 +270,8 @@
 (use-package cider)
 
 (use-package eat
-  :hook ('eshell-load-hook #'eat-eshell-mode))
+  :hook ((eshell-load-hook . eat-eshell-mode)
+         (eshell-load-hook . eat-eshell-visual-command-mode)))
 
 (use-package nerd-icons-dired
   :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
@@ -405,33 +415,35 @@
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture))
   :custom
+  (org-directory  "~/Workspace/debling/orgfiles/")
   (org-default-notes-file	(concat org-directory "notes.org"))
   (org-agenda-files       (mapc (lambda (s) (concat org-directory s)) '("email.org" "todo.org" "roam/daily/")))
   (org-export-with-smart-quotes t)
-  (org-capture-templates '(("p" "TODO - Personal" entry (file+headline "~/org/todo.org" "Personal")
+  (org-capture-templates '(("p" "TODO - Personal" entry (file+headline (concat org-directory "todo.org") "Personal")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("w" "TODO - Work" entry (file+headline "~/org/todo.org" "Work")
+                           ("w" "TODO - Work" entry (file+headline (concat org-directory "todo.org") "Work")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("u" "TODO - Uni" entry (file+headline "~/org/todo.org" "University")
+                           ("u" "TODO - Uni" entry (file+headline (concat org-directory "todo.org") "University")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("n" "Note" entry (file "~/Org/notes.org")
+                           ("n" "Note" entry (file (concat org-directory "notes.org"))
                             "* %? :NOTE:\n%U\n%a\n" :empty-lines 1)
-                           ("j" "Journal" entry (file+datetree "~/org/jornal.org")
+                           ("j" "Journal" entry (file+datetree (concat org-directory "jornal.org"))
                             "* %?\n%U\n" :clock-resume t)))
   (org-plantuml-exec-mode 'plantuml)
-  (org-babel-confirm-evaluate nil)
+  (org-confirm-babel-evaluate nil)
   :config
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
                                                            (java . t)
+                                                           (python . t)
                                                            (plantuml . t)))
 )
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
-(use-package org-excalidraw
-  :config
-  (org-excalidraw-directory "~/org/excalidraw"))
+;; (use-package org-excalidraw
+;;   :config
+;;   (org-excalidraw-directory (concat org-directory "~/org/excalidraw")))
 
 (use-package org-roam
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -449,7 +461,7 @@
 
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:80}" 'face 'org-tag)))
   :config
-  (org-roam-db-autosync-mode)
+  (org-roam-db-autosync-mode))
 
 
 ;;; EMAIL
@@ -473,8 +485,8 @@
  #+end_signature")
   )
  ; (org-msg-mode)
-(require 'mu4e)
 
+(require 'mu4e)
 (setq user-full-name "Denilson S. Ebling"
 	  ;; ask for context if no context matches
 	  mu4e-compose-context-policy 'ask
@@ -538,11 +550,9 @@ Av. Roraima 1000, prédio 2, sala 22
 
 (require 'mu4e-icalendar)
 (mu4e-icalendar-setup)
-(setq gnus-icalendar-org-capture-file "~/org/calendar.org")
+(setq gnus-icalendar-org-capture-file (concat org-directory "calendar.org"))
 (setq gnus-icalendar-org-capture-headline '("Email"))
 (gnus-icalendar-org-setup)
-
-(setq mu4e-icalendar-diary-file "/tmp/testdiary")
 
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
@@ -551,6 +561,8 @@ Av. Roraima 1000, prédio 2, sala 22
  (:name "Today's messages" :query "date:today..now AND NOT flag:trashed" :key 116)
  (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
  (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
+
+(mu4e 't)
 
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
