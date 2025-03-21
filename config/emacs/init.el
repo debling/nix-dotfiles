@@ -49,8 +49,15 @@
   (start/leader-keys
     "." '(find-file :wk "Find file")
     "TAB" '(comment-line :wk "Comment lines")
-    "p" '(project-prefix-map :wk "Projectile command map")
     "m" '(mu4e :wk "Projectile command map"))
+
+  (start/leader-keys
+    "p" '(:ignore t :wk "Project.el")
+    "p p" '(project-switch-project :wk "Switch project")
+    "p e" '(project-eshell :wk "Project Eshell")
+    "p f" '(project-find-file :wk "Project find-file")
+    "p c" '(project-compile :wk "Project compile"))
+
 
   (start/leader-keys
     "f" '(:ignore t :wk "Find")
@@ -457,11 +464,13 @@
   (org-roam-directory (expand-file-name (concat org-directory "/roam")))
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates '(("d" "default" entry "* %?\n%U\n"
-                                         :target (file+head "%<%Y-%m-%d>.org" "#+filetags: needs_review daily_notes\n#+title: %<%Y-%m-%d>\n"))))
+                                         :target (file+head "%<%Y-%m-%d>.org" "#+filetags: needs_review daily_notes\n#+title: %<%Y-%m-%d>\n\n"))))
 
-  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:80}" 'face 'org-tag)))
+  (org-roam-node-display-template (concat "${title} " (propertize "${tags:80}" 'face 'org-tag)))
   :config
   (org-roam-db-autosync-mode))
+
+(use-package org-roam-ui :after org-roam)
 
 
 ;;; EMAIL

@@ -3,7 +3,7 @@
 with pkgs;
 
 let
-  withFx = jdk: jdk23.override { enableJavaFX = true; };
+  withFx = jdk: jdk.override { enableJavaFX = true; };
   latest_jdk = withFx jdk23;
   javadoc = callPackage ./javadoc.nix { jdk = latest_jdk; };
 in

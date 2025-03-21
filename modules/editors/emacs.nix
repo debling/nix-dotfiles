@@ -28,10 +28,7 @@
       package =
         let
           emacsPkg = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs30-pgtk;
-          buildOpts = emacsPkg.overrideAttrs (prev: {
-            NIX_CFLAGS_COMPILE = "-march=native -O3";
-          });
-          finalPkg = buildOpts.override {
+          finalPkg = emacsPkg.override {
             withImageMagick = true;
           };
         in

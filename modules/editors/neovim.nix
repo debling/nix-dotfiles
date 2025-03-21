@@ -88,7 +88,19 @@ in
         };
 
         web = {
-          systemPkgs = with pkgs; [
+          systemPkgs = with pkgs;
+          let
+              hurl-nvim = pkgs.vimUtils.buildVimPlugin {
+                name = "hurl-nvim";
+                doCheck = false;
+                src = pkgs.fetchFromGitHub {
+                  owner = "jellydn";
+                  repo = "hurl.nvim";
+                  rev = "v2.1.0";
+                  hash = "sha256-h3uANPgLOKV/js6YTtHctjwgMg01Z71kuAecCKbs5Gs=";
+                };
+              };
+            in [
             nodePackages.typescript-language-server
             angular-language-server
             nodePackages.yaml-language-server
@@ -98,6 +110,7 @@ in
             nodePackages."@tailwindcss/language-server"
             emmet-ls
             hurl
+            hurl-nvim
           ];
           plugins = with pkgs.vimPlugins; [
             hurl
