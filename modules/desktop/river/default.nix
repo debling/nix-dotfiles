@@ -258,6 +258,13 @@
           main = {
             terminal = "${pkgs.foot}/bin/footclient";
             font = "monospace:size=18";
+            show-actions = true;
+            list-executables-in-path = true;
+            lines = 18;
+          };
+          border = {
+            radius = 0;
+            width = 3;
           };
           colors = with colorscheme.palette; {
             background = "${base00}ff";

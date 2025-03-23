@@ -111,55 +111,62 @@
     "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers")))
 
+
 (use-package emacs
-      :diminish eldoc-mode hs-minor-mode
-      :custom
-      (menu-bar-mode nil)         ;; Disable the menu bar
-      (scroll-bar-mode nil)       ;; Disable the scroll bar
-      (tool-bar-mode nil)         ;; Disable the tool bar
-      (inhibit-startup-screen t)  ;; Disable welcome screen
+  :bind
+  ("C-+" . text-scale-increase)
+  ("C--" . text-scale-decrease)
+  ("<C-wheel-up>" . text-scale-increase)
+  ("<C-wheel-down>" . text-scale-decrease)
+  :diminish eldoc-mode hs-minor-mode
+  :custom
+  (menu-bar-mode nil)         ;; Disable the menu bar
+  (scroll-bar-mode nil)       ;; Disable the scroll bar
+  (tool-bar-mode nil)         ;; Disable the tool bar
+  (inhibit-startup-screen t)  ;; Disable welcome screen
 
-      (delete-selection-mode t)   ;; Select text and delete it by typing.
-      (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
-      ;; (electric-pair-mode nil)      ;; Turns on automatic parens pairing
+  (delete-selection-mode t)   ;; Select text and delete it by typing.
+  (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
+  ;; (electric-pair-mode nil)      ;; Turns on automatic parens pairing
 
-      (blink-cursor-mode nil)     ;; Don't blink cursor
-      (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
+  (blink-cursor-mode nil)     ;; Don't blink cursor
+  (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
 
-      ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
-      ;;(recentf-mode t) ;; Enable recent file mode
+  ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
+  ;;(recentf-mode t) ;; Enable recent file mode
 
-      ;;(global-visual-line-mode t)           ;; Enable truncated lines
-      (display-line-numbers-type 'relative) ;; Relative line numbers
+  ;;(global-visual-line-mode t)           ;; Enable truncated lines
+  (display-line-numbers-type 'relative) ;; Relative line numbers
 
-      (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
-      (scroll-conservatively 10) ;; Smooth scrolling
-      (scroll-margin 5)
+  (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
+  (scroll-conservatively 10) ;; Smooth scrolling
+  (scroll-margin 5)
 
-      (tab-width 4)
-	  (indent-tabs-mode nil)
+  (tab-width 4)
+  (indent-tabs-mode nil)
 
-
-      (make-backup-files nil) ;; Stop creating ~ backup files
-      (auto-save-default nil) ;; Stop creating # auto save files
-      :hook
-      ((prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
-       (prog-mode . display-line-numbers-mode))
-      :config
-      ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
-      (setq custom-file (locate-user-emacs-file "custom-vars.el"))
-      (load custom-file 'noerror 'nomessage)
-      :bind (
-             ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
-             )
-      ;; Fix general.el leader key not working instantly in messages buffer with evil mode
-      :ghook ('after-init-hook
-              (lambda (&rest _)
-                (when-let ((messages-buffer (get-buffer "*Messages*")))
-                  (with-current-buffer messages-buffer
-                    (evil-normalize-keymaps))))
-              nil nil t)
-      )
+  (make-backup-files nil) ;; Stop creating ~ backup files
+  (auto-save-default nil) ;; Stop creating # auto save files
+  :hook
+  ((prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+   (prog-mode . display-line-numbers-mode))
+  :config
+  ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file 'noerror 'nomessage)
+  (fido-mode)
+  (fido-vertical-mode)
+  :bind (
+         ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
+         )
+  ;; Fix general.el leader key not working instantly in messages buffer with evil mode
+  :ghook ('after-init-hook
+          (lambda (&rest _)
+            (when-let ((messages-buffer (get-buffer "*Messages*")))
+              (with-current-buffer messages-buffer
+                (evil-normalize-keymaps))))
+          nil nil t)
+  )
 
 
 (use-package doom-themes
@@ -169,30 +176,13 @@
   (load-theme 'doom-gruvbox t)
   (doom-themes-org-config))
 
-(push '(undecorated . t) default-frame-alist)
+(if (not (eq system-type 'darwin))
+    (add-to-list 'default-frame-alist '(undecorated . t)))
 
 (set-face-attribute 'default nil
 					:font "JetBrainsMono Nerd Font"
 					:height (if (eq system-type 'darwin) 140 110)
 					:weight 'medium)
-; (set-face-attribute 'line-number nil
-; 					:background (face-background 'default))
-; (set-face-attribute 'line-number-current-line nil
-; 					:background (face-background 'default))
-
-;; This sets the default font on all graphical frames created after restarting Emacs.
-;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
-;; are not right unless I also add this method of setting the default font.
-
-;;(add-to-list 'default-frame-alist '(font . "JetBrains Mono")) ;; Set your favorite font
-(setq-default line-spacing 0.1)
-
-(use-package emacs
-  :bind
-  ("C-+" . text-scale-increase)
-  ("C--" . text-scale-decrease)
-  ("<C-wheel-up>" . text-scale-increase)
-  ("<C-wheel-down>" . text-scale-decrease))
 
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode)
@@ -222,9 +212,9 @@
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
   :hook ((c-mode c++-mode ;; Autostart lsp servers for a given mode
-    			 java-mode
-    			 nix-mode
-    			 ;
+                                        ; java-mode
+                                        ; nix-mode
+                                        ;
     			 )
     	 . eglot-ensure)
   :custom
@@ -235,8 +225,12 @@
   ;; Manual lsp servers
   :config
   (add-to-list 'eglot-server-programs
-    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
-  )
+    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls"))))
+
+
+(use-package treesit-auto
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all))
 
 (use-package yasnippet-snippets
   :diminish yas-minor-mode
@@ -244,7 +238,7 @@
 
 
 ;;; Text document languages
-(use-package markdown-mode
+(use-package markdown-ts-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
@@ -254,14 +248,14 @@
 
 
 ;;; Nix
-(use-package nix-mode
+(use-package nix-ts-mode
   :diminish nix-prettify-mode
   :mode "\\.nix\\'"
   :config 
   (nix-prettify-global-mode))
 
 ;;; Zig
-(use-package zig-mode
+(use-package zig-ts-mode
   :mode "\\.zig\\'"
   :config 
   (if (>= emacs-major-version 28)
@@ -277,14 +271,9 @@
 (use-package cider)
 
 (use-package eat
-  :hook ((eshell-load-hook . eat-eshell-mode)
-         (eshell-load-hook . eat-eshell-visual-command-mode)))
-
-(use-package nerd-icons-dired
-  :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
-
-(use-package nerd-icons-ibuffer
-  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+  :config
+  (eat-eshell-mode)
+  (eat-eshell-visual-command-mode))
 
 (use-package magit
   :commands magit-status)
@@ -296,9 +285,6 @@
   :init (global-diff-hl-mode))
 
 (use-package corfu
-  :bind
-  (:map corfu-map
-		("C-y" . corfu-complete))
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   (corfu-auto t)                 ;; Enable auto completion
@@ -321,7 +307,9 @@
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :config
+  (evil-define-key 'insert 'corfu-map (kbd "C-y") #'corfu-complete))
 
 (use-package nerd-icons-corfu
   :after corfu
@@ -352,23 +340,8 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(use-package vertico
-  :init
-  (vertico-mode))
 
 (savehist-mode) ;; Enables save history mode
-
-(use-package marginalia
-  :after vertico
-  :init
-  (marginalia-mode))
-
-(use-package nerd-icons-completion
-  :after marginalia
-  :config
-  (nerd-icons-completion-mode)
-  :hook
-  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
 
 (use-package consult
   ;; Enable automatic preview at point in the *Completions* buffer. This is
@@ -413,12 +386,17 @@
   (which-key-allow-imprecise-window-fit nil)) ;; Fixes which-key window slipping out in Emacs Daemon
 
 
+(use-package plantuml-mode
+  :custom
+  (plantuml-exec-mode 'executable)
+  )
+
 ;;; Org-mode
 (use-package org
   :delight org-indent-mode
   :hook ((org-mode	              . org-indent-mode)
          (org-babel-after-execute . org-redisplay-inline-images))
-  :bind (("C-c l" . org-store-link)
+  :bind (("C-c y" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture))
   :custom
@@ -439,11 +417,17 @@
   (org-plantuml-exec-mode 'plantuml)
   (org-confirm-babel-evaluate nil)
   :config
+  (require 'ol-man) ; org-link support for manpages
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
                                                            (java . t)
                                                            (python . t)
                                                            (plantuml . t)))
-)
+  )
+
+(use-package org-cliplink
+  :after org
+  :config
+  (evil-define-key 'normal org-mode-map (kbd "SPC l c") 'org-cliplink))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -493,7 +477,7 @@
  /One Emacs to rule them all/
  #+end_signature")
   )
- ; (org-msg-mode)
+                                        ; (org-msg-mode)
 
 (require 'mu4e)
 (setq user-full-name "Denilson S. Ebling"
@@ -517,45 +501,45 @@
 	  message-kill-buffer-on-exit t)
 
 (setq mu4e-contexts
-   (list
-	(make-mu4e-context
-	 :name "gmail"
-	 :enter-func (lambda () (mu4e-message "Enter gmail context"))
-	 :leave-func (lambda () (mu4e-message "Leave gmail context"))
-	 :match-func
-	 (lambda (msg)
-	   (when msg
-		 (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
-	 :vars '((user-mail-address . "d.ebling8@gmail.com" )
-			 (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-			 (mu4e-refile-folder . "/personal/[Gmail]/Archive")
-			 (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-			 (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-			 ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-			 (mu4e-sent-messages-behavior . 'delete)
-			 (message-sendmail-extra-arguments . '("-a" "personal"))))
-	(make-mu4e-context
-	 :name "zeit"
-	 :enter-func (lambda () (mu4e-message "Enter zeit context"))
-	 :leave-func (lambda () (mu4e-message "Leave zeit context"))
-	 :match-func
-	 (lambda (msg)
-	   (when msg
-		 (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
-	 :vars '((user-mail-address . "denilson@zeit.com.br")
-			 (mu4e-drafts-folder . "/zeit/Drafts")
-			 (mu4e-refile-folder . "/zeit/Archive")
-			 (mu4e-sent-folder . "/zeit/Sent")
-			 (mu4e-trash-folder . "/zeit/Trash")
-			 (mu4e-sent-messages-behavior . 'sent)
-			 (message-sendmail-extra-arguments . '("-a" "zeit"))
-			 (message-signature . "
+      (list
+	   (make-mu4e-context
+	    :name "gmail"
+	    :enter-func (lambda () (mu4e-message "Enter gmail context"))
+	    :leave-func (lambda () (mu4e-message "Leave gmail context"))
+	    :match-func
+	    (lambda (msg)
+	      (when msg
+		    (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
+	    :vars '((user-mail-address . "d.ebling8@gmail.com" )
+			    (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+			    (mu4e-refile-folder . "/personal/[Gmail]/Archive")
+			    (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+			    (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+			    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+			    (mu4e-sent-messages-behavior . 'delete)
+			    (message-sendmail-extra-arguments . '("-a" "personal"))))
+	   (make-mu4e-context
+	    :name "zeit"
+	    :enter-func (lambda () (mu4e-message "Enter zeit context"))
+	    :leave-func (lambda () (mu4e-message "Leave zeit context"))
+	    :match-func
+	    (lambda (msg)
+	      (when msg
+		    (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
+	    :vars '((user-mail-address . "denilson@zeit.com.br")
+			    (mu4e-drafts-folder . "/zeit/Drafts")
+			    (mu4e-refile-folder . "/zeit/Archive")
+			    (mu4e-sent-folder . "/zeit/Sent")
+			    (mu4e-trash-folder . "/zeit/Trash")
+			    (mu4e-sent-messages-behavior . 'sent)
+			    (message-sendmail-extra-arguments . '("-a" "zeit"))
+			    (message-signature . "
 Denilson dos Santos Ebling
 CTO
 Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
 Av. Roraima 1000, prédio 2, sala 22
 (55) 99645-5313")
-			 ))))
+			    ))))
 
 (require 'mu4e-icalendar)
 (mu4e-icalendar-setup)
@@ -566,10 +550,10 @@ Av. Roraima 1000, prédio 2, sala 22
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
 (setq mu4e-bookmarks 
-'((:name "Unread messages" :query "flag:unread AND NOT flag:trashed " :key 117)
- (:name "Today's messages" :query "date:today..now AND NOT flag:trashed" :key 116)
- (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
- (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
+      '((:name "Unread messages" :query "flag:unread AND NOT flag:trashed " :key 117)
+        (:name "Today's messages" :query "date:today..now AND NOT flag:trashed" :key 116)
+        (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
+        (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
 
 (mu4e 't)
 
