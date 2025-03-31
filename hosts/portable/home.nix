@@ -46,6 +46,8 @@ in
     enableNixpkgsReleaseCheck = true;
 
     packages = with pkgs; [
+      kmonad
+
       anydesk
 
       babashka

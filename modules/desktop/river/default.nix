@@ -14,8 +14,8 @@
       settings = with colorscheme.palette; {
         rule-add = {
           "-app-id" = {
-            zen = [ "ssd" { tags = 4; }];
-            emacs = [ "ssd" { tags = 1; }];
+            zen = [ "ssd" { tags = 4; } ];
+            emacs = [ "ssd" { tags = 1; } ];
             Spotify = { tags = 256; };
           };
         };
@@ -37,7 +37,7 @@
         ];
 
         default-layout = "rivertile";
-        keyboard-layout = "-options caps:swapescape us";
+        keyboard-layout = "us";
         background-color = "0x${base00}";
         border-color-unfocused = "0x${base01}";
         border-color-focused = "0x${base0A}";
@@ -186,7 +186,8 @@
       yambar = {
         enable = true;
         settings = {
-          bar =  with colorscheme.palette; {
+          bar = with colorscheme.palette; {
+            margin = 6;
             height = 26;
             location = "top";
             background = "${base00}ff";
@@ -199,7 +200,7 @@
                     workspaceTemplate = {
                       left-margin = 10;
                       right-margin = 13;
-                      conditions = lib.fold (attr: acc: acc // attr) {} (map wsFn workspaces);
+                      conditions = lib.fold (attr: acc: acc // attr) { } (map wsFn workspaces);
                     };
                     selectedColor = "${base02}ff";
                     occupiedUnderlineColor = "${base0B}ff";
@@ -213,16 +214,23 @@
                     };
                   in
                   {
-                    content.map.conditions = {
-                      "state == urgent".map = workspaceTemplate // {
-                        deco.background.color = "${base09}ff";
+                    content.map = {
+                      on-click = {
+                        left = "sh -c \"riverctl set-focused-tags $((1 << ({id} - 1)))\"";
+                        right = "sh -c \"riverctl toggle-focused-tags $((1 << ({id} -1)))\"";
+                        middle = "sh -c \"riverctl toggle-view-tags $((1 << ({id} -1)))\"";
                       };
-                      "state == focused".map = workspaceTemplate // { deco = bgDefault; };
-                      "state == visible && ~occupied".map = workspaceTemplate;
-                      "state == visible && occupied".map = workspaceTemplate // { deco = bgDefault; };
-                      "state == unfocused && occupied".map = workspaceTemplate;
-                      "state == invisible && ~occupied".empty = {};
-                      "state == invisible && occupied".map = workspaceTemplate;
+                      conditions = {
+                        "state == urgent".map = workspaceTemplate // {
+                          deco.background.color = "${base09}ff";
+                        };
+                        "state == focused".map = workspaceTemplate // { deco = bgDefault; };
+                        "state == visible && ~occupied".map = workspaceTemplate;
+                        "state == visible && occupied".map = workspaceTemplate // { deco = bgDefault; };
+                        "state == unfocused && occupied".map = workspaceTemplate;
+                        "state == invisible && ~occupied".empty = { };
+                        "state == invisible && occupied".map = workspaceTemplate;
+                      };
                     };
                   };
               }
@@ -231,12 +239,12 @@
             center = [
               {
                 foreign-toplevel.content.map.conditions = {
-                  "~activated".empty = {};
+                  "~activated".empty = { };
                   activated = [
-                    { string = {text = "{app-id}"; foreground = "${base0B}ff"; }; }
+                    { string = { text = "{app-id}"; foreground = "${base0B}ff"; }; }
                     { string.text = ": {title}"; }
                   ];
-                }; 
+                };
               }
             ];
 

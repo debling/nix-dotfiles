@@ -5,8 +5,9 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 
 (require 'use-package-ensure) ;; Load use-package-always-ensure
-(setq use-package-always-ensure t) ;; Always ensures that a package is installed
-(setq package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
+(setq use-package-always-ensure t ;; Always ensures that a package is installed
+      use-package-enable-imenu-support t
+      package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
@@ -55,9 +56,28 @@
     "p" '(:ignore t :wk "Project.el")
     "p p" '(project-switch-project :wk "Switch project")
     "p e" '(project-eshell :wk "Project Eshell")
-    "p f" '(project-find-file :wk "Project find-file")
-    "p c" '(project-compile :wk "Project compile"))
+    "p f" '(project-find-file :wk "Project find-file"))
 
+  (defun debling/compile-project-or-file ()
+    (declare (interactive-only compile)
+             (interactive-only project-compile))
+    (interactive)
+    (if (project-current)
+        (call-interactively #'project-compile)
+      (call-interactively #'compile)))
+
+  (defun debling/recompile-project-or-file ()
+    (declare (interactive-only compile)
+             (interactive-only project-compile))
+    (interactive)
+    (if (project-current)
+        (call-interactively #'project-recompile)
+      (call-interactively #'recompile)))
+
+  (start/leader-keys
+    "c" '(:ignore t :wk "Compile")
+    "c c" '(debling/compile-project-or-file :wk "Compile current project or file")
+    "c r" '(debling/recompile-project-or-file :wk "REcompile current project or ile"))
 
   (start/leader-keys
     "f" '(:ignore t :wk "Find")
@@ -154,8 +174,6 @@
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
   (load custom-file 'noerror 'nomessage)
-  (fido-mode)
-  (fido-vertical-mode)
   :bind (
          ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
          )
@@ -167,7 +185,6 @@
                 (evil-normalize-keymaps))))
           nil nil t)
   )
-
 
 (use-package doom-themes
   :custom
@@ -196,18 +213,30 @@
           ("NOTE"       success bold)
           ("DEPRECATED" font-lock-doc-face bold))))
 
-(require 'project)
-(setq project--list
-      (let ((work-dir (expand-file-name "~/Workspace/")))
-        (mapcar (lambda (path) (list (abbreviate-file-name path)))
-                (process-lines "fd" "\.git$"
-                               "--prune"
-                               "--absolute-path"
-                               "--unrestricted"
-                               "--type=d"
-                               "--max-depth=4"
-                               (concat "--base-directory=" work-dir)
-                               "--format={//}"))))
+(use-package project
+  :custom
+  (setq project--list
+        (let ((work-dir (expand-file-name "~/Workspace/")))
+          (mapcar (lambda (path) (list (abbreviate-file-name path)))
+                  (process-lines "fd" "\.git$"
+                                 "--prune"
+                                 "--absolute-path"
+                                 "--unrestricted"
+                                 "--type=d"
+                                 "--max-depth=3"
+                                 (concat "--base-directory=" work-dir)
+                                 "--format={//}")))))
+
+(use-package compile
+  :custom
+  (compilation-scroll-output t)
+  (compilation-always-kill t)
+  :config
+  (defun colorize-compilation ()
+    (require 'ansi-color)
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook #'colorize-compilation))
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
@@ -334,6 +363,12 @@
   (add-to-list 'completion-at-point-functions #'cape-sgml) ;; Complete Unicode char from SGML entity, e.g., &alpha
   (add-to-list 'completion-at-point-functions #'cape-rfc1345) ;; Complete Unicode char using RFC 1345 mnemonics
   )
+
+(use-package icomplete
+  :custom
+  (icomplete-compute-delay 0)
+  :config
+  (fido-vertical-mode))
 
 (use-package orderless
   :custom

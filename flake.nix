@@ -49,6 +49,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
 
     flake-utils.url = "github:numtide/flake-utils";
+     
 
 
     # overlays
@@ -127,7 +128,7 @@
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
-            # kmonad = inputs.kmonad.packages.${prev.system}.default;
+            kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
             foot =
               let
@@ -197,6 +198,8 @@
           ./hosts/portable/disko.nix
 
           ./hosts/portable/configuration.nix
+          
+          inputs.kmonad.nixosModules.default
 
           home-manager.nixosModules.home-manager
 

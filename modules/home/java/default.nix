@@ -16,7 +16,7 @@ in
       "SDKs/Java/21".source = jdk21.home;
       "SDKs/Java/17".source = jdk17.home;
       "SDKs/Java/11".source = jdk11.home;
-      "SDKs/Java/8".source =  jdk8.home;
+      "SDKs/Java/8".source = jdk8.home;
       "SDKs/graalvm".source = graalvmPackages.graalvm-ce.home;
     };
 

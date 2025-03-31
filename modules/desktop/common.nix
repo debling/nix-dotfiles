@@ -1,26 +1,27 @@
 { lib, pkgs, nix-colors, colorscheme, mainUser, ... }:
 
 {
-  environment.systemPackages = let 
-    volume = pkgs.writeShellApplication {
-      name = "volume";
-      runtimeInputs = with pkgs; [ libnotify pipewire ];
-      text = builtins.readFile ./volume;
-    };
+  environment.systemPackages =
+    let
+      volume = pkgs.writeShellApplication {
+        name = "volume";
+        runtimeInputs = with pkgs; [ libnotify pipewire ];
+        text = builtins.readFile ./volume;
+      };
 
-    screenshot = pkgs.writeShellApplication {
-      name = "screenshot";
+      screenshot = pkgs.writeShellApplication {
+        name = "screenshot";
 
-      runtimeInputs = with pkgs; [ grim slurp satty ];
+        runtimeInputs = with pkgs; [ grim slurp satty ];
 
-      text = /* sh */ ''
-        grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
-          | satty --filename - \
-          --fullscreen \
-          --output-filename "$HOME/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png";
-      '';
-    };
-  in
+        text = /* sh */ ''
+          grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
+            | satty --filename - \
+            --fullscreen \
+            --output-filename "$HOME/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png";
+        '';
+      };
+    in
     with pkgs; [
       volume
       screenshot

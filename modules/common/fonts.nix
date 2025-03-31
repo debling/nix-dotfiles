@@ -13,10 +13,14 @@
       nerd-fonts.iosevka
       nerd-fonts.iosevka-term
     ];
-    fontconfig.defaultFonts = {
-      monospace = [ "JetBrainsMonoNL NF" ];
-      sansSerif = [ "Source Sans Pro" ];
-      serif = [ "Source Serif Pro" ];
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "JetBrainsMonoNL NF" ];
+        sansSerif = [ "Source Sans Pro" ];
+        serif = [ "Source Serif Pro" ];
+      };
+      hinting.style = "full";
+      subpixel.rgba = "rgb";
     };
   };
 }
