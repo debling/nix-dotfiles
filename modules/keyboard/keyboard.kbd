@@ -8,8 +8,9 @@
 )
 
 ;; Keychron k6 
+;; `esc' and `grv' are in the same key on this keyboard, fn1 + esc = grv
 (defsrc
-  esc ;; `esc' and `grv' are in the same key on this keyboard, fn1 + esc = grv
+  esc
   grv   1    2    3    4    5    6    7    8    9    0    -    =    bspc
   tab   q    w    e    r    t    y    u    i    o    p    [    ]    \
   caps  a    s    d    f    g    h    j    k    l    ;    '    ret
@@ -19,7 +20,7 @@
 
 (defalias
   sl (sticky-key 300 (layer-toggle shifted))
-  caps (tap-next 300 esc lctl)
+  caps (tap-next esc lctl)
 )
 
 ;; to try it out

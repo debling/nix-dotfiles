@@ -186,20 +186,29 @@
           nil nil t)
   )
 
-(use-package doom-themes
-  :custom
-  (doom-gruvbox-dark-variant "hard")
+(use-package server
+  :ensure nil
+  :defer 1
+  :custom (server-client-instructions nil)
+  :config (unless (server-running-p)
+            (server-start)))
+
+(use-package modus-themes
+  :ensure nil ; already comes with emacs
+  :demand t
+  :hook (text-mode . variable-pitch-mode)
   :config
-  (load-theme 'doom-gruvbox t)
-  (doom-themes-org-config))
+  (modus-themes-load-theme 'modus-operandi)
+  (if (not (eq system-type 'darwin))
+      (add-to-list 'default-frame-alist '(undecorated . t)))
 
-(if (not (eq system-type 'darwin))
-    (add-to-list 'default-frame-alist '(undecorated . t)))
+  (set-face-attribute 'default nil
+					  :font "Iosevka Nerd Font"
+					  :height 130
+					  :weight 'medium)
+  (set-face-attribute 'variable-pitch nil :font "sans")
+  (setq modus-themes-mixed-fonts t))
 
-(set-face-attribute 'default nil
-					:font "JetBrainsMono Nerd Font"
-					:height (if (eq system-type 'darwin) 140 110)
-					:weight 'medium)
 
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode)
@@ -533,7 +542,10 @@
 	  sendmail-program (executable-find "msmtp")
 	  send-mail-function 'sendmail-send-it
 	  message-send-mail-function 'sendmail-send-it
-	  message-kill-buffer-on-exit t)
+	  message-kill-buffer-on-exit t
+
+      mu4e-read-option-use-builtin nil
+      mu4e-completing-read-function 'completing-read)
 
 (setq mu4e-contexts
       (list
@@ -551,8 +563,8 @@
 			    (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
 			    (mu4e-trash-folder . "/personal/[Gmail]/Trash")
 			    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-			    (mu4e-sent-messages-behavior . 'delete)
-			    (message-sendmail-extra-arguments . '("-a" "personal"))))
+			    (mu4e-sent-messages-behavior . delete)
+			    (message-sendmail-extra-arguments . ("-a" "personal"))))
 	   (make-mu4e-context
 	    :name "zeit"
 	    :enter-func (lambda () (mu4e-message "Enter zeit context"))
@@ -566,8 +578,8 @@
 			    (mu4e-refile-folder . "/zeit/Archive")
 			    (mu4e-sent-folder . "/zeit/Sent")
 			    (mu4e-trash-folder . "/zeit/Trash")
-			    (mu4e-sent-messages-behavior . 'sent)
-			    (message-sendmail-extra-arguments . '("-a" "zeit"))
+			    (mu4e-sent-messages-behavior . sent)
+			    (message-sendmail-extra-arguments . ("-a" "zeit"))
 			    (message-signature . "
 Denilson dos Santos Ebling
 CTO
