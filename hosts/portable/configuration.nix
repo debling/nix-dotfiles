@@ -27,7 +27,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "adbusers" "input" "uinput" ]; 
+    extraGroups = [ "wheel" "docker" "adbusers" "input" "uinput" ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
     shell = pkgs.fish;
   };
@@ -70,11 +70,11 @@
   # Configure keymap in X11
   services = {
     kmonad = {
-      enable= true;
+      enable = true;
       keyboards = {
         k6Out = {
           defcfg.enable = false;
-          device =  "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd";
+          device = "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd";
           config = builtins.readFile ../../modules/keyboard/keyboard.kbd;
         };
       };

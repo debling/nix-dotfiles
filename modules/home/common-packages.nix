@@ -40,6 +40,13 @@ in
       ### required by telescope.nvim  
       ripgrep
       fd
+
+      aria2
+
+      hledger
+      hledger-ui
+      hledger-web
+      hledger-interest
     ];
 
 
@@ -55,6 +62,7 @@ in
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
+      LEDGER_FILE = "$HOME/Workspace/debling/orgfiles/journal.hledger";
     };
 
     file = {

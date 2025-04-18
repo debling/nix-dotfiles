@@ -1,7 +1,8 @@
 # meh = shift + alt + ctrl
 alt - return : open -n "$HOME/Applications/Home Manager Apps/Alacritty.app"
 
-alt - t : alacritty --command taskwarrior-tui
+#alt - t : alacritty --command taskwarrior-tui
+alt - t :  emacsclient --no-wait --create-frame -e '(org-capture)'
 
 alt - o : alacritty --command nvim -c ObsidianQuickSwitch
 

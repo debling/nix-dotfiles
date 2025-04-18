@@ -49,7 +49,7 @@
     nix-colors.url = "github:misterio77/nix-colors";
 
     flake-utils.url = "github:numtide/flake-utils";
-     
+
 
 
     # overlays
@@ -77,7 +77,8 @@
     };
 
     kmonad = {
-      url = "github:kmonad/kmonad?dir=nix";
+      # submodules are neeed on darwin to pull in karabiner stuff
+      url = "git+file:/Users/debling/Workspace/probe/kmonad?submodules=1&dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -112,15 +113,11 @@
           allowBroken = true;
           allowUnfree = true;
           permittedInsecurePackages = [
-            "emacs-mac-macport-with-packages-with-packages-29.1"
-            "emacs-mac-macport-with-packages-29.1"
-            "emacs-mac-macport-29.1"
             "xpdf-4.05"
           ];
         };
         overlays = [
           inputs.android-nixpkgs.overlays.default
-          inputs.neovim-nightly-overlay.overlays.default
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
@@ -175,7 +172,7 @@
       username = "debling";
 
       specialArgs = {
-        inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors;
+        inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors neovim-nightly-overlay;
         mainUser = username;
         colorscheme = inputs.nix-colors.colorschemes.gruvbox-dark-hard;
       };

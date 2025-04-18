@@ -27,10 +27,34 @@
       enable = true;
       package =
         let
-          emacsPkg = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs30-pgtk;
-          finalPkg = emacsPkg.override {
-            withImageMagick = true;
-          };
+          finalPkg = pkgs.emacs30-pgtk.overrideAttrs (old: {
+            patches =
+              (old.patches or [ ])
+              ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+                # Fix OS window role (needed for window managers like yabai)
+                (pkgs.fetchpatch {
+                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-28/fix-window-role.patch";
+                  sha256 = "0c41rgpi19vr9ai740g09lka3nkjk48ppqyqdnncjrkfgvm2710z";
+                })
+                # Enable rounded window with no decoration
+                (pkgs.fetchpatch {
+                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-30/round-undecorated-frame.patch";
+                  sha256 = "0x187xvjakm2730d1wcqbz2sny07238mabh5d97fah4qal7zhlbl";
+                })
+                # Make Emacs aware of OS-level light/dark mode
+                (pkgs.fetchpatch {
+                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-30/system-appearance.patch";
+
+                  sha256 = "1dkx8xc3v2zgnh6fpx29cf6kc5h18f9misxsdvwvy980cj0cxcwy";
+                })
+              ];
+            NIX_CFLAGS_COMPILE = "${old.NIX_CFLAGS_COMPILE or ""} -O3 -march=native";
+
+          });
+          #  finalPkg = emacsPkg.override {
+          #    withImageMagick = true;
+          #    # withXwidgets = true;
+          #  };
         in
         (pkgs.emacsPackagesFor finalPkg).emacsWithPackages (epkgs: with epkgs; [
           nix-mode
@@ -81,7 +105,7 @@
           enable = true;
           create = "both";
           expunge = "both";
-          patterns = [ "*" "![Gmail]/All Mail" ];
+          patterns = [ "*" "![Gmail]/All Mail" "![Gmail]/Important" ];
         };
         mu.enable = true;
         msmtp.enable = true;
@@ -103,8 +127,7 @@
         realName = "Denilson dos Santos Ebling";
         address = addr;
         userName = addr;
-        passwordCommand = "${lib.getExe pkgs.rbw} get 'email zeit'";
-
+        passwordCommand = "${lib.getExe pkgs.rbw} get 'email zeit' | tr --delete '\\n'";
         msmtp.enable = true;
         imap = {
           host = "imap.kinghost.net";

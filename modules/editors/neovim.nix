@@ -163,7 +163,7 @@ in
         in
         {
           enable = true;
-          package = cfg.package;
+          # package = cfg.package;
           viAlias = true;
           vimAlias = true;
           vimdiffAlias = true;
@@ -194,7 +194,11 @@ in
             # General plugins
 
             ## Sintax hilighting
-            nvim-treesitter.withAllGrammars
+            (nvim-treesitter.withPlugins (_:
+              let
+                isNotOcamlLex = x: !lib.hasPrefix "ocamllex" x.name;
+              in
+              lib.filter isNotOcamlLex nvim-treesitter.allGrammars))
             nvim-treesitter-refactor
             nvim-treesitter-context
             todo-comments-nvim # No setup() call needed

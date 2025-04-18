@@ -7,8 +7,8 @@
 (require 'use-package-ensure) ;; Load use-package-always-ensure
 (setq use-package-always-ensure t ;; Always ensures that a package is installed
       use-package-enable-imenu-support t
+      native-comp-async-report-warnings-errors nil
       package-archives '(("melpa" . "https://melpa.org/packages/") ;; Sets default package repositories
-                         ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) ;; For Eat Terminal
 
@@ -131,7 +131,6 @@
     "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
     "t l" '(display-line-numbers-mode :wk "Toggle line numbers")))
 
-
 (use-package emacs
   :bind
   ("C-+" . text-scale-increase)
@@ -140,6 +139,7 @@
   ("<C-wheel-down>" . text-scale-decrease)
   :diminish eldoc-mode hs-minor-mode
   :custom
+  (use-short-answers t)
   (menu-bar-mode nil)         ;; Disable the menu bar
   (scroll-bar-mode nil)       ;; Disable the scroll bar
   (tool-bar-mode nil)         ;; Disable the tool bar
@@ -194,20 +194,39 @@
             (server-start)))
 
 (use-package modus-themes
-  :ensure nil ; already comes with emacs
   :demand t
-  :hook (text-mode . variable-pitch-mode)
+  ;:hook (text-mode . variable-pitch-mode)
+  :init
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-mixed-fonts t
+        ;; From the section "Make the mode line borderless", and the fringe transparent
+        modus-themes-common-palette-overrides '((border-mode-line-active unspecified)
+                                                (border-mode-line-inactive unspecified)
+                                                (bg-line-number-inactive unspecified)
+                                                (bg-line-number-active unspecified)))
   :config
-  (modus-themes-load-theme 'modus-operandi)
-  (if (not (eq system-type 'darwin))
-      (add-to-list 'default-frame-alist '(undecorated . t)))
+  (modus-themes-load-theme 'modus-operandi-tinted)
+  ;;(load-theme 'modus-operandi t)
+  (add-to-list 'default-frame-alist '(undecorated . t))
 
   (set-face-attribute 'default nil
 					  :font "Iosevka Nerd Font"
-					  :height 130
-					  :weight 'medium)
-  (set-face-attribute 'variable-pitch nil :font "sans")
-  (setq modus-themes-mixed-fonts t))
+					  :height 160)
+  (set-face-attribute 'variable-pitch nil :family "Sans Serif")
+  (set-face-attribute 'fixed-pitch nil :family (face-attribute 'default :family)))
+
+(use-package spacious-padding
+  :custom
+  (spacious-padding-widths '(:internal-border-width 15
+                             :header-line-width 4
+                             :mode-line-width 4
+                             :tab-width 4
+                             :right-divider-width 30
+                             :scroll-bar-width 8
+                             :fringe-width 8))
+  :config 
+  (spacious-padding-mode 1))
 
 
 (use-package hl-todo
@@ -224,7 +243,7 @@
 
 (use-package project
   :custom
-  (setq project--list
+  (project--list
         (let ((work-dir (expand-file-name "~/Workspace/")))
           (mapcar (lambda (path) (list (abbreviate-file-name path)))
                   (process-lines "fd" "\.git$"
@@ -234,7 +253,7 @@
                                  "--type=d"
                                  "--max-depth=3"
                                  (concat "--base-directory=" work-dir)
-                                 "--format={//}")))))
+                                 "--format={//}/")))))
 
 (use-package compile
   :custom
@@ -263,7 +282,8 @@
   ;; Manual lsp servers
   :config
   (add-to-list 'eglot-server-programs
-    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls"))))
+    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
+  (evil-define-key 'normal 'eglot-mode-map (kbd "gra") #'eglot-code-actions))
 
 
 (use-package treesit-auto
@@ -276,14 +296,26 @@
 
 
 ;;; Text document languages
-(use-package markdown-ts-mode
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown")
-  :config (use-package edit-indirect))
+(use-package ledger-mode
+  :custom
+  ((ledger-binary-path "hledger")
+   (ledger-mode-should-check-version nil)
+   (ledger-report-auto-width nil)
+   (ledger-report-links-in-register nil)
+   (ledger-report-native-highlighting-arguments '("--color=always")))
+  :mode ("\\.hledger\\'" "\\.ledger\\'"))
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+
+(use-package direnv)
+
+(use-package geiser
+  :ensure geiser-guile)
 
 ;;; Nix
 (use-package nix-ts-mode
@@ -305,6 +337,9 @@
 	  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)))
   )
 
+(use-package kotlin-ts-mode
+  :mode "\\.kt\\'")
+
 ;;; Clojure setup
 (use-package cider)
 
@@ -316,16 +351,10 @@
 (use-package magit
   :commands magit-status)
 
-(use-package diff-hl
-  :hook ((dired-mode         . diff-hl-dired-mode-unless-remote)
-         (magit-pre-refresh  . diff-hl-magit-pre-refresh)
-         (magit-post-refresh . diff-hl-magit-post-refresh))
-  :init (global-diff-hl-mode))
 
 (use-package corfu
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
   (corfu-auto-prefix 2)          ;; Minimum length of prefix for auto completion.
   (corfu-popupinfo-mode t)       ;; Enable popup information
   (corfu-popupinfo-delay 0.5)    ;; Lower popupinfo delay to 0.5 seconds from 2 seconds
@@ -337,21 +366,15 @@
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
   (completion-ignore-case t)
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (tab-always-indent 'complete)
   (corfu-preview-current nil) ;; Don't insert completion without confirmation
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
+  :bind (:map corfu-map ("RET" . nil))
   :init
   (global-corfu-mode)
   :config
   (evil-define-key 'insert 'corfu-map (kbd "C-y") #'corfu-complete))
-
-(use-package nerd-icons-corfu
-  :after corfu
-  :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package cape
   :after corfu
@@ -437,36 +460,58 @@
 
 ;;; Org-mode
 (use-package org
-  :delight org-indent-mode
-  :hook ((org-mode	              . org-indent-mode)
+  ; disable org indent for org-modern
+  ;:delight org-indent-mode
+  :hook (;(org-mode	              . org-indent-mode)
          (org-babel-after-execute . org-redisplay-inline-images))
   :bind (("C-c y" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture))
   :custom
-  (org-directory  "~/Workspace/debling/orgfiles/")
+  (org-directory  (expand-file-name "~/Workspace/debling/orgfiles/"))
   (org-default-notes-file	(concat org-directory "notes.org"))
-  (org-agenda-files       (mapc (lambda (s) (concat org-directory s)) '("email.org" "todo.org" "roam/daily/")))
+  (org-agenda-files       (mapc (lambda (s) (concat org-directory s)) '("calendar.org" "todo.org")))
   (org-export-with-smart-quotes t)
-  (org-capture-templates '(("p" "TODO - Personal" entry (file+headline (concat org-directory "todo.org") "Personal")
+  (org-capture-templates `(("p" "TODO - Personal" entry (file+headline ,(concat org-directory "todo.org") "Personal")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("w" "TODO - Work" entry (file+headline (concat org-directory "todo.org") "Work")
+                           ("w" "TODO - Work" entry (file+headline ,(concat org-directory "todo.org") "Work")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("u" "TODO - Uni" entry (file+headline (concat org-directory "todo.org") "University")
+                           ("u" "TODO - Uni" entry (file+headline ,(concat org-directory "todo.org") "University")
                             "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
-                           ("n" "Note" entry (file (concat org-directory "notes.org"))
+                           ("n" "Note" entry (file ,(concat org-directory "notes.org"))
                             "* %? :NOTE:\n%U\n%a\n" :empty-lines 1)
-                           ("j" "Journal" entry (file+datetree (concat org-directory "jornal.org"))
+                           ("j" "Journal" entry (file+datetree ,(concat org-directory "jornal.org"))
                             "* %?\n%U\n" :clock-resume t)))
   (org-plantuml-exec-mode 'plantuml)
   (org-confirm-babel-evaluate nil)
+
+ ;; Edit settings
+ (org-auto-align-tags nil)
+ (org-tags-column 0)
+ (org-catch-invisible-edits 'show-and-error)
+ (org-special-ctrl-a/e t)
+ (org-insert-heading-respect-content t)
+
+ ;; Org styling, hide markup etc.
+ (org-hide-emphasis-markers t)
+ (org-pretty-entities t)
+ (org-agenda-tags-column 0)
+ (org-ellipsis "…")
   :config
   (require 'ol-man) ; org-link support for manpages
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
                                                            (java . t)
                                                            (python . t)
                                                            (plantuml . t)))
-  )
+  ;
+)
+
+(use-package org-modern
+  :after org
+  :custom
+  (org-modern-hide-stars nil)
+  :config
+  (global-org-modern-mode))
 
 (use-package org-cliplink
   :after org
@@ -476,9 +521,11 @@
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
-;; (use-package org-excalidraw
-;;   :config
-;;   (org-excalidraw-directory (concat org-directory "~/org/excalidraw")))
+(use-package org-excalidraw
+  :vc (:url "https://github.com/wdavew/org-excalidraw.git"
+       :rev :newest)
+  :custom
+  (org-excalidraw-directory (concat org-directory "excalidraw")))
 
 (use-package org-roam
   :bind (("C-c n l" . org-roam-buffer-toggle)
@@ -500,28 +547,41 @@
 
 (use-package org-roam-ui :after org-roam)
 
+(use-package elfeed
+  :custom
+  (elfeed-feeds '("http://nullprogram.com/feed/"
+                  "https://planet.emacslife.com/atom.xml"
+                  "https://cestlaz.zamansky.net/rss.xml"
+                  "https://lukesmith.xyz/index.xml")))
+
 
 ;;; EMAIL
 (use-package org-msg 
-  :custom
-  (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
-  (org-msg-startup "hidestars indent inlineimages")
-  (org-msg-greeting-fmt "\nHi%s,\n\n")
-  (org-msg-greeting-name-limit 3)
-  (org-msg-default-alternatives '((new		. (text html))
-								  (reply-to-html	. (text html))
-								  (reply-to-text	. (text))))
-  (org-msg-convert-citation t)
-  (org-msg-signature "
+ :custom
+ (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
+ (org-msg-startup "hidestars indent inlineimages")
+ (org-msg-greeting-fmt "\nHi%s,\n\n")
+ (org-msg-greeting-name-limit 3)
+ (org-msg-default-alternatives '((new		. (text html))
+								   (reply-to-html	. (text html))
+								   (reply-to-text	. (text))))
+   (org-msg-convert-citation t)
+   (org-msg-signature "
  Regards,
-
+ 
  #+begin_signature
- --
- *Denilson*
- /One Emacs to rule them all/
+ Denilson dos Santos Ebling
+ CTO
+ Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
+ Av. Roraima 1000, prédio 2, sala 22
+ +55 (55) 99645-5313
  #+end_signature")
-  )
-                                        ; (org-msg-mode)
+)
+
+(setopt doc-view-resolution 400)
+(use-package org-alert
+  :custom 
+  (alert-default-style 'osx-notifier))
 
 (require 'mu4e)
 (setq user-full-name "Denilson S. Ebling"
@@ -537,15 +597,20 @@
 	  ;; use 'fancy' non-ascii characters in various places in mu4e
 	  mu4e-use-fancy-chars t
 	  ;; save attachment to my desktop (this can also be a function)
+      ;; TODO: auto create this directory
 	  mu4e-attachment-dir "~/Downloads/mail-attachments"
 	  mu4e-notification-support t
+	  mu4e-sent-messages-behavior (lambda () (if (string= (message-sendmail-envelope-from) "d.ebling8@gmail.com") 'delete 'sent))
 	  sendmail-program (executable-find "msmtp")
-	  send-mail-function 'sendmail-send-it
-	  message-send-mail-function 'sendmail-send-it
+      message-sendmail-f-is-evil t
+	  send-mail-function 'message-send-mail-with-sendmail
+	  message-send-mail-function 'message-send-mail-with-sendmail
 	  message-kill-buffer-on-exit t
-
+      ;; by default mu4e uses ido, setting this to use the emacs
+      ;; default, which in my case is setted to fido-mode
       mu4e-read-option-use-builtin nil
-      mu4e-completing-read-function 'completing-read)
+      mu4e-completing-read-function 'completing-read
+)
 
 (setq mu4e-contexts
       (list
@@ -580,12 +645,12 @@
 			    (mu4e-trash-folder . "/zeit/Trash")
 			    (mu4e-sent-messages-behavior . sent)
 			    (message-sendmail-extra-arguments . ("-a" "zeit"))
-			    (message-signature . "
-Denilson dos Santos Ebling
+			    (message-signature .
+"Denilson dos Santos Ebling
 CTO
 Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
 Av. Roraima 1000, prédio 2, sala 22
-(55) 99645-5313")
++55 (55) 99645-5313")
 			    ))))
 
 (require 'mu4e-icalendar)

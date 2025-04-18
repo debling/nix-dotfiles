@@ -68,11 +68,6 @@ in
       terraform
       tree
 
-      hledger
-      hledger-ui
-      hledger-web
-      hledger-interest
-
       cachix
 
       # required by telescope.nvim  

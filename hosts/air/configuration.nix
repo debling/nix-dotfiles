@@ -32,6 +32,7 @@
   # Fonts
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
+    nerd-fonts.iosevka
   ];
 
   environment.systemPackages = with pkgs; [
@@ -39,6 +40,8 @@
 
     # Linux programing api pages
     man-pages-posix
+
+    kmonad
   ];
 
   security.pam.services.sudo_local = {
@@ -137,15 +140,13 @@
       "android-studio"
       "anydesk"
       "bitwarden"
-      "docker"
-      "iterm2"
       "keycastr"
-      "logseq"
       "maccy"
       "obsidian"
       "slack"
       "spotify"
       "stremio"
+      "orbstack"
     ];
   };
 }
