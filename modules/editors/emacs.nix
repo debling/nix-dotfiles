@@ -44,7 +44,6 @@
                 # Make Emacs aware of OS-level light/dark mode
                 (pkgs.fetchpatch {
                   url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-30/system-appearance.patch";
-
                   sha256 = "1dkx8xc3v2zgnh6fpx29cf6kc5h18f9misxsdvwvy980cj0cxcwy";
                 })
               ];

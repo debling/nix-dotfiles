@@ -78,7 +78,7 @@
 
     kmonad = {
       # submodules are neeed on darwin to pull in karabiner stuff
-      url = "git+file:/Users/debling/Workspace/probe/kmonad?submodules=1&dir=nix";
+      url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

@@ -67,7 +67,6 @@ in
         python = {
           systemPkgs = with pkgs; [
             pyright
-            ruff-lsp
             ruff
             python312Packages.black
             python312Packages.isort

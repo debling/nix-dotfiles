@@ -196,31 +196,32 @@
 (use-package modus-themes
   :demand t
   ;:hook (text-mode . variable-pitch-mode)
-  :init
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-mixed-fonts t
-        ;; From the section "Make the mode line borderless", and the fringe transparent
-        modus-themes-common-palette-overrides '((border-mode-line-active unspecified)
-                                                (border-mode-line-inactive unspecified)
-                                                (bg-line-number-inactive unspecified)
-                                                (bg-line-number-active unspecified)))
+  :custom
+  (modus-themes-italic-constructs t)
+  (modus-themes-bold-constructs t)
+  (modus-themes-mixed-fonts t)
+  ;; From the section "Make the mode line borderless", and the fringe transparent
+  (modus-themes-common-palette-overrides '((border-mode-line-active   unspecified)
+                                           (border-mode-line-inactive unspecified)
+                                           (bg-line-number-inactive   unspecified)
+                                           (bg-line-number-active     unspecified)))
+  (modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
   :config
   (modus-themes-load-theme 'modus-operandi-tinted)
-  ;;(load-theme 'modus-operandi t)
+
+  (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+
   (add-to-list 'default-frame-alist '(undecorated . t))
 
-  (set-face-attribute 'default nil
-					  :font "Iosevka Nerd Font"
-					  :height 160)
+  (set-face-attribute 'default        nil :font   "Iosevka Nerd Font" :height 160)
   (set-face-attribute 'variable-pitch nil :family "Sans Serif")
-  (set-face-attribute 'fixed-pitch nil :family (face-attribute 'default :family)))
+  (set-face-attribute 'fixed-pitch    nil :family (face-attribute 'default :family)))
 
 (use-package spacious-padding
   :custom
-  (spacious-padding-widths '(:internal-border-width 15
+  (spacious-padding-widths '(:internal-border-width 12
                              :header-line-width 4
-                             :mode-line-width 4
+                             :mode-line-width 2
                              :tab-width 4
                              :right-divider-width 30
                              :scroll-bar-width 8
@@ -259,12 +260,10 @@
   :custom
   (compilation-scroll-output t)
   (compilation-always-kill t)
+  (compilation-auto-jump-to-first-error t)
   :config
-  (defun colorize-compilation ()
-    (require 'ansi-color)
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region compilation-filter-start (point-max))))
-  (add-hook 'compilation-filter-hook #'colorize-compilation))
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+  (add-hook 'compilation-filter-hook 'ansi-osc-compilation-filter))
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
@@ -326,16 +325,7 @@
 
 ;;; Zig
 (use-package zig-ts-mode
-  :mode "\\.zig\\'"
-  :config 
-  (if (>= emacs-major-version 28)
-	  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-	(progn
-	  (defun colorize-compilation-buffer ()
-		(let ((inhibit-read-only t))
-		  (ansi-color-apply-on-region compilation-filter-start (point))))
-	  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)))
-  )
+  :mode "\\.zig\\'")
 
 (use-package kotlin-ts-mode
   :mode "\\.kt\\'")
@@ -458,6 +448,26 @@
   (plantuml-exec-mode 'executable)
   )
 
+(use-package flyspell
+  :delight
+  :hook (text-mode . flyspell-mode)
+  :hook (prog-mode . flyspell-prog-mode)
+  :bind ("<f8>" . toggle-dictionary)
+  :custom
+  (ispell-program-name "hunspell")
+  (ispell-dictionary "en_US")
+  :config
+  (defun toggle-dictionary()
+    (interactive)
+    (let* ((dic ispell-current-dictionary)
+	       (change (if (string= dic "pt_BR") "en_US" "pt_BR")))
+      (ispell-change-dictionary change)
+      (flyspell-buffer)
+      (message "Dictionary switched from %s to %s" dic change)))
+  (defun flyspell-buffer-after-pdict-save (&rest _)
+    (flyspell-buffer))
+  (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save))
+
 ;;; Org-mode
 (use-package org
   ; disable org indent for org-modern
@@ -473,11 +483,11 @@
   (org-agenda-files       (mapc (lambda (s) (concat org-directory s)) '("calendar.org" "todo.org")))
   (org-export-with-smart-quotes t)
   (org-capture-templates `(("p" "TODO - Personal" entry (file+headline ,(concat org-directory "todo.org") "Personal")
-                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                            "* TODO [#B] %?\n%U" :empty-lines 1)
                            ("w" "TODO - Work" entry (file+headline ,(concat org-directory "todo.org") "Work")
-                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                            "* TODO [#B] %?\n%U" :empty-lines 1)
                            ("u" "TODO - Uni" entry (file+headline ,(concat org-directory "todo.org") "University")
-                            "* TODO [#B] %?\n%U" :clock-in t :clock-resume t :empty-lines 1)
+                            "* TODO [#B] %?\n%U" :empty-lines 1)
                            ("n" "Note" entry (file ,(concat org-directory "notes.org"))
                             "* %? :NOTE:\n%U\n%a\n" :empty-lines 1)
                            ("j" "Journal" entry (file+datetree ,(concat org-directory "jornal.org"))
@@ -501,6 +511,7 @@
   (require 'ol-man) ; org-link support for manpages
   (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
                                                            (java . t)
+                                                           (shell . t)
                                                            (python . t)
                                                            (plantuml . t)))
   ;
