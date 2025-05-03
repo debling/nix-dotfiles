@@ -77,15 +77,15 @@
         mouse_drop_action = "swap";
 
         # padding set to 8px
-        top_padding = 6;
-        bottom_padding = 6;
-        left_padding = 6;
-        right_padding = 6;
+        top_padding = 0;
+        bottom_padding = 0;
+        left_padding = 0;
+        right_padding = 0;
         window_gap = 8;
 
-        # window_opacity = "on";
-        # active_window_opacity = "1.0";
-        # normal_window_opacity = "0.9";
+        window_opacity = "on";
+        active_window_opacity = "1.0";
+        normal_window_opacity = "0.8";
 
         window_animation_duration = 0.0;
       };

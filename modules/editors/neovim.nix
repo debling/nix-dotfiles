@@ -235,7 +235,6 @@ in
           ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
           extraConfig = /* vim */ ''
-            colorscheme base16-${colorscheme.slug}
             lua require('debling')
           '';
         };

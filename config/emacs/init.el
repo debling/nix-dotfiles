@@ -139,6 +139,8 @@
   ("<C-wheel-down>" . text-scale-decrease)
   :diminish eldoc-mode hs-minor-mode
   :custom
+  (frame-resize-pixelwise t)
+
   (use-short-answers t)
   (menu-bar-mode nil)         ;; Disable the menu bar
   (scroll-bar-mode nil)       ;; Disable the scroll bar
