@@ -16,6 +16,8 @@
     obsidian
     spotify
     zoom-us
+
+    slack
   ];
 }
 

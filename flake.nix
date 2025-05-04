@@ -252,7 +252,6 @@
               uid = 501;
               description = "Denilson S. Ebling";
               home = "/Users/${username}";
-              shell = pkgs.fish;
             };
             # `home-manager` config
             home-manager = homeManagerConfiguration;

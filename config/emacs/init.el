@@ -140,6 +140,7 @@
   :diminish eldoc-mode hs-minor-mode
   :custom
   (frame-resize-pixelwise t)
+  (create-lockfiles nil)
 
   (use-short-answers t)
   (menu-bar-mode nil)         ;; Disable the menu bar
@@ -170,8 +171,9 @@
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
   :hook
-  ((prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
-   (prog-mode . display-line-numbers-mode))
+  (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+  (prog-mode . display-line-numbers-mode)
+  (before-save . whitespace-cleanup)
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -215,7 +217,9 @@
 
   (add-to-list 'default-frame-alist '(undecorated . t))
 
-  (set-face-attribute 'default        nil :font   "Iosevka Nerd Font" :height 160)
+  (if (eq system-type 'darwin)
+      (set-face-attribute 'default      nil :height 120 :family "Iosevka Nerd Font")
+    (set-face-attribute 'default        nil :height 140 :family "Iosevka Nerd Font"))
   (set-face-attribute 'variable-pitch nil :family "Sans Serif")
   (set-face-attribute 'fixed-pitch    nil :family (face-attribute 'default :family)))
 
@@ -228,7 +232,7 @@
                              :right-divider-width 30
                              :scroll-bar-width 8
                              :fringe-width 8))
-  :config 
+  :config
   (spacious-padding-mode 1))
 
 
@@ -246,6 +250,7 @@
 
 (use-package project
   :custom
+  (xref-search-program 'ripgrep)
   (project--list
         (let ((work-dir (expand-file-name "~/Workspace/")))
           (mapcar (lambda (path) (list (abbreviate-file-name path)))
@@ -273,8 +278,8 @@
                                         ; java-mode
                                         ; nix-mode
                                         ;
-    			 )
-    	 . eglot-ensure)
+                 )
+         . eglot-ensure)
   :custom
   ;; Good default
   (eglot-events-buffer-size 0) ;; No event buffers (Lsp server logs)
@@ -283,7 +288,7 @@
   ;; Manual lsp servers
   :config
   (add-to-list 'eglot-server-programs
-    		   `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
+               `(java-mode . ("jdtls-with-lombok" "-data" "/tmp/jdtls")))
   (evil-define-key 'normal 'eglot-mode-map (kbd "gra") #'eglot-code-actions))
 
 
@@ -322,7 +327,7 @@
 (use-package nix-ts-mode
   :diminish nix-prettify-mode
   :mode "\\.nix\\'"
-  :config 
+  :config
   (nix-prettify-global-mode))
 
 ;;; Zig
@@ -358,6 +363,7 @@
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
   (completion-ignore-case t)
+  (corfu-auto t)
   (corfu-preview-current nil) ;; Don't insert completion without confirmation
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
@@ -422,7 +428,7 @@
         xref-show-definitions-function #'consult-xref)
 
   (setq consult-async-min-input 1
-		consult-async-input-debounce 0.1)
+        consult-async-input-debounce 0.1)
   :config)
 
 (use-package diminish)
@@ -462,7 +468,7 @@
   (defun toggle-dictionary()
     (interactive)
     (let* ((dic ispell-current-dictionary)
-	       (change (if (string= dic "pt_BR") "en_US" "pt_BR")))
+           (change (if (string= dic "pt_BR") "en_US" "pt_BR")))
       (ispell-change-dictionary change)
       (flyspell-buffer)
       (message "Dictionary switched from %s to %s" dic change)))
@@ -474,7 +480,7 @@
 (use-package org
   ; disable org indent for org-modern
   ;:delight org-indent-mode
-  :hook (;(org-mode	              . org-indent-mode)
+  :hook (;(org-mode               . org-indent-mode)
          (org-babel-after-execute . org-redisplay-inline-images))
   :bind (("C-c y" . org-store-link)
          ("C-c a" . org-agenda)
@@ -496,6 +502,7 @@
                             "* %?\n%U\n" :clock-resume t)))
   (org-plantuml-exec-mode 'plantuml)
   (org-confirm-babel-evaluate nil)
+  (org-tag-alist '(("@personal" . ?p) ("@zeit" . ?z) ("@rabapp" . ?r)))
 
  ;; Edit settings
  (org-auto-align-tags nil)
@@ -548,7 +555,7 @@
          ("C-c n c" . org-roam-capture)
          ;; Dailies
          ("C-c n j" . org-roam-dailies-capture-today))
-  :custom 
+  :custom
   (org-roam-directory (expand-file-name (concat org-directory "/roam")))
   (org-roam-completion-everywhere t)
   (org-roam-dailies-capture-templates '(("d" "default" entry "* %?\n%U\n"
@@ -569,19 +576,19 @@
 
 
 ;;; EMAIL
-(use-package org-msg 
+(use-package org-msg
  :custom
  (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t")
  (org-msg-startup "hidestars indent inlineimages")
  (org-msg-greeting-fmt "\nHi%s,\n\n")
  (org-msg-greeting-name-limit 3)
  (org-msg-default-alternatives '((new		. (text html))
-								   (reply-to-html	. (text html))
-								   (reply-to-text	. (text))))
+                                   (reply-to-html	. (text html))
+                                   (reply-to-text	. (text))))
    (org-msg-convert-citation t)
    (org-msg-signature "
  Regards,
- 
+
  #+begin_signature
  Denilson dos Santos Ebling
  CTO
@@ -593,32 +600,32 @@
 
 (setopt doc-view-resolution 400)
 (use-package org-alert
-  :custom 
+  :custom
   (alert-default-style 'osx-notifier))
 
 (require 'mu4e)
 (setq user-full-name "Denilson S. Ebling"
-	  ;; ask for context if no context matches
-	  mu4e-compose-context-policy 'ask
-	  ;; ask for context if no context matches
-	  mu4e-context-policy 'pick-first
-	  ;; use mu4e for e-mail in emacs
-	  mail-user-agent 'mu4e-user-agent
-	  mu4e-get-mail-command "mbsync -a"
-	  mu4e-update-interval 600
-	  mu4e-change-filenames-when-moving t
-	  ;; use 'fancy' non-ascii characters in various places in mu4e
-	  mu4e-use-fancy-chars t
-	  ;; save attachment to my desktop (this can also be a function)
+      ;; ask for context if no context matches
+      mu4e-compose-context-policy 'ask
+      ;; ask for context if no context matches
+      mu4e-context-policy 'pick-first
+      ;; use mu4e for e-mail in emacs
+      mail-user-agent 'mu4e-user-agent
+      mu4e-get-mail-command "mbsync -a"
+      mu4e-update-interval 600
+      mu4e-change-filenames-when-moving t
+      ;; use 'fancy' non-ascii characters in various places in mu4e
+      mu4e-use-fancy-chars t
+      ;; save attachment to my desktop (this can also be a function)
       ;; TODO: auto create this directory
-	  mu4e-attachment-dir "~/Downloads/mail-attachments"
-	  mu4e-notification-support t
-	  mu4e-sent-messages-behavior (lambda () (if (string= (message-sendmail-envelope-from) "d.ebling8@gmail.com") 'delete 'sent))
-	  sendmail-program (executable-find "msmtp")
+      mu4e-attachment-dir "~/Downloads/mail-attachments"
+      mu4e-notification-support t
+      mu4e-sent-messages-behavior (lambda () (if (string= (message-sendmail-envelope-from) "d.ebling8@gmail.com") 'delete 'sent))
+      sendmail-program (executable-find "msmtp")
       message-sendmail-f-is-evil t
-	  send-mail-function 'message-send-mail-with-sendmail
-	  message-send-mail-function 'message-send-mail-with-sendmail
-	  message-kill-buffer-on-exit t
+      send-mail-function 'message-send-mail-with-sendmail
+      message-send-mail-function 'message-send-mail-with-sendmail
+      message-kill-buffer-on-exit t
       ;; by default mu4e uses ido, setting this to use the emacs
       ;; default, which in my case is setted to fido-mode
       mu4e-read-option-use-builtin nil
@@ -627,44 +634,44 @@
 
 (setq mu4e-contexts
       (list
-	   (make-mu4e-context
-	    :name "gmail"
-	    :enter-func (lambda () (mu4e-message "Enter gmail context"))
-	    :leave-func (lambda () (mu4e-message "Leave gmail context"))
-	    :match-func
-	    (lambda (msg)
-	      (when msg
-		    (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
-	    :vars '((user-mail-address . "d.ebling8@gmail.com" )
-			    (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
-			    (mu4e-refile-folder . "/personal/[Gmail]/Archive")
-			    (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
-			    (mu4e-trash-folder . "/personal/[Gmail]/Trash")
-			    ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
-			    (mu4e-sent-messages-behavior . delete)
-			    (message-sendmail-extra-arguments . ("-a" "personal"))))
-	   (make-mu4e-context
-	    :name "zeit"
-	    :enter-func (lambda () (mu4e-message "Enter zeit context"))
-	    :leave-func (lambda () (mu4e-message "Leave zeit context"))
-	    :match-func
-	    (lambda (msg)
-	      (when msg
-		    (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
-	    :vars '((user-mail-address . "denilson@zeit.com.br")
-			    (mu4e-drafts-folder . "/zeit/Drafts")
-			    (mu4e-refile-folder . "/zeit/Archive")
-			    (mu4e-sent-folder . "/zeit/Sent")
-			    (mu4e-trash-folder . "/zeit/Trash")
-			    (mu4e-sent-messages-behavior . sent)
-			    (message-sendmail-extra-arguments . ("-a" "zeit"))
-			    (message-signature .
+       (make-mu4e-context
+        :name "gmail"
+        :enter-func (lambda () (mu4e-message "Enter gmail context"))
+        :leave-func (lambda () (mu4e-message "Leave gmail context"))
+        :match-func
+        (lambda (msg)
+          (when msg
+            (mu4e-message-contact-field-matches msg :to "d.ebling8@gmail.com")))
+        :vars '((user-mail-address . "d.ebling8@gmail.com" )
+                (mu4e-drafts-folder . "/personal/[Gmail]/Drafts")
+                (mu4e-refile-folder . "/personal/[Gmail]/Archive")
+                (mu4e-sent-folder . "/personal/[Gmail]/Sent Mail")
+                (mu4e-trash-folder . "/personal/[Gmail]/Trash")
+                ;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+                (mu4e-sent-messages-behavior . delete)
+                (message-sendmail-extra-arguments . ("-a" "personal"))))
+       (make-mu4e-context
+        :name "zeit"
+        :enter-func (lambda () (mu4e-message "Enter zeit context"))
+        :leave-func (lambda () (mu4e-message "Leave zeit context"))
+        :match-func
+        (lambda (msg)
+          (when msg
+            (mu4e-message-contact-field-matches msg :to "denilson@zeit.com.br")))
+        :vars '((user-mail-address . "denilson@zeit.com.br")
+                (mu4e-drafts-folder . "/zeit/Drafts")
+                (mu4e-refile-folder . "/zeit/Archive")
+                (mu4e-sent-folder . "/zeit/Sent")
+                (mu4e-trash-folder . "/zeit/Trash")
+                (mu4e-sent-messages-behavior . sent)
+                (message-sendmail-extra-arguments . ("-a" "zeit"))
+                (message-signature .
 "Denilson dos Santos Ebling
 CTO
 Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
 Av. Roraima 1000, prédio 2, sala 22
 +55 (55) 99645-5313")
-			    ))))
+                ))))
 
 (require 'mu4e-icalendar)
 (mu4e-icalendar-setup)
@@ -674,15 +681,22 @@ Av. Roraima 1000, prédio 2, sala 22
 
 (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
 
-(setq mu4e-bookmarks 
-      '((:name "Unread messages" :query "flag:unread AND NOT flag:trashed " :key 117)
-        (:name "Today's messages" :query "date:today..now AND NOT flag:trashed" :key 116)
-        (:name "Last 7 days" :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
+(setq mu4e-bookmarks
+      '((:name "Unread messages"      :query "flag:unread AND NOT flag:trashed " :key 117)
+        (:name "Today's messages"     :query "date:today..now AND NOT flag:trashed" :key 116)
+        (:name "Last 7 days"          :query "date:7d..now AND NOT flag:trashed" :hide-unread t :key 119)
         (:name "Messages with images" :query "mime:image/* AND NOT flag:trashed" :key 112)))
 
 (mu4e 't)
 
-(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setopt erc-hide-list '("JOIN" "PART" "QUIT"))
+
+
+(use-package whitespace
+  :hook (after-init . global-whitespace-mode)
+  :custom
+  (whitespace-style '(face tabs trailing space-before-tab indentation
+                           tab-mark empty space-after-tab missing-newline-at-eof)))
 
 ;;; Setup gc back
 ;; Make gc pauses faster by decreasing the threshold.

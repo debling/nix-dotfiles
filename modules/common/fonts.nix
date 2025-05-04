@@ -15,11 +15,11 @@
     ];
     fontconfig = {
       defaultFonts = {
-        monospace = [ "JetBrainsMonoNL NF" ];
+        monospace = [ "Iosevka Nerd Font" ];
         sansSerif = [ "Source Sans Pro" ];
         serif = [ "Source Serif Pro" ];
       };
-      hinting.style = "full";
+      # hinting.style = "full";
       subpixel.rgba = "rgb";
     };
   };

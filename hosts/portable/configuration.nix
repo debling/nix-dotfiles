@@ -24,10 +24,19 @@
 
   documentation.dev.enable = true;
 
+  hardware.opentabletdriver.enable = true;
+  services.xserver.wacom.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "adbusers" "input" "uinput" ];
+    extraGroups = [
+      "wheel"          # sudo commands without password
+      "docker"         # docker commands without root
+      "adbusers"       # android `adb` command
+      "input" "uinput" # access to udev access (in use by kmonad)
+      "dialout"        # access to wserial ports
+    ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
     shell = pkgs.fish;
   };
@@ -37,6 +46,8 @@
   home-manager.users.${mainUser} = import ./home.nix;
 
   boot.kernel.sysctl."vm.swappiness" = 200;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
 
   boot.loader.grub = {
     enable = true;
@@ -47,7 +58,7 @@
       menuentry "Reboot" --class restart {
         reboot
       }
-      
+
       menuentry "Shutdown" --class shutdown {
         halt
       }
@@ -168,4 +179,5 @@
 
   services.fstrim.enable = true;
   services.tlp.enable = true;
+  services.logind.lidSwitchExternalPower = "ignore";
 }

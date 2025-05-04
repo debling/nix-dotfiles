@@ -1,5 +1,5 @@
-(defcfg fallthrough true
-  input  (device-file "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd")
+(defcfg
+ fallthrough true input  (device-file "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd")
   output (uinput-sink "My KMonad output")
    ;; "sleep 1 && setxkbmap -option compose:menu")
   cmp-seq menu    ;; Set the compose key to `Menu'
@@ -39,7 +39,7 @@
 ;; grv  1    2    3    4    5    6    7    8    9    0    _    +    bspc
 (deflayer shifted
   ~ 
-  ~    !    @    #    $    %    ^    &    *   \(   \)    _    +    bspc
+  ~    !    @    #    $    %    ^    &    *   \(   \)    \_    +    bspc
   tab   Q    W    E    R    T    Y    U    I    O    P    {    }  |
   @caps  A    S    D    F    G    H    J    K    L    :    "    ret
   lsft lsgt  Z    X    C    V    B    N    M    <    >    ?    rsft

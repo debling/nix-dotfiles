@@ -82,7 +82,7 @@ in
         boto3
         scikit-learn
       ]))
-      poetry
+      # poetry
 
 
       # unrar

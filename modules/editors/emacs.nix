@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home = {
@@ -11,7 +11,7 @@
       # used by org-excalidraw to generate svg images from drawings
 
       # build failling on darwin
-      # excalidraw_export 
+      # excalidraw_export
 
       plantuml-c4
     ];
@@ -66,13 +66,6 @@
     mbsync.enable = true;
     mu.enable = true;
     msmtp.enable = true;
-    neomutt = {
-      enable = true;
-      sidebar.enable = true;
-      vimKeys = true;
-      sort = "reverse-date";
-    };
-    notmuch.enable = true;
   };
 
 
@@ -108,14 +101,6 @@
         };
         mu.enable = true;
         msmtp.enable = true;
-        neomutt = {
-          enable = true;
-          mailboxName = "personal";
-        };
-        notmuch = {
-          enable = true;
-          neomutt.enable = true;
-        };
       };
 
     zeit =
@@ -145,14 +130,17 @@
           expunge = "both";
         };
         mu.enable = true;
-        neomutt = {
-          enable = true;
-          mailboxName = "zeit";
-        };
-        notmuch = {
-          enable = true;
-          neomutt.enable = true;
-        };
       };
+  };
+
+  services.git-sync = {
+    enable = true;
+    repositories = {
+      orgfiles = {
+        path = "${config.home.homeDirectory}/Workspace/debling/orgfiles";
+        uri = "git@github.com:debling/orgfiles.git";
+        interval = 600;
+      };
+    };
   };
 }

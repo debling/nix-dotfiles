@@ -40,7 +40,7 @@ in
       manix
       nix-output-monitor
 
-      ### required by telescope.nvim  
+      ### required by telescope.nvim
       ripgrep
       fd
 
@@ -50,6 +50,7 @@ in
       hledger-ui
       hledger-web
       hledger-interest
+      ledger-autosync
     ];
 
 
@@ -65,7 +66,7 @@ in
 
     sessionVariables = {
       GRAALVM_HOME = pkgs.graalvm-ce.home;
-      LEDGER_FILE = "$HOME/Workspace/debling/orgfiles/journal.hledger";
+      LEDGER_FILE = "$HOME/Workspace/debling/orgfiles/ledger/journal.hledger";
     };
 
     file = {
@@ -86,7 +87,6 @@ in
 
       ".ideavimrc".source = ./../../config/.ideavimrc;
 
-      # TODO: migrate to common
       ".psqlrc".text = ''
         \pset null '(null)'
 
@@ -95,7 +95,7 @@ in
 
         -- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
         \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
-        
+
         -- PROMPT2 is printed when the prompt expects more input, like when you type
         -- SELECT * FROM<enter>. %R shows what type of input it expects.
         \set PROMPT2 '[more] %R > '
@@ -110,10 +110,16 @@ in
       '';
     };
 
-
   };
 
   programs = {
+    tealdeer = {
+      enable = true;
+      settings.update = {
+        auto_update = true;
+      };
+    };
+
     rbw = {
       enable = true;
       settings = {
@@ -222,7 +228,7 @@ in
             log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
             exit 2
           fi
-        
+
           local VENV=$(dirname $(poetry run which python))
           export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
           export POETRY_ACTIVE=1
