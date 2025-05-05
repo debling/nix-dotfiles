@@ -147,6 +147,7 @@
       "spotify"
       "stremio"
       "orbstack"
+      "zen-browser"
     ];
   };
 }

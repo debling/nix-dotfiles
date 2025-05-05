@@ -173,6 +173,7 @@
   :hook
   (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   (prog-mode . display-line-numbers-mode)
+  (prog-mode . flymake-mode)
   (before-save . whitespace-cleanup)
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
@@ -218,7 +219,7 @@
   (add-to-list 'default-frame-alist '(undecorated . t))
 
   (if (eq system-type 'darwin)
-      (set-face-attribute 'default      nil :height 120 :family "Iosevka Nerd Font")
+      (set-face-attribute 'default      nil :height 160 :family "Iosevka Nerd Font")
     (set-face-attribute 'default        nil :height 140 :family "Iosevka Nerd Font"))
   (set-face-attribute 'variable-pitch nil :family "Sans Serif")
   (set-face-attribute 'fixed-pitch    nil :family (face-attribute 'default :family)))
@@ -271,6 +272,19 @@
   :config
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
   (add-hook 'compilation-filter-hook 'ansi-osc-compilation-filter))
+
+(use-package flymake-languagetool
+  :ensure t
+  :hook ((text-mode       . flymake-languagetool-load)
+         (latex-mode      . flymake-languagetool-load)
+         (org-mode        . flymake-languagetool-load)
+         (markdown-mode   . flymake-languagetool-load))
+  :init
+  ;; If using Premium Version provide the following information
+  (setopt flymake-languagetool-server-jar nil
+          flymake-languagetool-url "https://api.languagetoolplus.com"
+          flymake-languagetool-api-username "d.ebling8@gmail.com"
+          flymake-languagetool-api-key (string-trim (shell-command-to-string "rbw get 'Langtool API Key'"))))
 
 (use-package eglot
   :ensure nil ;; Don't install eglot because it's now built-in
