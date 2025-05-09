@@ -173,8 +173,11 @@
   :hook
   (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   (prog-mode . display-line-numbers-mode)
+  (text-mode . flymake-mode)
   (prog-mode . flymake-mode)
-  (before-save . whitespace-cleanup)
+  (prog-mode . editorconfig-mode)
+  (text-mode . editorconfig-mode)
+  (before-save . delete-trailing-whitespace)
   :config
   ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
   (setq custom-file (locate-user-emacs-file "custom-vars.el"))
@@ -268,7 +271,7 @@
   :custom
   (compilation-scroll-output t)
   (compilation-always-kill t)
-  (compilation-auto-jump-to-first-error t)
+  (compilation-auto-jump-to-first-error nil)
   :config
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
   (add-hook 'compilation-filter-hook 'ansi-osc-compilation-filter))
@@ -644,6 +647,7 @@
       ;; default, which in my case is setted to fido-mode
       mu4e-read-option-use-builtin nil
       mu4e-completing-read-function 'completing-read
+      mu4e-mu-allow-temp-file t
 )
 
 (setq mu4e-contexts
@@ -711,6 +715,17 @@ Av. Roraima 1000, prédio 2, sala 22
   :custom
   (whitespace-style '(face tabs trailing space-before-tab indentation
                            tab-mark empty space-after-tab missing-newline-at-eof)))
+
+
+(setopt sql-connection-alist
+      '(("rabapp-db"
+         (sql-product 'postgres)
+         (sql-server "localhost")
+         (sql-user "rabapp")
+         (sql-password "rabapp")
+         (sql-database "rabapp_db")
+         (sql-port 5435))))
+
 
 ;;; Setup gc back
 ;; Make gc pauses faster by decreasing the threshold.
