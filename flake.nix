@@ -4,7 +4,6 @@
   inputs = {
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     # Environment/system management
     darwin = {
@@ -127,13 +126,6 @@
             zls = inputs.zls.packages.${prev.system}.default;
             kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
-            foot =
-              let
-                pkgs = import inputs.nixpkgs-master {
-                  system = prev.system;
-                };
-              in
-              pkgs.foot;
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {
@@ -195,7 +187,30 @@
           ./hosts/portable/disko.nix
 
           ./hosts/portable/configuration.nix
-          
+
+          inputs.kmonad.nixosModules.default
+
+          home-manager.nixosModules.home-manager
+
+          {
+            nixpkgs = nixpkgsConfig;
+            home-manager = homeManagerConfiguration;
+          }
+        ];
+      };
+
+      nixosConfigurations.x1-carbon = nixpkgs.lib.nixosSystem {
+        system = flake-utils.lib.system.x86_64-linux;
+        specialArgs = specialArgs;
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./hosts/x1-carbon/disko.nix
+
+          inputs.nixos-facter-modules.nixosModules.facter
+          { config.facter.reportPath = ./hosts/x1-carbon/facter.json; }
+
+          ./hosts/x1-carbon/configuration.nix
+
           inputs.kmonad.nixosModules.default
 
           home-manager.nixosModules.home-manager
