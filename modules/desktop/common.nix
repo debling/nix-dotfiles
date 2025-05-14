@@ -1,4 +1,4 @@
-{ lib, pkgs, nix-colors, colorscheme, mainUser, ... }:
+{ config, lib, pkgs, nix-colors, colorscheme, mainUser, ... }:
 
 {
   environment.systemPackages =
@@ -56,27 +56,36 @@
 
 
   home-manager.users.${mainUser} = {
-
-    systemd.user.services.wbg = {
-      Unit = {
-        Description = "Service to set the wallpapper";
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service.ExecStart =
-        let
-          nix-colors-lib = nix-colors.lib.contrib { inherit pkgs; };
-          wallpaper = nix-colors-lib.nixWallpaperFromScheme {
-            scheme = colorscheme;
-            width = 3840;
-            height = 2160;
-            logoScale = 4.0;
-          };
-        in
-        "${lib.getExe pkgs.wbg} --stretch ${wallpaper}";
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
+    # systemd.user.services.wbg = {
+    #   Unit = {
+    #     Description = "Service to set the wallpapper";
+    #     PartOf = [ "graphical-session.target" ];
+    #   };
+    #   Service.ExecStart =
+    #     let
+    #       nix-colors-lib = nix-colors.lib.contrib { inherit pkgs; };
+    #       wallpaper = nix-colors-lib.nixWallpaperFromScheme {
+    #         scheme = colorscheme;
+    #         width = 3840;
+    #         height = 2160;
+    #         logoScale = 4.0;
+    #       };
+    #     in
+    #     "${lib.getExe pkgs.wbg} --stretch ${wallpaper}";
+    #   Install.WantedBy = [ "graphical-session.target" ];
+    # };
 
     services = {
+      wpaperd = {
+        enable = true;
+        settings = {
+          default = {
+            path = config.home-manager.users.${mainUser}.home.homeDirectory + "/Wallpapers";
+            duration = "30m";
+            transition-time = 1000;
+          };
+        };
+      };
       cliphist.enable = true;
       wlsunset = {
         enable = true;
@@ -87,4 +96,3 @@
     };
   };
 }
-

@@ -822,22 +822,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-master": {
-      "locked": {
-        "lastModified": 1746825832,
-        "narHash": "sha256-+6GiLDcENXBnESfXKg0PC+KM7aHKhTDJbjyD+eWya1Y=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "552b9e87315413b35577e0d61af1ace722b41254",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-wayland": {
       "inputs": {
         "flake-compat": "flake-compat_4",
@@ -931,7 +915,6 @@
         "nix-on-droid": "nix-on-droid",
         "nixos-facter-modules": "nixos-facter-modules",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-wayland": "nixpkgs-wayland",
         "zen-browser": "zen-browser",
         "zig-overlay": "zig-overlay",

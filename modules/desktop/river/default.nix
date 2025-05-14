@@ -3,6 +3,11 @@
 {
   imports = [ ../common.nix ];
 
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    WLR_NO_HARDWARE_CURSORS = "1";
+  };
+
   programs = {
     dconf.enable = true;
     xwayland.enable = true;
@@ -19,11 +24,22 @@
       enable = true;
       settings = with colorscheme.palette; {
         rule-add = {
-          "-app-id" = {
-            zen-beta = [ "ssd" { tags = 4; } ];
-            emacs = [ "ssd" { tags = 1; } ];
-            Spotify = { tags = 256; };
-          };
+          "-app-id" =
+            let
+              intFromBinStr = str:
+                lib.pipe str [
+                  lib.stringToCharacters
+                  lib.reverseList
+                  (map lib.toInt)
+                  (lib.foldl (acc: digit: acc * 2 + digit) 0)
+                ];
+            in
+            {
+              emacs = [ "ssd" { tags = intFromBinStr "100000000"; } ]; # ws 1
+              Slack = { tags = intFromBinStr "010000000"; }; # ws 2
+              zen-beta = [ "ssd" { tags = intFromBinStr "001000000"; } ];
+              spotify = { tags = intFromBinStr "000000001"; }; # only workspace 9
+            };
         };
 
         map = {
@@ -40,6 +56,7 @@
           "zen"
           "emacs"
           "spotify"
+          "slack"
         ];
 
         default-layout = "rivertile";
@@ -184,7 +201,12 @@
         riverctl rule-add -app-id "bar" csd
 
         rivertile -view-padding 6 -outer-padding 6 &
-        '';
+
+        riverctl input pointer-1739-0-Synaptics_TM3289-021 scroll-factor  0.3
+        riverctl input pointer-1739-0-Synaptics_TM3289-021 natural-scroll enabled
+        riverctl input pointer-1739-0-Synaptics_TM3289-021 tap            enabled
+        riverctl input pointer-2-10-TPPS/2_Elan_TrackPoint pointer-accel  1.5
+      '';
     };
 
 
@@ -196,7 +218,9 @@
             margin = 6;
             height = 26;
             location = "top";
-            background = "${base00}ff";
+            foreground = "FFFFFFFF";
+            background = "${base00}bb";
+
             left = [
               {
                 river =
@@ -256,8 +280,74 @@
 
             right = [
               {
+                network = {
+                  poll-interval = 1000;
+                  content.map.conditions."name == wlp2s0".map =
+                    let
+                      base = { margin = 10; };
+                    in
+                    {
+                      default = { string = { text = "  "; foreground = "ffffff66"; } // base; };
+                      conditions = {
+                        "state == down" = { string = { text = "  "; foreground = "ff0000ff"; } // base; };
+                        "state == up" = [
+                          { string = { text = "  "; }; }
+                          { string = { text = "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s"; } // base; }
+                        ];
+                      };
+                    };
+                };
+              }
+
+              {
+                battery = {
+                  name = "BAT0";
+                  poll-interval = 30000;
+                  content.map.conditions =
+                    let
+                      states = [
+                        { string = { text = "   "; foreground = "ff0000ff"; }; }
+                        { string = { text = "   "; foreground = "ffa600ff"; }; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string.text = "   "; }
+                        { string = { text = "   "; foreground = "00ff00ff"; }; }
+                      ];
+                      template = [
+                        { ramp = { tag = "capacity"; items = states; }; }
+                        { string.text = "{capacity}% {estimate}"; }
+                      ];
+                    in
+                    {
+                      "state == unknown" = template;
+                      "state == discharging" = template;
+                      "state == \"not charging\"" = template;
+                      "state == charging" = [
+                        { string = { text = "  "; foreground = "00ff00ff"; }; }
+                        { string.text = "{capacity}% {estimate}"; }
+                      ];
+                      "state == full" = [
+                        { string = { text = "  "; foreground = "00ff00ff"; }; }
+                        { string.text = "{capacity}% full"; }
+                      ];
+                    };
+
+                };
+              }
+              {
+                backlight = {
+                  name = "intel_backlight";
+                  content = [{ string = { text = "  {percent}%"; margin = 10; }; }];
+                };
+              }
+              {
                 clock = {
-                  time-format = "%H:%M";
+                  time-format = "  %H:%M";
                   content = [{ string.text = "{date} {time}"; }];
                 };
               }
@@ -271,10 +361,11 @@
         settings = {
           main = {
             terminal = "${pkgs.foot}/bin/footclient";
-            font = "monospace:size=18";
+            font = "monospace:size=16";
+            dpi-aware = false;
             show-actions = true;
             list-executables-in-path = true;
-            lines = 18;
+            lines = 10;
           };
           border = {
             radius = 0;

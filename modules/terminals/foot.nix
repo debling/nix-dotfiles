@@ -7,13 +7,15 @@
     settings = {
       main = {
         font = "monospace:size=12";
+        pad = "6x6";
       };
       scrollback = {
         lines = 0; # disable scrollbacl, tmux does it better
       };
       colors = with colorscheme.palette; {
         foreground = base05;
-        background = base00;
+        background = "000000";
+        alpha = 0.85;
         regular0 = base00; # black
         regular1 = base08; # red
         regular2 = base0B; # green

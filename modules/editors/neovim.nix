@@ -170,8 +170,6 @@ in
             blink-cmp
             friendly-snippets # used by blink.cmp
 
-            base16-nvim
-
             harpoon2
 
             snacks-nvim

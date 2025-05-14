@@ -14,7 +14,7 @@ in
   home = {
     packages = with pkgs; [
       # spelling
-      (hunspellWithDicts [hunspellDicts.pt_BR hunspellDicts.en_US])
+      (hunspellWithDicts [ hunspellDicts.pt_BR hunspellDicts.en_US ])
 
       btop
       cloc
