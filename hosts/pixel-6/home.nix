@@ -60,7 +60,7 @@
             log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
             exit 2
           fi
-        
+
           local VENV=$(dirname $(poetry run which python))
           export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
           export POETRY_ACTIVE=1
@@ -75,14 +75,6 @@
       enableBashIntegration = true;
       enableZshIntegration = true;
       git = true;
-    };
-
-    # A modern replacement for cat, with sintax hilghting
-    bat = {
-      enable = true;
-      config = {
-        theme = "base16-256";
-      };
     };
 
     jq.enable = true;

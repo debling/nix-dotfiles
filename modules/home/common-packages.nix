@@ -245,21 +245,12 @@ in
       git = true;
     };
 
-    # A modern replacement for cat, with sintax hilghting
-    bat = {
-      enable = true;
-      config = {
-        theme = "base16-256";
-      };
-    };
-
     # Terminal fuzzy finder
     fzf = {
       enable = true;
       enableZshIntegration = true;
       changeDirWidgetOptions = [ "--preview 'tree -C {} | head -n 100'" ];
       fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
-      fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
     };
 
     yazi = {

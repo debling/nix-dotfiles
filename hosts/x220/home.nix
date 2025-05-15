@@ -215,20 +215,11 @@ in
       '';
     };
 
-    # A modern replacement for ls.
-    eza = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      git = true;
-    };
-
     fzf = {
       enable = true;
       enableZshIntegration = true;
       changeDirWidgetOptions = [ "--preview 'tree -C {} | head -n 100'" ];
       fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
-      fileWidgetOptions = [ "--preview 'bat --color=always --style=numbers --line-range :100 {}'" ];
     };
 
     # GitHub's cli tool
