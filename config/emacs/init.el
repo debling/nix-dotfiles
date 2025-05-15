@@ -728,6 +728,19 @@ Av. Roraima 1000, prédio 2, sala 22
          (sql-port 5435))))
 
 
+(defun dse/dired-open-external ()
+  (interactive)
+  ;; adapted from https://www.reddit.com/r/emacs/comments/cgbpvl/comment/hzgqae0/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  (let ((process-connection-type nil)
+        (curr-file (dired-get-file-for-visit)))
+    (start-process
+     "" nil shell-file-name
+     shell-command-switch
+     (format "nohup 1>/dev/null 2>/dev/null xdg-open %s"
+             (shell-quote-argument curr-file)))))
+
+(evil-define-key 'normal dired-mode-map (kbd "o") #'dse/dired-open-external)
+
 ;;; Setup gc back
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))

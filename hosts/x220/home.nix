@@ -70,7 +70,7 @@ in
 
       cachix
 
-      # required by telescope.nvim  
+      # required by telescope.nvim
       ripgrep
       fd
 
@@ -206,7 +206,7 @@ in
             log_error 'No pyproject.toml found.  Use `poetry new` or `poetry init` to create one first.'
             exit 2
           fi
-        
+
           local VENV=$(dirname $(poetry run which python))
           export VIRTUAL_ENV=$(echo "$VENV" | rev | cut -d'/' -f2- | rev)
           export POETRY_ACTIVE=1
@@ -223,15 +223,6 @@ in
       git = true;
     };
 
-    # A modern replacement for cat, with sintax hilghting
-    bat = {
-      enable = true;
-      config = {
-        theme = "base16-256";
-      };
-    };
-
-    # Terminal fuzzy finder
     fzf = {
       enable = true;
       enableZshIntegration = true;

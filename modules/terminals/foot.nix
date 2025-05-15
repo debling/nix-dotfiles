@@ -1,4 +1,4 @@
-{ pkgs, colorscheme, ... }:
+{ lib, pkgs, colorscheme, ... }:
 
 {
   programs.foot = {
@@ -6,14 +6,15 @@
     server.enable = true;
     settings = {
       main = {
+        shell = lib.getExe pkgs.fish;
         font = "monospace:size=12";
-        pad = "6x6";
+        pad = "8x8";
       };
       scrollback = {
         lines = 0; # disable scrollbacl, tmux does it better
       };
       colors = with colorscheme.palette; {
-        foreground = base05;
+        foreground = "FFFFFF";
         background = "000000";
         alpha = 0.85;
         regular0 = base00; # black

@@ -31,7 +31,6 @@
   documentation.dev.enable = true;
 
   hardware.opentabletdriver.enable = true;
-  services.xserver.wacom.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.debling = {
@@ -56,8 +55,10 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
 
+    kernelParams = [ "quiet" ];
     kernel.sysctl."vm.swappiness" = 200;
 
+    loader.timeout = 0;
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
   };

@@ -1,7 +1,7 @@
 {
   disko.devices = {
     disk = {
-      main = {
+      nvme0 = {
         # When using disko-install, we will overwrite this value from the commandline
         device = "/dev/disk/by-id/nvme-INTEL_SSDPEKKF256G8L_BTHH8455096S256B:0";
         type = "disk";
@@ -9,9 +9,7 @@
           type = "gpt";
           partitions = {
             ESP = {
-              priority = 1;
               type = "EF00";
-              start = "1M";
               size = "500M";
               content = {
                 type = "filesystem";
@@ -24,7 +22,7 @@
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted";
+                name = "x1-crypted";
                 settings.allowDiscards = true;
                 content = {
                   type = "btrfs";
@@ -53,7 +51,7 @@
                     };
                     "/swap" = {
                       mountpoint = "/.swapvol";
-                      swap.swapfile.size = "20M";
+                      swap.swapfile.size = "16G";
                     };
                   };
                 };

@@ -2,6 +2,7 @@
 
 {
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
+  networking.networkmanager.wifi.backend = "iwd";
 
   # Use networkd instead of the pile of shell scripts
   networking.useNetworkd = lib.mkDefault true;
