@@ -23,6 +23,8 @@ in
       jq
       killall
       ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
+      zip
+      unzip
       pinentry-tty
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
       silver-searcher # A faster and more convenient grep. Executable is called `ag`
@@ -94,11 +96,11 @@ in
         \pset border 2
 
         -- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
-        \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
+        -- \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
 
         -- PROMPT2 is printed when the prompt expects more input, like when you type
         -- SELECT * FROM<enter>. %R shows what type of input it expects.
-        \set PROMPT2 '[more] %R > '
+        -- \set PROMPT2 '[more] %R > '
 
         -- Show how long each query takes to execute
         \timing

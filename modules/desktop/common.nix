@@ -25,6 +25,7 @@
     with pkgs; [
       volume
       screenshot
+      kooha # recording tool
 
       pamixer
       slurp

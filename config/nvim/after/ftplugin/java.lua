@@ -87,7 +87,7 @@ end
 
 local config = {
   cmd = {
-    'jdtls-with-lombok',
+    'jdtls',
     '-data', get_data_dir()
   },
   on_attach = jdtls_on_attach,

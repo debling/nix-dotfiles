@@ -1,9 +1,5 @@
-SYS_REBUILD_CMD=nixos-rebuild
-
-ifeq ($((shell uname -s),Darwin)
-	SYS_REBUILD_CMD=darwin-rebuild
-endif
-
+.PHONY: default
+default: switch
 
 .PHONY: update
 update:
@@ -11,11 +7,15 @@ update:
 
 .PHONY: switch
 switch:
-	darwin-rebuild switch --flake .
+	ifeq ($(shell uname -s),Darwin)
+		darwin-rebuild switch --flake .
+	else
+		nixos-rebuild switch --flake .
+	endif
 
 .PHONY: get-age-key
 get-age-key:
-	@nix run nixpkgs#bitwarden-cli get password age-key  
+	@nix run nixpkgs#bitwarden-cli get password age-key
 
 
 .PHONY: iso/build

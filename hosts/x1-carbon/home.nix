@@ -1,9 +1,13 @@
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  nix-index-database,
+  android-nixpkgs,
+  mainUser,
+  ...
+}:
 
-let
-  customScriptsDir = ".local/bin";
-  globalNodePackagesDir = ".local/share/node_packages";
-in
 {
   imports = [
     ../../modules/home/common-packages.nix
@@ -29,17 +33,18 @@ in
 
     path = "${config.home.homeDirectory}/SDKs/android";
 
-    packages = sdk: with sdk; [
-      build-tools-30-0-0
-      build-tools-30-0-3
-      cmdline-tools-latest
-      emulator
-      platforms-android-33
-      platform-tools
-      sources-android-33
-      # ndk-23-1-7779620
-      cmake-3-22-1
-    ];
+    packages =
+      sdk: with sdk; [
+        build-tools-30-0-0
+        build-tools-30-0-3
+        cmdline-tools-latest
+        # emulator
+        platforms-android-33
+        platform-tools
+        sources-android-33
+        # ndk-23-1-7779620
+        cmake-3-22-1
+      ];
   };
 
   home = {
@@ -70,20 +75,21 @@ in
       nodePackages.pnpm
       pipenv
 
-      (python311.withPackages (ps: with ps; [
-        pandas
-        numpy
-        ipython
-        matplotlib
-        seaborn
-        # jupyterlab
-        pudb
-        # torch
-        boto3
-        scikit-learn
-      ]))
+      (python311.withPackages (
+        ps: with ps; [
+          pandas
+          numpy
+          ipython
+          matplotlib
+          seaborn
+          # jupyterlab
+          pudb
+          # torch
+          boto3
+          scikit-learn
+        ]
+      ))
       # poetry
-
 
       # unrar
       postgresql_15
@@ -116,6 +122,54 @@ in
   };
 
   programs = {
+    helix = {
+      enable = true;
+      extraPackages = [ pkgs.nodePackages.prettier ];
+      themes = {
+        transparent_bg = {
+          inherits = "gruvbox_dark_hard";
+          "ui.background" = "";
+        };
+      };
+      settings = {
+        theme = "transparent_bg";
+        editor = {
+          line-number = "relative";
+        };
+      };
+      languages = {
+        language-server = {
+          codebook = {
+            command = lib.getExe pkgs.codebook;
+            args = ["serve"];  
+          };
+          # efm-prettier-md = {
+          #   command = lib.getExe pkgs.;
+          #   args = ["serve"];  
+          # };
+          astro-ls = {
+            command = lib.getExe pkgs.astro-language-server;
+            args = ["--stdio"];  
+            config.typescript.tsdk = "./node_modules/typescript/lib/";
+          };
+        };
+        language = [
+          {
+            name = "astro";
+            language-servers = ["astro-ls" "tailwindcss-ls"];
+            formatter = {
+              command = "prettier";
+              args = ["--plugin" "prettier-plugin-astro" "--parser" "astro"];
+            };
+            auto-format = true;
+          }
+          {
+            name = "markdown";
+            language-servers = ["codebook" "marksman"];
+          }
+        ];
+      };
+    };
     nushell.enable = true;
 
     fish = {
@@ -124,7 +178,10 @@ in
         set fish_greeting # Disable greeting
       '';
       plugins = [
-        { name = "done"; src = pkgs.fishPlugins.done.src; }
+        {
+          name = "done";
+          src = pkgs.fishPlugins.done.src;
+        }
       ];
 
       # FIXME: This is needed to address bug where the $PATH is re-ordered by
@@ -148,61 +205,65 @@ in
             "/nix/var/nix/profiles/default"
           ];
 
-          makeBinSearchPath =
-            lib.concatMapStringsSep " " (path: "${path}/bin");
+          makeBinSearchPath = lib.concatMapStringsSep " " (path: "${path}/bin");
         in
-        lib.mkIf pkgs.stdenv.isDarwin
-          ''
-            # Fix path that was re-ordered by Apple's path_helper
-            fish_add_path --move --prepend --path ${makeBinSearchPath profiles}
-            set fish_user_paths $fish_user_paths
-          '';
+        lib.mkIf pkgs.stdenv.isDarwin ''
+          # Fix path that was re-ordered by Apple's path_helper
+          fish_add_path --move --prepend --path ${makeBinSearchPath profiles}
+          set fish_user_paths $fish_user_paths
+        '';
     };
 
     tmux = {
       enable = true;
       escapeTime = 0;
       historyLimit = 10000;
-      terminal = "foot";
+      terminal = "tmux";
       sensibleOnTop = false;
       tmuxp.enable = true;
-      extraConfig = /* tmux */ ''
-        # Terminal config for TrueColor support
-        # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
-        # set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
-        # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
-        # set -as terminal-overrides ",*:RGB"  # true-color support
+      extraConfig = # tmux
+        ''
+          # Terminal config for TrueColor support
+          # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
+          # set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
+          # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
+          # set -as terminal-overrides ",*:RGB"  # true-color support
+           
+          # from  https://yazi-rs.github.io/docs/image-preview/#tmux
+          set -g allow-passthrough on
+          set -ga update-environment TERM
+          set -ga update-environment TERM_PROGRAM
 
 
-        set -g focus-events on
+          set -g focus-events on
 
-        set -g mouse on
+          set -g mouse on
 
-        set -g set-titles on
-        set -g set-titles-string "#S / #W"
+          set -g set-titles on
+          set -g set-titles-string "#S / #W"
 
-        set -g status-style "none,bg=default"
-        set -g status-justify centre
-        set -g status-bg colour8
-        set -g status-fg colour15
-        set -g status-left-length 25
-        set -g status-right '%d/%m %H:%M'
+          set -g status-style "none,bg=default"
+          set -g status-justify centre
+          set -g status-bg colour8
+          set -g status-fg colour15
+          set -g status-left-length 25
+          set -g status-right '%d/%m %H:%M'
 
-        setw -g window-status-current-format '#[bold]#I:#W#[fg=colour5]#F'
-        setw -g window-status-format '#[fg=colour7]#I:#W#F'
+          setw -g window-status-current-format '#[bold]#I:#W#[fg=colour5]#F'
+          setw -g window-status-format '#[fg=colour7]#I:#W#F'
 
-        # Open new splits in the same directory as the current pane
-        bind  %  split-window -h -c "#{pane_current_path}"
-        bind '"' split-window -v -c "#{pane_current_path}"
+          # Open new splits in the same directory as the current pane
+          bind  %  split-window -h -c "#{pane_current_path}"
+          bind '"' split-window -v -c "#{pane_current_path}"
 
-        bind-key -r f run-shell "tmux neww tmux-sessionizer"
-      '';
+          bind-key -r f run-shell "tmux neww tmux-sessionizer"
+          bind-key -r g run-shell "tmux popup -E -h 90% -w 90% -T lazygit lazygit"
+          bind-key -r y run-shell "tmux popup -E -h 90% -w 90% -T yazi yazi"
+        '';
     };
   };
 
-
   systemd.user.startServices = "sd-switch";
-
 
   ####
   #### The section bellow is auto-generated by home-manager

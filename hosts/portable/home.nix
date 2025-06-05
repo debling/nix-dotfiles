@@ -33,7 +33,7 @@ in
       build-tools-30-0-0
       build-tools-30-0-3
       cmdline-tools-latest
-      emulator
+      # emulator
       platforms-android-33
       platform-tools
       sources-android-33

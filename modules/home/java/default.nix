@@ -9,7 +9,11 @@ let
 in
 {
   home = {
-    packages = [ latest_jdk javadoc mvnd scenebuilder ];
+    packages = [
+        latest_jdk
+        javadoc
+      # mvnd
+        scenebuilder ];
     file = {
       # Stable SDK symlinks
       "SDKs/Java/23".source = (withFx jdk23).home;

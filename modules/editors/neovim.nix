@@ -49,7 +49,7 @@ in
         java = {
           systemPkgs = with pkgs;
             let
-              jdtls-with-lombok = pkgs.writeShellScriptBin "jdtls-with-lombok" ''
+              jdtls-with-lombok = pkgs.writeShellScriptBin "jdtls" ''
                 ${lib.getExe jdt-language-server} \
                   --jvm-arg=-javaagent:${lombok}/share/java/lombok.jar \
                   --jvm-arg=-Dlog.level=ALL \
@@ -93,8 +93,7 @@ in
               angular-language-server
               nodePackages.yaml-language-server
               nodePackages.vscode-langservers-extracted
-              nodePackages.eslint_d
-              nodePackages.prettier
+              biome
               nodePackages."@tailwindcss/language-server"
               emmet-ls
               hurl
@@ -138,6 +137,7 @@ in
           nixd # language server
           statix #  static analysis
           nixfmt-rfc-style
+          marksman
         ] ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));
 
         sessionVariables = {

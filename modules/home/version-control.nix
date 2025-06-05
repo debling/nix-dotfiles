@@ -46,7 +46,6 @@
       settings = {
         gui = {
           nerdFontsVersion = "3";
-          border = "hidden";
         };
         git.paging = {
           colorArg = "always";

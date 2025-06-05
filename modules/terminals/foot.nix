@@ -8,7 +8,7 @@
       main = {
         shell = lib.getExe pkgs.fish;
         font = "monospace:size=12";
-        pad = "8x8";
+        pad = "14x14";
       };
       scrollback = {
         lines = 0; # disable scrollbacl, tmux does it better
@@ -16,7 +16,6 @@
       colors = with colorscheme.palette; {
         foreground = "FFFFFF";
         background = "000000";
-        alpha = 0.85;
         regular0 = base00; # black
         regular1 = base08; # red
         regular2 = base0B; # green

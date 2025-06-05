@@ -385,6 +385,7 @@
   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
   ;; be used globally (M-/).  See also the customization variable
   ;; `global-corfu-modes' to exclude certain modes.
+  (tab-always-indent 'nil)
   :bind (:map corfu-map ("RET" . nil))
   :init
   (global-corfu-mode)
@@ -476,7 +477,6 @@
 (use-package flyspell
   :delight
   :hook (text-mode . flyspell-mode)
-  :hook (prog-mode . flyspell-prog-mode)
   :bind ("<f8>" . toggle-dictionary)
   :custom
   (ispell-program-name "hunspell")
@@ -516,8 +516,9 @@
 
                            ("r" "RABapp related")
                            ("rr" "Code Review" entry (file ,(concat org-directory "todo.org"))
-                            "* TODO ")
-))
+                            "* TODO Review of RAB-%? :@rabapp:codereview:\n%U"
+                            :clock-in t
+                            :empty-lines 2)))
   (org-plantuml-exec-mode 'plantuml)
   (org-confirm-babel-evaluate nil)
   (org-tag-alist '(("@personal" . ?p) ("@zeit" . ?z) ("@rabapp" . ?r)))
@@ -708,7 +709,33 @@ Av. Roraima 1000, prédio 2, sala 22
 
 (mu4e 't)
 
-(setopt erc-hide-list '("JOIN" "PART" "QUIT"))
+
+(use-package erc
+  :custom
+  (erc-autojoin-channels-alist '(("irc.libera.chat" "#emacs")
+                                 ("irc.oftc.net" "#home-manager")))
+  (erc-autojoin-timing 'ident)
+  (erc-fill-function 'erc-fill-static)
+  (erc-fill-static-center 22)
+  (erc-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-lurker-threshold-time 43200)
+  (erc-prompt-for-nickserv-password nil)
+  (erc-server-reconnect-attempts 5)
+  (erc-server-reconnect-timeout 3)
+  (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                             "324" "329" "332" "333" "353" "477"))
+  :config
+  (add-to-list 'erc-modules 'notifications)
+  (add-to-list 'erc-modules 'spelling)
+  (erc-services-mode 1)
+  (erc-update-modules))
+
+(use-package erc-hl-nicks
+  :after erc)
+
+(use-package erc-image
+  :after erc)
 
 
 (use-package whitespace

@@ -202,10 +202,19 @@
 
         rivertile -view-padding 6 -outer-padding 6 &
 
+        riverctl map normal Alt+Shift 4  spawn  screenshot
+        riverctl map normal Alt+Shift 5  spawn  kooha
+
+        riverctl map $mode None XF86MonBrightnessDown spawn 'brightnessctl set 5%-'
+
+        # x1-touchpad
         riverctl input pointer-1739-0-Synaptics_TM3289-021 scroll-factor  0.3
         riverctl input pointer-1739-0-Synaptics_TM3289-021 natural-scroll enabled
         riverctl input pointer-1739-0-Synaptics_TM3289-021 tap            enabled
+
         riverctl input pointer-2-10-TPPS/2_Elan_TrackPoint pointer-accel  1.5
+
+        riverctl input pointer-2362-9505-USB_OPTICAL_MOUSE natural-scroll enabled
       '';
     };
 

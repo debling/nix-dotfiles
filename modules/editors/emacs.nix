@@ -6,7 +6,7 @@
       emacsclient-commands
       # used by doc-view-mode to render pdfs
       mupdf
-      xpdf
+      # xpdf
       ghostscript
       # used by org-excalidraw to generate svg images from drawings
 
@@ -55,7 +55,7 @@
           #    # withXwidgets = true;
           #  };
         in
-        (pkgs.emacsPackagesFor finalPkg).emacsWithPackages (epkgs: with epkgs; [
+        (pkgs.emacsPackagesFor pkgs.emacs30-pgtk).emacsWithPackages (epkgs: with epkgs; [
           nix-mode
           vterm
           treesit-grammars.with-all-grammars

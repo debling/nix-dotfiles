@@ -23,7 +23,7 @@ local simple_servers = {
 
   -- vscode-langservers-extracted
   'html',
-  'eslint',
+  'biome',
   'cssls',
   'astro',
   'emmet_ls',
@@ -33,6 +33,8 @@ local simple_servers = {
   'clojure_lsp',
   'rust_analyzer',
   'zls',
+
+  'marksman',
 }
 
 vim.g.zig_fmt_autosave = 0
@@ -143,7 +145,7 @@ null_ls.setup({
     null_ls.builtins.hover.printenv,
 
     -- Javascript
-    null_ls.builtins.formatting.prettier,
+    -- null_ls.builtins.formatting.prettier,
 
     -- General text
     null_ls.builtins.completion.spell,
