@@ -8,7 +8,7 @@
                                 "sudo nixos-rebuild switch --flake . --log-format internal-json -v")
                           (p/pb {:out :inherit :err :inherit}
                                 "nom --json")))
-                   (p/shell "darwin-rebuild switch --flake ."))
+                   (p/shell "sudo darwin-rebuild switch --flake ."))
            }
 
   update  {:doc "Update flake dependencies"

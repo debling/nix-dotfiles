@@ -7,7 +7,6 @@
 
     ../../modules/editors/neovim.nix
     ../../modules/home/common-packages.nix
-    ../../modules/home/gtk-qt.nix
     ../../modules/home/version-control.nix
     ../../modules/terminals/alacritty.nix
   ];

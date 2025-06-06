@@ -100,6 +100,7 @@
 
   # TODO: Move this config to home-manager
   system = {
+    primaryUser = mainUser;
     stateVersion = 5;
 
     keyboard = {
