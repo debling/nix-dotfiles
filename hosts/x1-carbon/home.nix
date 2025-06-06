@@ -166,53 +166,6 @@
         '';
     };
 
-    tmux = {
-      enable = true;
-      escapeTime = 0;
-      historyLimit = 10000;
-      terminal = "tmux";
-      sensibleOnTop = false;
-      tmuxp.enable = true;
-      extraConfig = # tmux
-        ''
-          # Terminal config for TrueColor support
-          # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # colored underscores
-          # set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
-          # set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
-          # set -as terminal-overrides ",*:RGB"  # true-color support
-           
-          # from  https://yazi-rs.github.io/docs/image-preview/#tmux
-          set -g allow-passthrough on
-          set -ga update-environment TERM
-          set -ga update-environment TERM_PROGRAM
-
-
-          set -g focus-events on
-
-          set -g mouse on
-
-          set -g set-titles on
-          set -g set-titles-string "#S / #W"
-
-          set -g status-style "none,bg=default"
-          set -g status-justify centre
-          set -g status-bg colour8
-          set -g status-fg colour15
-          set -g status-left-length 25
-          set -g status-right '%d/%m %H:%M'
-
-          setw -g window-status-current-format '#[bold]#I:#W#[fg=colour5]#F'
-          setw -g window-status-format '#[fg=colour7]#I:#W#F'
-
-          # Open new splits in the same directory as the current pane
-          bind  %  split-window -h -c "#{pane_current_path}"
-          bind '"' split-window -v -c "#{pane_current_path}"
-
-          bind-key -r f run-shell "tmux neww tmux-sessionizer"
-          bind-key -r g run-shell "tmux popup -E -h 90% -w 90% -T lazygit lazygit"
-          bind-key -r y run-shell "tmux popup -E -h 90% -w 90% -T yazi yazi"
-        '';
-    };
   };
 
   systemd.user.startServices = "sd-switch";
