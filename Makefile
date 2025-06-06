@@ -1,5 +1,11 @@
-.PHONY: default
-default: switch
+ifeq ($(shell uname -s),Darwin)
+	REBUILD_CMD=sudo darwin-rebuild
+else
+	REBUILD_CMD=sudo nixos-rebuild
+endif
+
+.PHONY: all
+all: update switch
 
 .PHONY: update
 update:
@@ -7,16 +13,11 @@ update:
 
 .PHONY: switch
 switch:
-	ifeq ($(shell uname -s),Darwin)
-		darwin-rebuild switch --flake .
-	else
-		nixos-rebuild switch --flake .
-	endif
+	$(REBUILD_CMD) switch --flake .
 
 .PHONY: get-age-key
 get-age-key:
 	@nix run nixpkgs#bitwarden-cli get password age-key
-
 
 .PHONY: iso/build
 iso/build:
@@ -26,6 +27,6 @@ iso/build:
 iso/run:
 	nix run nixpkgs#qemu -- -enable-kvm -m 2048 -drive format=raw,file=image.img
 
-.PHONY: iso/un
+.PHONY: vm/build
 vm/build:
 	nix build .#nixosConfigurations.live.config.system.build.vm
