@@ -8,6 +8,7 @@ in
 {
   imports = [
     ../editors/emacs.nix
+    ../editors/helix.nix
     ./java
   ];
 
