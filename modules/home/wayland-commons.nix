@@ -11,8 +11,6 @@
       text-color = "#${base05}";
       border-color = "#${base0D}";
       progress-color = "#${base02}";
-    };
-    criteria = {
       "urgency=low" = {
         background-color = "#${base00}";
         text-color = "#${base0A}";

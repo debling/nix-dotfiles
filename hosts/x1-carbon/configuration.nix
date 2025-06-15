@@ -21,12 +21,12 @@
     memoryPercent = 35;
   };
 
- # swapDevices = [
- #   {
- #     device = "/var/swapfile";
- #     size = 2 * 1024; # 4GB
- #   }
- # ];
+  # swapDevices = [
+  #   {
+  #     device = "/var/swapfile";
+  #     size = 2 * 1024; # 4GB
+  #   }
+  # ];
 
   documentation.dev.enable = true;
 
@@ -89,9 +89,19 @@
       };
     };
 
-    udev.extraRules = ''
-      KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
-    '';
+    udev = {
+
+      extraRules = ''
+        KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
+      '';
+
+      packages = [
+        pkgs.platformio-core
+        pkgs.openocd
+        pkgs.flashrom
+      ];
+    };
+
 
     greetd = {
       enable = true;
@@ -140,6 +150,10 @@
     zen-browser
     man-pages
     man-pages-posix
+
+    platformio-core
+    openocd
+    flashrom
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

@@ -10,10 +10,11 @@ in
 {
   home = {
     packages = [
-        latest_jdk
-        javadoc
+      latest_jdk
+      javadoc
       # mvnd
-        scenebuilder ];
+      scenebuilder
+    ];
     file = {
       # Stable SDK symlinks
       "SDKs/Java/23".source = (withFx jdk23).home;

@@ -62,6 +62,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    helix-overlay = {
+      url = "github:helix-editor/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zig-overlay = {
       url = "github:mitchellh/zig-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -118,6 +123,8 @@
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
 
+          inputs.helix-overlay.overlays.default
+
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
@@ -127,7 +134,7 @@
             fishPlugins = prev.fishPlugins // {
               foreign-env = prev.fishPlugins.foreign-env.overrideAttrs (old: {
                 preInstall = old.preInstall + (with prev; ''
-                 sed -e "s|'env'|${coreutils}/bin/env|" -i functions/*
+                  sed -e "s|'env'|${coreutils}/bin/env|" -i functions/*
                 '');
               });
             };

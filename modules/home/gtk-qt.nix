@@ -15,17 +15,17 @@
     package = pkgs.rose-pine-cursor;
   };
 
-   gtk = {
-     enable = pkgs.stdenv.isLinux;
-     theme = {
-       name = "rose-pine";
-       package = pkgs.rose-pine-gtk-theme;
-     };
-     iconTheme = {
-       name = "rose-pine";
-       package = pkgs.rose-pine-icon-theme;
-     };
-   };
+  gtk = {
+    enable = pkgs.stdenv.isLinux;
+    theme = {
+      name = "rose-pine";
+      package = pkgs.rose-pine-gtk-theme;
+    };
+    iconTheme = {
+      name = "rose-pine";
+      package = pkgs.rose-pine-icon-theme;
+    };
+  };
 
   qt = {
     enable = pkgs.stdenv.isLinux;

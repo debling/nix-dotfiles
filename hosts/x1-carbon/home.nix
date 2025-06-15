@@ -1,11 +1,10 @@
-{
-  config,
-  lib,
-  pkgs,
-  nix-index-database,
-  android-nixpkgs,
-  mainUser,
-  ...
+{ config
+, lib
+, pkgs
+, nix-index-database
+, android-nixpkgs
+, mainUser
+, ...
 }:
 
 {
