@@ -1,4 +1,4 @@
-{ config, lib, pkgs, colorscheme, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.debling.editors.neovim;
@@ -6,7 +6,6 @@ in
 {
   options.debling.editors.neovim = {
     enable = lib.mkEnableOption "Enable neovim and its configuration";
-    package = lib.mkPackageOption pkgs "neovim" { };
   };
 
   config =
@@ -71,8 +70,6 @@ in
             python312Packages.black
             python312Packages.isort
           ];
-          plugins = with pkgs.vimPlugins; [
-          ];
         };
 
         sql = {
@@ -103,7 +100,6 @@ in
             [
               hurl
               hurl-nvim
-              render-markdown-nvim
             ];
         };
       };
@@ -134,26 +130,15 @@ in
       programs.neovim =
         {
           enable = true;
-          # package = cfg.package;
           viAlias = true;
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
-            #blink-cmp
-            #friendly-snippets # used by blink.cmp
-
             harpoon2
-
             snacks-nvim
-
             rainbow-delimiters-nvim
-
             obsidian-nvim
-
-            vim-multiple-cursors
-
             ts-comments-nvim
-
             telescope-nvim
             telescope-fzf-native-nvim
             telescope-ui-select-nvim
@@ -186,14 +171,10 @@ in
             ## UI
             vim-slime
 
-            vim-sleuth
-
             SchemaStore-nvim
 
             ## Remember last place on files
             nvim-lastplace
-
-            nvim-web-devicons
           ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
         };

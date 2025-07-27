@@ -117,6 +117,7 @@
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
+          inputs.neovim-nightly-overlay.overlays.default
 
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };

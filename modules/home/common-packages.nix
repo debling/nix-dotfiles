@@ -19,7 +19,7 @@ in
 
   xdg.configFile."ghostty/config".text = ''
     shell-integration = fish
-    theme = GruvboxLightHard
+    theme = GruvboxDarkHard
     font-family = JetBrainsMono Nerd Font
     font-size = 14
     window-padding-x = 10

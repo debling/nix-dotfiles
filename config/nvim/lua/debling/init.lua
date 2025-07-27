@@ -45,6 +45,7 @@ require('obsidian').setup({
   ui = {
     enable = false,
   },
+  legacy_commands = false,
 })
 
 local utils = require('debling.config_utils')
@@ -52,9 +53,9 @@ utils.nmap('<leader>og', '<cmd>ObsidianSearch<CR>')
 utils.nmap('<leader>of', '<cmd>ObsidianQuickSwitch<CR>')
 utils.nmap('<leader>ow', '<cmd>ObsidianWorkspace<CR>')
 
---[[
-
 vim.g['conjure#mapping#doc_word'] = 'gk'
+
+--[[
 
 vim.api.nvim_create_autocmd('DiagnosticChanged', {
   pattern = { 'conjure-log-*' },
@@ -96,7 +97,6 @@ require('gitsigns').setup()
 -- -- UI setup
 -- --
 vim.o.termguicolors = true
-vim.o.background = 'light'
 vim.cmd.colorscheme('default')
 vim.cmd.hi('Normal ctermbg=none guibg=none')
 
