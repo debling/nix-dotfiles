@@ -51,18 +51,10 @@
   };
 
   services = {
-    karabiner-elements.enable = true;
-
-    jankyborders = {
-      enable = false;
-      active_color = "0xFF586e75";
-      inactive_color = "0xFFfdf6e3";
-      # style = "square";
-      hidpi = true;
-    };
+    # karabiner-elements.enable = true;
 
     yabai = {
-      enable = true;
+      enable = false;
       enableScriptingAddition = true;
       config = {
         # default layout (can be bsp, stack or float)
@@ -98,7 +90,6 @@
     };
   };
 
-  # TODO: Move this config to home-manager
   system = {
     primaryUser = mainUser;
     stateVersion = 5;
@@ -148,7 +139,8 @@
       "spotify"
       "stremio"
       "orbstack"
-      "zen-browser"
+      "ghostty"
+      "karabiner-elements"
     ];
   };
 }

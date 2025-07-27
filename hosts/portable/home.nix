@@ -1,4 +1,4 @@
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, ... }:
+{ config, lib, pkgs, android-nixpkgs, mainUser, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -14,7 +14,6 @@ in
     ../../modules/home/version-control.nix
     ../../modules/home/wayland-commons.nix
     ../../modules/home/gtk-qt.nix
-    nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
   ];
 

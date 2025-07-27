@@ -1,7 +1,7 @@
 # TODO: separate linux and darwin stuff
 # TODO: check programs.lf
 # TODO: setup plantuml
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, colorscheme, ... }:
+{ config, lib, pkgs, android-nixpkgs, mainUser, colorscheme, ... }:
 
 let
   customScriptsDir = ".local/bin";
@@ -9,8 +9,6 @@ let
 in
 {
   imports = [
-    nix-index-database.hmModules.nix-index
-
     ../../modules/editors/neovim.nix
     ../../modules/home/gtk-qt.nix
     ../../modules/home/version-control.nix
@@ -186,10 +184,6 @@ in
     zoxide.enable = true;
 
     dircolors.enable = true;
-
-    nix-index-database.comma.enable = true;
-
-    nix-index.enable = true;
 
     htop.enable = true;
 

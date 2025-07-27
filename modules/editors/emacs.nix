@@ -47,13 +47,8 @@
                   sha256 = "sha256-3QLq91AQ6E921/W9nfDjdOUWR8YVsqBAT/W9c1woqAw=";
                 })
               ];
-            NIX_CFLAGS_COMPILE = "${old.NIX_CFLAGS_COMPILE or ""} -O3 -march=native";
 
           });
-          #  finalPkg = emacsPkg.override {
-          #    withImageMagick = true;
-          #    # withXwidgets = true;
-          #  };
         in
         (pkgs.emacsPackagesFor pkgs.emacs30-pgtk).emacsWithPackages (epkgs: with epkgs; [
           nix-mode

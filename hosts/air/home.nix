@@ -1,8 +1,7 @@
-{ config, lib, pkgs, nix-index-database, android-nixpkgs, mainUser, ... }:
+{ config, lib, pkgs, android-nixpkgs, mainUser, ... }:
 
 {
   imports = [
-    nix-index-database.hmModules.nix-index
     android-nixpkgs.hmModule
 
     ../../modules/editors/neovim.nix

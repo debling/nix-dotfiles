@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, nix-index-database, ... }:
 
 
 let
@@ -7,10 +7,24 @@ let
 in
 {
   imports = [
+    nix-index-database.homeModules.nix-index
     ../editors/emacs.nix
     ../editors/helix.nix
     ./java
   ];
+
+  programs.nix-index-database.comma.enable = true;
+  programs.nix-index.enable = true;
+
+
+  xdg.configFile."ghostty/config".text = ''
+    shell-integration = fish
+    theme = GruvboxLightHard
+    font-family = JetBrainsMono Nerd Font
+    font-size = 14
+    window-padding-x = 10
+    window-padding-y = 10
+  '';
 
   home = {
     packages = with pkgs; [
@@ -140,10 +154,6 @@ in
     };
 
     dircolors.enable = true;
-
-    nix-index-database.comma.enable = true;
-
-    nix-index.enable = true;
 
     vscode = {
       enable = true;

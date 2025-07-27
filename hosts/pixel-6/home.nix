@@ -1,10 +1,9 @@
-{ config, lib, pkgs, nix-index-database, mainUser, ... }:
+{ config, lib, pkgs, mainUser, ... }:
 
 {
   imports = [
     ./modules/editors/neovim.nix
     ./modules/home/version-control.nix
-    nix-index-database.hmModules.nix-index
   ];
 
   debling.editors.neovim.enable = true;
@@ -41,10 +40,6 @@
     zoxide.enable = true;
 
     dircolors.enable = true;
-
-    nix-index-database.comma.enable = true;
-
-    nix-index.enable = true;
 
     htop.enable = true;
     # Used to have custom environment per project.
