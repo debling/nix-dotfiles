@@ -62,11 +62,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    helix-overlay = {
-      url = "github:helix-editor/helix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     zig-overlay = {
       url = "github:mitchellh/zig-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -123,21 +118,11 @@
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
 
-          inputs.helix-overlay.overlays.default
-
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
             kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
-
-            fishPlugins = prev.fishPlugins // {
-              foreign-env = prev.fishPlugins.foreign-env.overrideAttrs (old: {
-                preInstall = old.preInstall + (with prev; ''
-                  sed -e "s|'env'|${coreutils}/bin/env|" -i functions/*
-                '');
-              });
-            };
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {
@@ -151,24 +136,7 @@
 
             vimPlugins = prev.vimPlugins // {
               blink-cmp = inputs.blink-cmp.packages.${prev.system}.blink-cmp;
-
-              # none-ls-nvim = prev.vimPlugins.none-ls-nvim.overrideAttrs {
-              #   src = prev.fetchFromGitHub {
-              #     owner = "nvimtools";
-              #     repo = "none-ls.nvim";
-              #     rev = "a66b5b9ad8d6a3f3dd8c0677a80eb27412fa5056";
-              #     hash = "sha256-xMb+wSwTAsI5EEfiyHFUpFDOl4WsK/dDqm8WUKm/L74=";
-              #   };
-              # };
             };
-
-            karabiner-elements = prev.karabiner-elements.overrideAttrs (old: {
-              version = "14.13.0";
-              src = prev.fetchurl {
-                inherit (old.src) url;
-                hash = "sha256-gmJwoht/Tfm5qMecmq1N6PSAIfWOqsvuHU8VDJY8bLw=";
-              };
-            });
           })
         ];
       };

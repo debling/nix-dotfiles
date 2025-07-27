@@ -30,3 +30,7 @@ iso/run:
 .PHONY: vm/build
 vm/build:
 	nix build .#nixosConfigurations.live.config.system.build.vm
+
+gc:
+	nix-collect-garbage -d
+	sudo nix-collect-garbage -d

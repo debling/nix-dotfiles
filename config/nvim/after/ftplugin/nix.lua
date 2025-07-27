@@ -1,5 +1,5 @@
 local lsp = require('lspconfig')
-local lsp_setup = require('debling.lsp_server_setup')
+local utils = require('debling.config_utils')
 
 lsp.nixd.setup({
   settings = {
@@ -11,7 +11,7 @@ lsp.nixd.setup({
   },
 })
 
-lsp_setup.null_ls_register(
+utils.null_ls_register(
   function(builtins)
     return {
       builtins.code_actions.statix,

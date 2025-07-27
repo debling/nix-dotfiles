@@ -1,5 +1,3 @@
-local lsp = require('lspconfig')
-
 local utils = require('debling.config_utils')
 
 -- Mappings.
@@ -40,13 +38,13 @@ local simple_servers = {
 vim.g.zig_fmt_autosave = 0
 
 for _, server in pairs(simple_servers) do
-  lsp[server].setup({})
+  vim.lsp.enable(server)
 end
 
 local schemaStore = require('schemastore')
 
 -- from vscode-langservers-extracted
-lsp.jsonls.setup({
+vim.lsp.config('jsonls', {
   settings = {
     json = {
       schemas = schemaStore.json.schemas(),
@@ -54,8 +52,9 @@ lsp.jsonls.setup({
     },
   },
 })
+vim.lsp.enable('jsonls')
 
-lsp.yamlls.setup({
+vim.lsp.config('yamlls', {
   settings = {
     yaml = {
       schemaStore = {
@@ -78,8 +77,9 @@ lsp.yamlls.setup({
     },
   },
 })
+vim.lsp.enable('yamlls')
 
-lsp.ltex.setup({
+vim.lsp.config('ltex', {
   -- removed html and xhtml for now, since the support for it isnt great,
   -- currently, its trying the spellcheck the xml tags it self, ending up
   -- reporting a lot of errors
@@ -93,7 +93,6 @@ lsp.ltex.setup({
     'rnoweb',
     'tex',
     'pandoc',
-    'quarto',
     'rmd',
     'context',
     'mail',
@@ -118,6 +117,7 @@ lsp.ltex.setup({
     },
   },
 })
+vim.lsp.enable('ltex')
 
 require('lazydev').setup({
   library = {
@@ -126,7 +126,7 @@ require('lazydev').setup({
   },
 })
 
-lsp.lua_ls.setup({
+vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       telemetry = {
@@ -136,6 +136,7 @@ lsp.lua_ls.setup({
     },
   },
 })
+vim.lsp.enable('lua_ls')
 
 local null_ls = require('null-ls')
 
@@ -145,15 +146,13 @@ null_ls.setup({
     null_ls.builtins.hover.printenv,
 
     -- Javascript
-    -- null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.prettier,
 
     -- General text
     null_ls.builtins.completion.spell,
 
     -- -- Terraform
     null_ls.builtins.diagnostics.trivy,
-
-    null_ls.builtins.diagnostics.clj_kondo,
 
     null_ls.builtins.formatting.clang_format,
 
@@ -164,3 +163,56 @@ null_ls.setup({
     null_ls.builtins.formatting.stylua,
   },
 })
+
+-- -- Completion and snippets setup
+vim.o.completeopt = 'menu,menuone,noselect,popup,fuzzy'
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('my.lsp', { clear = true }),
+  callback = function(ev)
+    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+
+    if client:supports_method('textDocument/completion') then
+      local chars = {}
+      for i = 32, 126 do
+        table.insert(chars, string.char(i))
+      end
+      client.server_capabilities.completionProvider.triggerCharacters = chars
+      vim.lsp.completion.enable(true, client.id, ev.buf, {
+        autotrigger = true,
+      })
+    end
+  end,
+})
+
+---@enum JumpDirection
+local JUMP_DIRECTION = {
+  prev = -1,
+  next = 1,
+}
+
+---@param keys string
+---@param direction JumpDirection
+local function snippet_jump_or_send_keys(keys, direction)
+  ---@cast direction vim.snippet.Direction
+  if vim.snippet.active({ direction = direction }) then
+    vim.snippet.jump(direction)
+  else
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), 'n')
+  end
+end
+
+-- move to previous item on the snippert
+utils.map(
+  { 'i', 's' },
+  '<c-h>',
+  function() snippet_jump_or_send_keys('<c-h>', JUMP_DIRECTION.prev) end
+)
+
+-- move to foward item on the snippert
+utils.map(
+  { 'i', 's' },
+  '<c-l>',
+  function() snippet_jump_or_send_keys('<c-l>', JUMP_DIRECTION.next) end,
+  { silent = true, noremap = false }
+)

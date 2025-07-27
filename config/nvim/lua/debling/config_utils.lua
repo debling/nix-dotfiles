@@ -1,5 +1,18 @@
 local M = {}
 
+local null_ls = require('null-ls')
+
+-- Null-ls does NOT define a type for its source table
+---@alias NullLsSource table
+
+---@param select_sources_fn fun(table): NullLsSource[]
+function M.null_ls_register(select_sources_fn)
+  local sources = select_sources_fn(null_ls.builtins)
+  for _, s in ipairs(sources) do
+    if not null_ls.is_registered(s.name) then null_ls.register(s) end
+  end
+end
+
 local default_opts = { silent = true, noremap = true }
 
 ---@param modes ('i' | 'n' | 'v' | 's' | 't')[]

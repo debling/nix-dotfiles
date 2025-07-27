@@ -23,7 +23,7 @@ in
         zig = {
           systemPkgs = with pkgs; [
             zigpkgs.master
-            # zls
+            zls
           ];
         };
 
@@ -72,8 +72,6 @@ in
             python312Packages.isort
           ];
           plugins = with pkgs.vimPlugins; [
-            otter-nvim ## quarto dependency
-            quarto-nvim
           ];
         };
 
@@ -89,32 +87,19 @@ in
         web = {
           systemPkgs = with pkgs;
             [
-              nodePackages.typescript-language-server
               angular-language-server
-              nodePackages.yaml-language-server
-              nodePackages.vscode-langservers-extracted
+              astro-language-server
               biome
-              nodePackages."@tailwindcss/language-server"
               emmet-ls
-              hurl
               html-tidy
+              hurl
+              nodePackages."@tailwindcss/language-server"
+              nodePackages.typescript-language-server
+              nodePackages.vscode-langservers-extracted
+              nodePackages.yaml-language-server
+              prettier
             ];
           plugins = with pkgs.vimPlugins;
-            let
-              hurl-nvim = pkgs.vimUtils.buildVimPlugin {
-                name = "hurl-nvim";
-                doCheck = false;
-
-                dependencies = [ nui-nvim ];
-
-                src = pkgs.fetchFromGitHub {
-                  owner = "jellydn";
-                  repo = "hurl.nvim";
-                  rev = "v2.1.0";
-                  hash = "sha256-h3uANPgLOKV/js6YTtHctjwgMg01Z71kuAecCKbs5Gs=";
-                };
-              };
-            in
             [
               hurl
               hurl-nvim
@@ -126,6 +111,7 @@ in
     lib.mkIf cfg.enable {
       home = {
         packages = with pkgs; [
+          go
           gopls # go
           terraform-ls
           ### Lua
@@ -146,20 +132,6 @@ in
       };
 
       programs.neovim =
-        let
-          freeze-code-nvim = pkgs.vimUtils.buildVimPlugin {
-            name = "freeze-code-nvim";
-
-            buildInputs = [ pkgs.charm-freeze ];
-
-            src = pkgs.fetchFromGitHub {
-              owner = "AlejandroSuero";
-              repo = "freeze-code.nvim";
-              rev = "b9e54ef8842d831f09298d331e997b574ee0ff78";
-              hash = "sha256-EOO8l/V1EPGmxGFXcu+66B7QtaD3lDInUVA56sDahFo=";
-            };
-          };
-        in
         {
           enable = true;
           # package = cfg.package;
@@ -167,14 +139,12 @@ in
           vimAlias = true;
           vimdiffAlias = true;
           plugins = with pkgs.vimPlugins; [
-            blink-cmp
-            friendly-snippets # used by blink.cmp
+            #blink-cmp
+            #friendly-snippets # used by blink.cmp
 
             harpoon2
 
             snacks-nvim
-
-            freeze-code-nvim
 
             rainbow-delimiters-nvim
 
@@ -191,13 +161,7 @@ in
             # General plugins
 
             ## Sintax hilighting
-            (nvim-treesitter.withPlugins (_:
-              let
-                isNotOcamlLex = x: !lib.hasPrefix "ocamllex" x.name;
-              in
-              lib.filter isNotOcamlLex nvim-treesitter.allGrammars))
-            nvim-treesitter-refactor
-            nvim-treesitter-context
+            nvim-treesitter.withAllGrammars
             todo-comments-nvim # No setup() call needed
 
             ## LSP
@@ -232,18 +196,10 @@ in
             nvim-web-devicons
           ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
-          extraConfig = /* vim */ ''
-            lua require('debling')
-          '';
         };
 
       xdg = {
-        configFile = {
-          nvim = {
-            source = ../../config/nvim;
-            recursive = true;
-          };
-        };
+        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink "/Users/debling/Workspace/debling/nix-dotfiles/config/nvim";
 
         dataFile = {
           "nvim/jdtls/java-debug" = {
