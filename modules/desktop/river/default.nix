@@ -3,9 +3,11 @@
 {
   imports = [ ../common.nix ];
 
+  environment.systemPackages = [ pkgs.river-ultitile ];
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
+    _JAVA_AWT_WM_NONREPARENTING = "1";
   };
 
   programs = {
@@ -225,10 +227,11 @@
         settings = {
           bar = with colorscheme.palette; {
             margin = 6;
-            height = 26;
+            height = 40;
+            font = "monospace:size=20:weight=semibold";
             location = "top";
-            foreground = "FFFFFFFF";
-            background = "${base00}bb";
+            foreground = "${base05}FF";
+            background = "${base00}BB";
 
             left = [
               {

@@ -1,6 +1,16 @@
 {
   description = "";
 
+
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   inputs = {
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -117,7 +127,6 @@
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
-          inputs.neovim-nightly-overlay.overlays.default
 
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };

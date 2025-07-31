@@ -27,7 +27,7 @@
       enable = true;
       package =
         let
-          finalPkg = pkgs.emacs30-pgtk.overrideAttrs (old: {
+          emacsPkg = pkgs.emacs30-pgtk.overrideAttrs (old: {
             patches =
               (old.patches or [ ])
               ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [

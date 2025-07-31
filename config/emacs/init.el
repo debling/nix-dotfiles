@@ -34,7 +34,7 @@
   :after evil
   :config
   ;; Setting where to use evil-collection
-  (setq evil-collection-mode-list '(dired ibuffer magit corfu vertico consult))
+  (setq evil-collection-mode-list '(dired ibuffer magit corfu vertico consult cider))
   (evil-collection-init))
 
 (use-package general
@@ -223,7 +223,7 @@
 
   (if (eq system-type 'darwin)
       (set-face-attribute 'default      nil :height 160 :family "Iosevka Nerd Font")
-    (set-face-attribute 'default        nil :height 120 :family "Iosevka Nerd Font"))
+    (set-face-attribute 'default        nil :height 120 :family "Iosevka Nerd Font" :weight 'medium))
   (set-face-attribute 'variable-pitch nil :family "Sans Serif")
   (set-face-attribute 'fixed-pitch    nil :family (face-attribute 'default :family)))
 

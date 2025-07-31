@@ -26,6 +26,10 @@ in
     window-padding-y = 10
   '';
 
+  programs.ghostty = {
+    enable = true;
+  };
+
   home = {
     packages = with pkgs; [
       # spelling
@@ -333,6 +337,19 @@ in
       default-cache-ttl 60480000
       pinentry-program ${lib.getExe pinentryPkgs}
     '';
+
+  home.file.".clojure/deps.edn".text = /* clojure */ ''
+    {:aliases
+      {:repl
+        {:extra-deps {nrepl/nrepl                {:mvn/version "1.3.1"}
+                      cider/cider-nrepl          {:mvn/version "0.57.0"}
+                      com.bhauman/rebel-readline {:mvn/version "0.1.5"}}
+         :main-opts  ["--eval" "(apply require clojure.main/repl-requires)"
+                      "--main" "nrepl.cmdline"
+                      "--middleware" "[cider.nrepl/cider-middleware]"
+                      "--interactive"
+                      "-f" "rebel-readline.main/-main"]}}}
+  '';
 
 
   programs.tmux = {

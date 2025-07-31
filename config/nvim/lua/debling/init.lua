@@ -45,13 +45,13 @@ require('obsidian').setup({
   ui = {
     enable = false,
   },
-  legacy_commands = false,
+  legacy_commands = false;
 })
 
 local utils = require('debling.config_utils')
-utils.nmap('<leader>og', '<cmd>ObsidianSearch<CR>')
-utils.nmap('<leader>of', '<cmd>ObsidianQuickSwitch<CR>')
-utils.nmap('<leader>ow', '<cmd>ObsidianWorkspace<CR>')
+utils.nmap('<leader>og', '<cmd>Obsidian search<CR>')
+utils.nmap('<leader>of', '<cmd>Obsidian quick_switch<CR>')
+utils.nmap('<leader>ow', '<cmd>Obsidian workspace<CR>')
 
 vim.g['conjure#mapping#doc_word'] = 'gk'
 

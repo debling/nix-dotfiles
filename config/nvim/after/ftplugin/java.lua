@@ -34,8 +34,16 @@ local runtimes = {
     path = jdk_path('11'),
   },
   {
-    name = 'JavaSE-22',
-    path = jdk_path('22'),
+    name = 'JavaSE-17',
+    path = jdk_path('17'),
+  },
+  {
+    name = 'JavaSE-21',
+    path = jdk_path('21'),
+  },
+  {
+    name = 'JavaSE-23',
+    path = jdk_path('23'),
   },
 }
 
@@ -61,8 +69,11 @@ local function jdtls_on_attach(_, bufnr)
   local opts = { buffer = bufnr }
   -- If using nvim-dap
   -- This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
-  utils.nmap('<leader>tc', jdtls.test_class, opts)
-  utils.nmap('<leader>tm', jdtls.test_nearest_method, opts)
+  utils.nmap('<leader>trc', jdtls.test_class, opts)
+  utils.nmap('<leader>trm', jdtls.test_nearest_method, opts)
+  local tests = require("jdtls.tests")
+  utils.nmap('<leader>tgc', tests.generate, opts)
+  utils.nmap('<leader>tgd', tests.goto_subjects, opts)
 end
 
 local function get_data_dir()
@@ -93,27 +104,11 @@ local config = {
   },
   settings = {
     java = {
-      compile = {
-        nullAnalysis = {
-          mode = 'automatic',
-        },
-      },
       configuration = {
         runtimes = runtimes,
       },
       references = {
         includeDecompiledSources = true,
-      },
-      inlayHints = {
-        parameterNames = {
-          enabled = 'all', -- literals, all, none
-        },
-      },
-      signatureHelp = {
-        enabled = true,
-        description = {
-          enabled = true,
-        },
       },
       format = {
         settings = {

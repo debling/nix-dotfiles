@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, neovim-nightly-overlay,  ... }:
 
 let
   cfg = config.debling.editors.neovim;
@@ -130,6 +130,7 @@ in
       programs.neovim =
         {
           enable = true;
+          package = neovim-nightly-overlay.packages.${pkgs.system}.default;
           viAlias = true;
           vimAlias = true;
           vimdiffAlias = true;
@@ -180,7 +181,8 @@ in
         };
 
       xdg = {
-        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink "/Users/debling/Workspace/debling/nix-dotfiles/config/nvim";
+        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink
+            "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/config/nvim";
 
         dataFile = {
           "nvim/jdtls/java-debug" = {

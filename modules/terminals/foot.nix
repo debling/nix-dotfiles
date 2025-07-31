@@ -11,11 +11,12 @@
         pad = "14x14";
       };
       scrollback = {
-        lines = 0; # disable scrollbacl, tmux does it better
+        lines = 0; # disable scrollback, tmux does it better
       };
       colors = with colorscheme.palette; {
-        foreground = "FFFFFF";
-        background = "000000";
+        alpha = 0.95;
+        foreground = base05;
+        background = base00;
         regular0 = base00; # black
         regular1 = base08; # red
         regular2 = base0B; # green

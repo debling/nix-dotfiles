@@ -15,6 +15,7 @@ local simple_servers = {
   'lemminx',
   'texlab',
   'terraformls',
+  'tflint',
   'ts_ls',
   'kotlin_language_server',
   'tailwindcss',
@@ -153,6 +154,8 @@ null_ls.setup({
 
     -- -- Terraform
     null_ls.builtins.diagnostics.trivy,
+    null_ls.builtins.diagnostics.terraform_validate,
+    null_ls.builtins.formatting.terraform_fmt,
 
     null_ls.builtins.formatting.clang_format,
 
