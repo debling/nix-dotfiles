@@ -284,44 +284,7 @@ in
       controlMaster = "auto";
       controlPersist = "15m";
       matchBlocks = {
-        "cvm1" = {
-          hostname = "rabapp.cvm.ncsu.edu";
-          user = "debling";
-        };
-
-        "cvm2" = {
-          hostname = "rabapp-test.cvm.ncsu.edu";
-          user = "debling";
-        };
-
-        "pdsa.aws" = {
-          hostname = "ec2-54-232-138-185.sa-east-1.compute.amazonaws.com";
-          user = "centos";
-          identityFile = "~/.ssh/identities/pdsa-aws.pem";
-        };
-
-        "pdsa.review" = {
-          hostname = "200.18.45.230";
-          user = "admin";
-          port = 222;
-        };
-
-        "pdsa.dev" = {
-          hostname = "200.18.45.231";
-          user = "admin";
-          port = 222;
-        };
-
-        "pdsa.xen" = {
-          hostname = "200.18.45.229";
-          user = "admin";
-        };
-
-        "zeit-ryzen" = {
-          hostname = "10.0.0.44";
-          user = "debling";
-          port = 443;
-        };
+        "i-*".proxyCommand = "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";
       };
     };
   };

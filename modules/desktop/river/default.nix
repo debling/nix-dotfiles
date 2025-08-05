@@ -227,8 +227,8 @@
         settings = {
           bar = with colorscheme.palette; {
             margin = 6;
-            height = 40;
-            font = "monospace:size=20:weight=semibold";
+            height = 30;
+            font = "monospace:size=16:weight=semibold";
             location = "top";
             foreground = "${base05}FF";
             background = "${base00}BB";

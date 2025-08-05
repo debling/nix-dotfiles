@@ -22,7 +22,7 @@ in
         zig = {
           systemPkgs = with pkgs; [
             zigpkgs.master
-            zls
+            #zls
           ];
         };
 

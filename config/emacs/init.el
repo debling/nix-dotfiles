@@ -591,7 +591,8 @@
   (elfeed-feeds '("http://nullprogram.com/feed/"
                   "https://planet.emacslife.com/atom.xml"
                   "https://cestlaz.zamansky.net/rss.xml"
-                  "https://lukesmith.xyz/index.xml")))
+                  "https://lukesmith.xyz/index.xml"
+                  "http://www.finep.gov.br/component/ninjarsssyndicator/?feed_id=1&format=raw")))
 
 
 ;;; EMAIL
