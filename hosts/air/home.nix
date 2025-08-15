@@ -84,6 +84,7 @@
         # torch
         boto3
         scikit-learn
+        pip
       ]))
       poetry
 

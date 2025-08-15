@@ -3,6 +3,7 @@ local Path = require('plenary.path')
 local jdtls = require('jdtls')
 local utils = require('debling.config_utils')
 
+--[[
 utils.null_ls_register(
   function(builtins)
     return {
@@ -17,6 +18,7 @@ utils.null_ls_register(
     }
   end
 )
+--]]
 
 ---@param jdk_version string
 ---@return string

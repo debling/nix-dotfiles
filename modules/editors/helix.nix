@@ -16,8 +16,8 @@
       };
       keys.normal.space = {
         e = {
-          e = ":pipe-to /home/debling/Workspace/probe/replink/run.sh send -l python -t tmux:p=right";
-          l = ":sh echo -n '(load-file \"%{buffer_name}\")' | /home/debling/Workspace/probe/replink/run.sh send -l python -t tmux:p=right";
+          e = ":pipe-to tmux-pipe";
+          l = ":sh echo -n '(load-file \"%{buffer_name}\")' | tmux-pipe";
         };
       };
     };

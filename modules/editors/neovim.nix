@@ -107,6 +107,7 @@ in
     lib.mkIf cfg.enable {
       home = {
         packages = with pkgs; [
+        trivy
           go
           gopls # go
           terraform-ls

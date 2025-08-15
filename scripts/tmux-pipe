@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Check if stdin is a terminal (i.e., not a pipe or redirection)
+if [ -t 0 ]; then
+    echo "Error: No input detected. Please pipe data into this script." >&2
+    exit 1
+fi
+tmux_pane_id() {
+  tmux display-message -p '#{pane_id}'
+}
+
+cat | tmux load-buffer  -
+
+current_pane=$(tmux_pane_id)
+tmux select-pane -R
+target_pane_id=$(tmux_pane_id)
+tmux select-pane -t "${current_pane}"
+
+tmux paste-buffer -t "${target_pane_id}"
+tmux send-keys -t  "${target_pane_id}" Enter

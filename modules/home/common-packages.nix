@@ -27,7 +27,7 @@ in
   '';
 
   programs.ghostty = {
-    enable = true;
+    enable = !pkgs.stdenv.isDarwin;
   };
 
   home = {

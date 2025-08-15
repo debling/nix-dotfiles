@@ -101,7 +101,7 @@
     defaults = {
       NSGlobalDomain = {
         InitialKeyRepeat = 15;
-        KeyRepeat = 1;
+        KeyRepeat = 2;
 
         NSAutomaticWindowAnimationsEnabled = true;
 
@@ -141,6 +141,7 @@
       "orbstack"
       "ghostty"
       "karabiner-elements"
+      "libreoffice"
     ];
   };
 }

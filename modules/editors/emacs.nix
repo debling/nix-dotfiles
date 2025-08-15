@@ -50,11 +50,9 @@
 
           });
         in
-        (pkgs.emacsPackagesFor pkgs.emacs30-pgtk).emacsWithPackages (epkgs: with epkgs; [
-          nix-mode
-          vterm
-          treesit-grammars.with-all-grammars
+        (pkgs.emacsPackagesFor emacsPkg).emacsWithPackages (epkgs: with epkgs; [
           mu4e
+          treesit-grammars.with-all-grammars
         ]);
     };
 
