@@ -21,7 +21,11 @@ in
     shell-integration = fish
     theme = GruvboxDarkHard
     font-family = JetBrainsMono Nerd Font
+    background = #000000
+    foreground = #EAEAEA
     font-size = 14
+    adjust-cell-width = -7%
+    font-thicken = true
     window-padding-x = 10
     window-padding-y = 10
   '';
@@ -34,6 +38,8 @@ in
     packages = with pkgs; [
       # spelling
       (hunspellWithDicts [ hunspellDicts.pt_BR hunspellDicts.en_US ])
+
+      duckdb
 
       btop
       cloc

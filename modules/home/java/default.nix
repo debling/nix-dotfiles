@@ -12,8 +12,9 @@ in
     packages = [
       latest_jdk
       javadoc
-      # mvnd
+      mvnd
       scenebuilder
+      jol
     ];
     file = {
       # Stable SDK symlinks

@@ -72,6 +72,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    helix = {
+      url = "github:helix-editor/helix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     zig-overlay = {
       url = "github:mitchellh/zig-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -83,12 +88,6 @@
         nixpkgs.follows = "nixpkgs";
         zig-overlay.follows = "zig-overlay";
       };
-    };
-
-    kmonad = {
-      # submodules are neeed on darwin to pull in karabiner stuff
-      url = "git+https://github.com/kmonad/kmonad?submodules=1&dir=nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixpkgs-wayland = {
@@ -127,11 +126,11 @@
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
+          inputs.helix.overlays.default
 
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
-            kmonad = inputs.kmonad.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
 
             wbg = prev.wbg.overrideAttrs {
@@ -178,7 +177,6 @@
 
           ./hosts/portable/configuration.nix
 
-          inputs.kmonad.nixosModules.default
 
           home-manager.nixosModules.home-manager
 
@@ -200,8 +198,6 @@
           { config.facter.reportPath = ./hosts/x1-carbon/facter.json; }
 
           ./hosts/x1-carbon/configuration.nix
-
-          inputs.kmonad.nixosModules.default
 
           home-manager.nixosModules.home-manager
 

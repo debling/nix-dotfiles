@@ -1,4 +1,4 @@
-{ config, lib, pkgs, neovim-nightly-overlay,  ... }:
+{ config, lib, pkgs, neovim-nightly-overlay, ... }:
 
 let
   cfg = config.debling.editors.neovim;
@@ -22,7 +22,7 @@ in
         zig = {
           systemPkgs = with pkgs; [
             zigpkgs.master
-            #zls
+            zls
           ];
         };
 
@@ -48,8 +48,15 @@ in
         java = {
           systemPkgs = with pkgs;
             let
+                jdt = jdt-language-server.overrideAttrs {
+
+                     postPatch = ''
+                       substituteInPlace bin/jdtls.py \
+                         --replace-fail "jdtls_base_path = Path(__file__).parent.parent" "jdtls_base_path = Path(\"$out/share/java/jdtls/\")"
+                     '';
+                        };
               jdtls-with-lombok = pkgs.writeShellScriptBin "jdtls" ''
-                ${lib.getExe jdt-language-server} \
+                ${lib.getExe jdt} \
                   --jvm-arg=-javaagent:${lombok}/share/java/lombok.jar \
                   --jvm-arg=-Dlog.level=ALL \
                   $@
@@ -89,7 +96,7 @@ in
               biome
               emmet-ls
               html-tidy
-              hurl
+                            #hurl
               nodePackages."@tailwindcss/language-server"
               nodePackages.typescript-language-server
               nodePackages.vscode-langservers-extracted
@@ -98,8 +105,8 @@ in
             ];
           plugins = with pkgs.vimPlugins;
             [
-              hurl
-              hurl-nvim
+                            #hurl
+                            #hurl-nvim
             ];
         };
       };
@@ -107,7 +114,7 @@ in
     lib.mkIf cfg.enable {
       home = {
         packages = with pkgs; [
-        trivy
+          trivy
           go
           gopls # go
           terraform-ls
@@ -149,6 +156,7 @@ in
 
             ## Sintax hilighting
             nvim-treesitter.withAllGrammars
+            nvim-treesitter-context
             todo-comments-nvim # No setup() call needed
 
             ## LSP
@@ -168,22 +176,19 @@ in
             gitsigns-nvim
             neogit
 
-            lazydev-nvim
+            #lazydev-nvim
 
             ## UI
             vim-slime
 
             SchemaStore-nvim
-
-            ## Remember last place on files
-            nvim-lastplace
           ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
         };
 
       xdg = {
         configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink
-            "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/config/nvim";
+          "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/config/nvim";
 
         dataFile = {
           "nvim/jdtls/java-debug" = {

@@ -120,23 +120,6 @@ vim.lsp.config('ltex', {
 })
 vim.lsp.enable('ltex')
 
-require('lazydev').setup({
-  library = {
-    -- Load luvit types when the `vim.uv` word is found
-    { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
-  },
-})
-
-vim.lsp.config('lua_ls', {
-  settings = {
-    Lua = {
-      telemetry = {
-        enable = false,
-      },
-      hint = { enable = true },
-    },
-  },
-})
 vim.lsp.enable('lua_ls')
 
 local null_ls = require('null-ls')

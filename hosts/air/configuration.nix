@@ -40,8 +40,6 @@
 
     # Linux programing api pages
     man-pages-posix
-
-    kmonad
   ];
 
   security.pam.services.sudo_local = {

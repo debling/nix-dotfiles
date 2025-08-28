@@ -36,22 +36,29 @@
           args = [ "--stdio" ];
           config.typescript.tsdk = "./node_modules/typescript/lib/";
         };
+        angular-ls = {
+          command = "ngsever";
+          args = [
+            "--stdio"
+          ];
+          file-types = ["ts" "typescript" "html"];
+        };
       };
       grammar = [
         {
           name = "asm";
           source = { git = "https://github.com/RubixDev/tree-sitter-asm"; rev = "04962e15f6b464cf1d75eada59506dc25090e186"; };
         }
-              ];
+      ];
       language = [
         {
           name = "fasm";
           scope = "source.fasm";
           comment-token = ";";
           indent = { tab-width = 4; unit = "    "; };
-          language-servers = [ "asm-lsp"];
+          language-servers = [ "asm-lsp" ];
           grammar = "asm";
-          file-types = ["fasm"];
+          file-types = [ "fasm" ];
         }
         {
           name = "astro";
@@ -61,6 +68,18 @@
             args = [ "--plugin" "prettier-plugin-astro" "--parser" "astro" ];
           };
           auto-format = true;
+        }
+        {
+          name = "typescript";
+          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
+        }
+        {
+          name = "javascript";
+          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
+        }
+        {
+          name = "html";
+          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
         }
         {
           name = "markdown";

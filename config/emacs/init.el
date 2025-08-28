@@ -170,6 +170,7 @@
 
   (make-backup-files nil) ;; Stop creating ~ backup files
   (auto-save-default nil) ;; Stop creating # auto save files
+  (global-hl-line-mode 1)
   :hook
   (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
   (prog-mode . display-line-numbers-mode)

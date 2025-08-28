@@ -6,10 +6,50 @@ vim.api.nvim_create_autocmd('FileType', {
   callback = function() pcall(vim.treesitter.start) end,
 })
 
+local function load_setup_treesitter()
+  require('nvim-treesitter.configs').setup({
+    modules = {},
+    ensure_installed = {},
+    ignore_install = { "all" },
+    sync_install = false,
+    auto_install = false,
+    highlight = {
+      enable = true,
+    },
+    indent = {
+      enable = true,
+    },
+    refactor = {
+      highlight_definitions = {
+        enable = true,
+        -- Set to false if you have an `updatetime` of ~100.
+        clear_on_cursor_move = true,
+      },
+      navigation = {
+        enable = true,
+        keymaps = {
+          goto_definition = 'gnd',
+          list_definitions = 'gnD',
+          list_definitions_toc = 'gO',
+          goto_next_usage = '<a-*>',
+          goto_previous_usage = '<a-#>',
+        },
+      },
+    },
+  })
+end
+
+vim.defer_fn(load_setup_treesitter, 1)
+
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldenable = false
+
 vim.o.foldenable = true -- enable fold
 vim.o.foldlevel = 99 -- start editing with all folds opened
 vim.o.foldmethod = 'expr' -- use tree-sitter for folding method
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+
 
 local harpoon = require('harpoon')
 

@@ -30,6 +30,3 @@ utils.nmap('<Leader>fh', tel_builtin.help_tags)
 utils.nmap('<Leader>fs', tel_builtin.lsp_dynamic_workspace_symbols)
 
 utils.nmap('z=', tel_builtin.spell_suggest)
-
--- remember the last place you were editing a file
-require('nvim-lastplace').setup()
