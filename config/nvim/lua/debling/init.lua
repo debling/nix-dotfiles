@@ -33,6 +33,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 local utils = require('debling.config_utils')
 
+--[[
 require('obsidian').setup({
   workspaces = {
     {
@@ -53,6 +54,7 @@ require('obsidian').setup({
 utils.nmap('<leader>og', '<cmd>Obsidian search<CR>')
 utils.nmap('<leader>of', '<cmd>Obsidian quick_switch<CR>')
 utils.nmap('<leader>ow', '<cmd>Obsidian workspace<CR>')
+--]]
 
 
 vim.g['conjure#mapping#doc_word'] = 'gk'

@@ -346,6 +346,7 @@
   :diminish nix-prettify-mode
   :mode "\\.nix\\'"
   :config
+  (use-package nix-mode)
   (nix-prettify-global-mode))
 
 ;;; Zig

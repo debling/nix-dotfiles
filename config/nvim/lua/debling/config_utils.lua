@@ -109,12 +109,16 @@ end
 function M.lazy_require(req_fn)
   local module = nil
   return setmetatable({}, {
+    __call = function(_, ...) if module == nil then module = req_fn() end return module(...) end,
+
     __index = function(_, k)
       return function(...)
         if module == nil then module = req_fn() end
         return module[k](...)
       end
     end,
+
+    __newindex = function(_, key, value) if module == nil then module = req_fn() end module[key] = value end,
   })
 end
 

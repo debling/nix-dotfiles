@@ -12,8 +12,9 @@
       ../../modules/common/networking.nix
       ../../modules/common/nix.nix
       ../../modules/common/pipewire.nix
-      ../../modules/desktop/river
-      ../../modules/hardware/bluetooth.nix
+      ../../modules/nixos/desktop/river.nix
+      ../../modules/nixos/keyboard.nix
+      ../../modules/nixos/bluetooth.nix
     ];
 
   zramSwap = {
@@ -46,7 +47,6 @@
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
   };
 
-  users.users.kmonad.extraGroups = [ "uinput" ];
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -78,19 +78,7 @@
 
   # Configure keymap in X11
   services = {
-    kmonad = {
-      enable = true;
-      keyboards = {
-        k6Out = {
-          defcfg.enable = false;
-          device = "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd";
-          config = builtins.readFile ../../modules/keyboard/keyboard.kbd;
-        };
-      };
-    };
-
     udev = {
-
       extraRules = ''
         KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
       '';
@@ -114,7 +102,7 @@
           default_session = {
             command =
               ''
-                ${lib.getExe pkgs.greetd.tuigreet} \
+                ${lib.getExe pkgs.tuigreet} \
                   --cmd river \
                   --asterisks --remember --remember-user-session --time
               '';
@@ -154,7 +142,10 @@
     platformio-core
     openocd
     flashrom
+
+    uv
   ];
+  environment.localBinInPath = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -190,5 +181,5 @@
 
   services.fstrim.enable = true;
   services.tlp.enable = true;
-  services.logind.lidSwitchExternalPower = "ignore";
+  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 }

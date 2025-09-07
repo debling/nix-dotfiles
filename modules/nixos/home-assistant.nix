@@ -20,8 +20,6 @@
       # https://www.home-assistant.io/integrations/default_config/
       default_config = { };
       homeassistant = {
-
-
         media_dirs = {
           media = "/media";
           recormedia_sourceding = "/mnt/recordings";

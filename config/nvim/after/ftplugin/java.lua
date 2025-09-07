@@ -122,6 +122,9 @@ local config = {
   },
 }
 
+-- vim.fn.exepath("jol-cli")
 -- FIXME: hardcoded, use nix to build
 jdtls.jol_path = vim.fs.normalize('~/Downloads/jol-cli-latest.jar')
+
+vim.lsp.log.set_level(vim.log.levels.DEBUG)
 jdtls.start_or_attach(config)

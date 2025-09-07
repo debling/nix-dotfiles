@@ -1,32 +1,48 @@
-{ config, lib, pkgs, nix-colors, colorscheme, mainUser, ... }:
+{
+  config,
+  pkgs,
+  colorscheme,
+  mainUser,
+  ...
+}:
 
 {
   environment.systemPackages =
     let
       volume = pkgs.writeShellApplication {
         name = "volume";
-        runtimeInputs = with pkgs; [ libnotify pipewire ];
+        runtimeInputs = with pkgs; [
+          libnotify
+          pipewire
+        ];
         text = builtins.readFile ./volume;
       };
 
       screenshot = pkgs.writeShellApplication {
         name = "screenshot";
 
-        runtimeInputs = with pkgs; [ grim slurp satty ];
+        runtimeInputs = with pkgs; [
+          grim
+          slurp
+          satty
+        ];
 
-        text = /* sh */ ''
-          grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
-            | satty --filename - \
-            --fullscreen \
-            --output-filename "$HOME/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png";
-        '';
+        text = # sh
+          ''
+            grim -g "$(slurp -c '#ff0000ff')" -t ppm - \
+              | satty --filename - \
+              --fullscreen \
+              --output-filename "$HOME/Pictures/Screenshots/satty-$(date '+%Y%m%d-%H:%M:%S').png";
+          '';
       };
     in
-    with pkgs; [
+    with pkgs;
+    [
       volume
       screenshot
       kooha # recording tool
-
+      wf-recorder
+      hyprshot
       pamixer
       slurp
       grim
@@ -55,7 +71,6 @@
     ];
   };
 
-
   home-manager.users.${mainUser} = {
     # systemd.user.services.wbg = {
     #   Unit = {
@@ -75,8 +90,30 @@
     #     "${lib.getExe pkgs.wbg} --stretch ${wallpaper}";
     #   Install.WantedBy = [ "graphical-session.target" ];
     # };
-
     services = {
+      mako = with colorscheme.palette; {
+        enable = true;
+        settings = {
+          default-timeout = 10 * 1000;
+          layer = "overlay";
+          icon-path = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
+          background-color = "#${base00}";
+          text-color = "#${base05}";
+          border-color = "#${base0D}";
+          progress-color = "#${base02}";
+          "urgency=low" = {
+            background-color = "#${base00}";
+            text-color = "#${base0A}";
+            border-color = "#${base0D}";
+          };
+
+          "urgency=high" = {
+            background-color = "#${base00}";
+            text-color = "#${base08}";
+            border-color = "#${base0D}";
+          };
+        };
+      };
       wpaperd = {
         enable = true;
         settings = {

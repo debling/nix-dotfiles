@@ -10,11 +10,10 @@
   imports = [
     ../../modules/home/common-packages.nix
     ../../modules/home/nixos-common-pkgs.nix
-    ../../modules/editors/neovim.nix
-    ../../modules/terminals/alacritty.nix
-    ../../modules/terminals/foot.nix
+    ../../modules/home/neovim.nix
+    ../../modules/nixos_and_darwin/alacritty.nix
+    ../../modules/nixos/foot.nix
     ../../modules/home/version-control.nix
-    ../../modules/home/wayland-commons.nix
     ../../modules/home/gtk-qt.nix
     android-nixpkgs.hmModule
   ];
@@ -72,7 +71,8 @@
       nodePackages.pnpm
       pipenv
 
-      (python311.withPackages (
+
+      (python313.withPackages (
         ps: with ps; [
           pandas
           numpy
@@ -82,6 +82,7 @@
           # jupyterlab
           pudb
           # torch
+          pyarrow
           boto3
           scikit-learn
         ]

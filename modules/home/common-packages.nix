@@ -8,8 +8,8 @@ in
 {
   imports = [
     nix-index-database.homeModules.nix-index
-    ../editors/emacs.nix
-    ../editors/helix.nix
+    ./emacs.nix
+    ./helix.nix
     ./java
   ];
 
@@ -78,6 +78,9 @@ in
       hledger-web
       hledger-interest
       ledger-autosync
+
+      awscli2
+      ssm-session-manager-plugin
     ];
 
 
@@ -286,10 +289,12 @@ in
 
     ssh = {
       enable = true;
-      compression = true;
-      controlMaster = "auto";
-      controlPersist = "15m";
       matchBlocks = {
+        "*" = {
+          compression = true;
+          controlMaster = "auto";
+          controlPersist = "15m";
+        };
         "i-*".proxyCommand = "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";
       };
     };

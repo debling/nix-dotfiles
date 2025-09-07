@@ -1,7 +1,7 @@
-{ config, lib, pkgs, mainUser, nix-colors, colorscheme, ... }:
+{  lib, pkgs, mainUser, colorscheme, ... }:
 
 {
-  imports = [ ../common.nix ];
+  imports = [ ./wayland.nix ];
 
   environment.systemPackages = [ pkgs.river-ultitile ];
   environment.sessionVariables = {
@@ -24,6 +24,7 @@
   home-manager.users.${mainUser} = {
     wayland.windowManager.river = {
       enable = true;
+      package = pkgs.river-classic;
       settings = with colorscheme.palette; {
         rule-add = {
           "-app-id" =
@@ -227,8 +228,8 @@
         settings = {
           bar = with colorscheme.palette; {
             margin = 6;
-            height = 30;
-            font = "monospace:size=16:weight=semibold";
+            height = 26;
+            font = "monospace:size=14:weight=semibold";
             location = "top";
             foreground = "${base05}FF";
             background = "${base00}BB";
