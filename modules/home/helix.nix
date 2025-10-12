@@ -27,6 +27,7 @@
           command = lib.getExe pkgs.codebook;
           args = [ "serve" ];
         };
+        biome = { command = "biome"; args = ["lsp-proxy"]; };
         # efm-prettier-md = {
         #   command = lib.getExe pkgs.;
         #   args = ["serve"];  
@@ -41,7 +42,7 @@
           args = [
             "--stdio"
           ];
-          file-types = ["ts" "typescript" "html"];
+          file-types = [ "ts" "typescript" "html" ];
         };
       };
       grammar = [
@@ -71,15 +72,31 @@
         }
         {
           name = "typescript";
-          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
+          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
+        }
+        {
+          name = "tsx";
+          language-servers = [ { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
+        }
+        {
+          name = "java";
+          language-servers = [ "codebook" "jdtls" ];
         }
         {
           name = "javascript";
-          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
+          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome" ];
+        }
+        {
+          name = "jsx";
+          language-servers = [ { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
         }
         {
           name = "html";
-          language-servers = ["angular" "typescript-language-server" "vscode-eslint-language-server"];
+          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome"];
+        }
+        {
+          name = "json";
+          language-servers = [ { name = "vscode-json-language-server"; except-features = [ "format" ]; } "biome" ];
         }
         {
           name = "markdown";

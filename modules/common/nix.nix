@@ -7,6 +7,7 @@
     '';
     channel.enable = false;
     settings.auto-optimise-store = true;
+    daemonCPUSchedPolicy = "idle";
   };
 
 

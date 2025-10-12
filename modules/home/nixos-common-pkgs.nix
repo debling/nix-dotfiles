@@ -18,6 +18,7 @@
     zoom-us
 
     slack
+    discord
   ];
 }
 

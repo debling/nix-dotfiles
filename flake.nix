@@ -38,7 +38,6 @@
     };
     nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
 
-
     # Modules
     android-nixpkgs = {
       url = "github:tadfisher/android-nixpkgs/stable";
@@ -83,7 +82,7 @@
     };
 
     zls = {
-      url = "github:zigtools/zls";
+      url = "github:zigtools/zls/829f566c1203ab98612577885a85e07eb0101961";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         zig-overlay.follows = "zig-overlay";

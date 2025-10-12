@@ -3,7 +3,6 @@ local Path = require('plenary.path')
 local jdtls = require('jdtls')
 local utils = require('debling.config_utils')
 
---[[
 utils.null_ls_register(
   function(builtins)
     return {
@@ -18,7 +17,6 @@ utils.null_ls_register(
     }
   end
 )
---]]
 
 ---@param jdk_version string
 ---@return string
@@ -128,3 +126,6 @@ jdtls.jol_path = vim.fs.normalize('~/Downloads/jol-cli-latest.jar')
 
 vim.lsp.log.set_level(vim.log.levels.DEBUG)
 jdtls.start_or_attach(config)
+
+vim.opt.makeprg = "mvnd compile -q -f pom.xml"
+vim.opt.errorformat = "[ERROR] %f:[%l%.%c]%m"

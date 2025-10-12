@@ -39,10 +39,12 @@
     extraGroups = [
       "wheel" # sudo commands without password
       "docker" # docker commands without root
+      "podman" # podman commands without root
       "adbusers" # android `adb` command
       "input"
       "uinput" # access to udev access (in use by kmonad)
       "dialout" # access to wserial ports
+      "kvm" # access to wserial ports
     ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
   };
@@ -179,7 +181,6 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
 
-  services.fstrim.enable = true;
   services.tlp.enable = true;
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 }

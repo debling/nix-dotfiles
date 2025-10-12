@@ -1,4 +1,4 @@
-{  lib, pkgs, mainUser, colorscheme, ... }:
+{ lib, pkgs, mainUser, colorscheme, ... }:
 
 {
   imports = [ ./wayland.nix ];
@@ -40,6 +40,7 @@
             {
               emacs = [ "ssd" { tags = intFromBinStr "100000000"; } ]; # ws 1
               Slack = { tags = intFromBinStr "010000000"; }; # ws 2
+              discord = { tags = intFromBinStr "010000000"; }; # ws 2
               zen-beta = [ "ssd" { tags = intFromBinStr "001000000"; } ];
               spotify = { tags = intFromBinStr "000000001"; }; # only workspace 9
             };
@@ -47,19 +48,22 @@
 
         map = {
           normal = {
-            "Super+Shift Return" = "spawn footclient";
+            "Super Return" = "spawn 'footclient -E'";
             "Super Space" = "spawn fuzzel";
             "Super Q" = "close";
             "Super Y" = "spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'";
+            "Super S" = "spawn omarchy-cmd-screenrecord";
+            "Super P" = "spawn omarchy-cmd-screenshot";
           };
         };
 
         spawn = [
+          "discord"
+          "emacs"
+          "slack"
+          "spotify"
           "yambar"
           "zen"
-          "emacs"
-          "spotify"
-          "slack"
         ];
 
         default-layout = "rivertile";
@@ -90,7 +94,7 @@
         riverctl map normal Super+Shift Comma send-to-output previous
 
         # Super+Return to bump the focused view to the top of the layout stack
-        riverctl map normal Super Return zoom
+        riverctl map normal Super+Shift Return zoom
 
         # Super+H and Super+L to decrease/increase the main ratio of rivertile(1)
         riverctl map normal Super H send-layout-cmd rivertile "main-ratio -0.05"
@@ -198,15 +202,15 @@
         riverctl set-repeat 50 300
 
         # Make all views with an app-id that starts with "float" and title "foo" start floating.
-        riverctl rule-add -app-id 'float*' -title 'foo' float
+        riverctl rule-add -app-id 'float*' float
 
         # Make all views with app-id "bar" and any title use client-side decorations
         riverctl rule-add -app-id "bar" csd
 
         rivertile -view-padding 6 -outer-padding 6 &
 
-        riverctl map normal Alt+Shift 4  spawn  screenshot
-        riverctl map normal Alt+Shift 5  spawn  kooha
+        riverctl map normal Super T spawn 'footclient -a float-term --window-size-chars=150x40 -E /usr/bin/env taskwarrior-tui'
+        riverctl map normal Super N spawn 'footclient -a float-term --window-size-chars=150x40 -E /usr/bin/env newsboat'
 
         riverctl map $mode None XF86MonBrightnessDown spawn 'brightnessctl set 5%-'
 

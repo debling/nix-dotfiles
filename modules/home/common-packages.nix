@@ -17,15 +17,17 @@ in
   programs.nix-index.enable = true;
 
 
-  xdg.configFile."ghostty/config".text = ''
-    shell-integration = fish
-    theme = GruvboxDarkHard
+  xdg.configFile."ghostty/config".text = /* sh */ ''
+    # theme = GruvboxDarkHard
+    keybind = ctrl+%=new_split:right
+    window-decoration = server
+    command = ${lib.getExe pkgs.fish}
+
     font-family = JetBrainsMono Nerd Font
     background = #000000
     foreground = #EAEAEA
     font-size = 14
-    adjust-cell-width = -7%
-    font-thicken = true
+    #font-thicken = true
     window-padding-x = 10
     window-padding-y = 10
   '';
@@ -34,10 +36,66 @@ in
     enable = !pkgs.stdenv.isDarwin;
   };
 
+  programs.newsboat = {
+    enable = true;
+    autoReload = true;
+    urls = let
+      links =  [
+        "http://nullprogram.com/feed/"
+        "https://planet.emacslife.com/atom.xml"
+        "https://cestlaz.zamansky.net/rss.xml"
+        "https://lukesmith.xyz/index.xml"
+        "http://www.finep.gov.br/component/ninjarsssyndicator/?feed_id=1&format=raw"
+        "https://www.openmymind.net/atom.xml"
+    ];
+     toUrlStruct = url: ({ url = url; });
+     in lib.map toUrlStruct links;
+    extraConfig = ''
+bind-key j down
+bind-key k up
+bind-key j next articlelist
+bind-key k prev articlelist
+bind-key J next-feed articlelist
+bind-key K prev-feed articlelist
+bind-key G end
+bind-key g home
+bind-key d pagedown
+bind-key u pageup
+bind-key l open
+bind-key h quit
+bind-key a toggle-article-read
+bind-key n next-unread
+bind-key N prev-unread
+bind-key D pb-download
+bind-key U show-urls
+bind-key x pb-delete
+
+color listnormal cyan default
+color listfocus black yellow standout bold
+color listnormal_unread blue default
+color listfocus_unread yellow default bold
+color info red black bold
+color article white default bold
+
+highlight all "---.*---" yellow
+highlight feedlist ".*(0/0))" black
+highlight article "(^Feed:.*|^Title:.*|^Author:.*)" cyan default bold
+highlight article "(^Link:.*|^Date:.*)" default default
+highlight article "https?://[^ ]+" green default
+highlight article "^(Title):.*$" blue default
+highlight article "\\[[0-9][0-9]*\\]" magenta default bold
+highlight article "\\[image\\ [0-9]+\\]" green default bold
+highlight article "\\[embedded flash: [0-9][0-9]*\\]" green default bold
+highlight article ":.*\\(link\\)$" cyan default
+highlight article ":.*\\(image\\)$" blue default
+highlight article ":.*\\(embedded flash\\)$" magenta default
+'';
+  };
+
   home = {
     packages = with pkgs; [
       # spelling
-      (hunspellWithDicts [ hunspellDicts.pt_BR hunspellDicts.en_US ])
+      (hunspell.withDicts (d: [ d.pt_BR d.en_US ]))
 
       duckdb
 
@@ -79,8 +137,8 @@ in
       hledger-interest
       ledger-autosync
 
-      awscli2
-      ssm-session-manager-plugin
+    #awscli2
+    #ssm-session-manager-plugin
     ];
 
 
@@ -263,14 +321,6 @@ in
       '';
     };
 
-    # A modern replacement for ls.
-    eza = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      git = true;
-    };
-
     # Terminal fuzzy finder
     fzf = {
       enable = true;
@@ -363,6 +413,58 @@ in
       bind-key -r f run-shell "tmux neww tmux-sessionizer"
       bind-key -r g run-shell "tmux popup -d '#{pane_current_path}' -E -h 90% -w 90% -T lazygit lazygit"
       bind-key -r y run-shell "tmux popup -d '#{pane_current_path}' -E -h 90% -w 90% -T yazi yazi"
+      bind-key -r t run-shell "tmux popup -d '#{pane_current_path}' -E -h 90% -w 90% -T tasks taskwarrior-tui"
     '';
   };
+
+  
+  programs.carapace = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+  programs = {
+    nushell.enable = true;
+
+    fish = {
+      enable = true;
+      interactiveShellInit = ''
+        set fish_greeting # Disable greeting
+      '';
+      plugins = [
+        {
+          name = "done";
+          src = pkgs.fishPlugins.done.src;
+        }
+      ];
+
+      # FIXME: This is needed to address bug where the $PATH is re-ordered by
+      # the `path_helper` tool, prioritising Apple’s tools over the ones we’ve
+      # installed with nix.
+      #
+      # This gist explains the issue in more detail: https://gist.github.com/Linerre/f11ad4a6a934dcf01ee8415c9457e7b2
+      # There is also an issue open for nix-darwin: https://github.com/LnL7/nix-darwin/issues/122
+      loginShellInit =
+        let
+          # We should probably use `config.environment.profiles`, as described in
+          # https://github.com/LnL7/nix-darwin/issues/122#issuecomment-1659465635
+          # but this takes into account the new XDG paths used when the nix
+          # configuration has `use-xdg-base-directories` enabled. See:
+          # https://github.com/LnL7/nix-darwin/issues/947 for more information.
+          profiles = [
+            "/etc/profiles/per-user/$USER" # Home manager packages
+            "$HOME/.nix-profile"
+            "(set -q XDG_STATE_HOME; and echo $XDG_STATE_HOME; or echo $HOME/.local/state)/nix/profile"
+            "/run/current-system/sw"
+            "/nix/var/nix/profiles/default"
+          ];
+
+          makeBinSearchPath = lib.concatMapStringsSep " " (path: "${path}/bin");
+        in
+        lib.mkIf pkgs.stdenv.isDarwin ''
+          # Fix path that was re-ordered by Apple's path_helper
+          fish_add_path --move --prepend --path ${makeBinSearchPath profiles}
+          set fish_user_paths $fish_user_paths
+        '';
+    };
+    };
 }

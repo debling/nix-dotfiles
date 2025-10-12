@@ -1,4 +1,9 @@
-{ config, lib, pkgs, neovim-nightly-overlay, ... }:
+{ config
+, lib
+, pkgs
+, neovim-nightly-overlay
+, ...
+}:
 
 let
   cfg = config.debling.editors.neovim;
@@ -22,14 +27,14 @@ in
         zig = {
           systemPkgs = with pkgs; [
             zigpkgs.master
-                        #zls
+            #zls
           ];
         };
 
         sh = {
           systemPkgs = with pkgs; [
             hadolint
-            nodePackages.dockerfile-language-server-nodejs
+            dockerfile-language-server
             nodePackages.bash-language-server
             shellcheck
             shfmt
@@ -37,24 +42,33 @@ in
         };
 
         rust = {
-          systemPkgs = with pkgs; [ rust-analyzer cargo rustc clippy ];
+          systemPkgs = with pkgs; [
+            rust-analyzer
+            cargo
+            rustc
+            clippy
+          ];
         };
 
         clojure = {
-          systemPkgs = with pkgs; [ clojure-lsp clj-kondo ];
+          systemPkgs = with pkgs; [
+            clojure-lsp
+            clj-kondo
+          ];
           plugins = with pkgs.vimPlugins; [ conjure ];
         };
 
         java = {
-          systemPkgs = with pkgs;
+          systemPkgs =
+            with pkgs;
             let
-                jdt = jdt-language-server.overrideAttrs {
+              jdt = jdt-language-server.overrideAttrs {
 
-                     postPatch = ''
-                       substituteInPlace bin/jdtls.py \
-                         --replace-fail "jdtls_base_path = Path(__file__).parent.parent" "jdtls_base_path = Path(\"$out/share/java/jdtls/\")"
-                     '';
-                        };
+                postPatch = ''
+                  substituteInPlace bin/jdtls.py \
+                    --replace-fail "jdtls_base_path = Path(__file__).parent.parent" "jdtls_base_path = Path(\"$out/share/java/jdtls/\")"
+                '';
+              };
               jdtls-with-lombok = pkgs.writeShellScriptBin "jdtls" ''
                 ${lib.getExe jdt} \
                   --jvm-arg=-javaagent:${lombok}/share/java/lombok.jar \
@@ -89,60 +103,62 @@ in
         };
 
         web = {
-          systemPkgs = with pkgs;
-            [
-              angular-language-server
-              astro-language-server
-              biome
-              emmet-ls
-              html-tidy
-                            #hurl
-              nodePackages."@tailwindcss/language-server"
-              nodePackages.typescript-language-server
-              nodePackages.vscode-langservers-extracted
-              nodePackages.yaml-language-server
-              prettier
-            ];
-          plugins = with pkgs.vimPlugins;
-            [
-                            #hurl
-                            #hurl-nvim
-            ];
+          systemPkgs = with pkgs; [
+            angular-language-server
+            astro-language-server
+            biome
+            emmet-ls
+            html-tidy
+            #hurl
+            nodePackages."@tailwindcss/language-server"
+            nodePackages.typescript-language-server
+            nodePackages.vscode-langservers-extracted
+            nodePackages.yaml-language-server
+            prettier
+          ];
+          plugins = with pkgs.vimPlugins; [
+            hurl
+            hurl-nvim
+          ];
         };
       };
     in
     lib.mkIf cfg.enable {
       home = {
-        packages = with pkgs; [
-          trivy
-          go
-          gopls # go
-          terraform-ls
-          ### Lua
-          sumneko-lua-language-server
-          stylua
-          ltex-ls
-          texlab
-          ### nix
-          nixd # language server
-          statix #  static analysis
-          nixfmt-rfc-style
-          marksman
-        ] ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));
+        packages =
+          with pkgs;
+          [
+            trivy
+            go
+            gopls # go
+            terraform-ls
+            ### Lua
+            sumneko-lua-language-server
+            stylua
+            ltex-ls
+            texlab
+            ### nix
+            nixd # language server
+            statix # static analysis
+            nixfmt-rfc-style
+            marksman
+          ]
+          ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));
 
         sessionVariables = {
           EDITOR = "nvim";
         };
       };
 
-      programs.neovim =
-        {
-          enable = true;
-          package = neovim-nightly-overlay.packages.${pkgs.system}.default;
-          viAlias = true;
-          vimAlias = true;
-          vimdiffAlias = true;
-          plugins = with pkgs.vimPlugins; [
+      programs.neovim = {
+        enable = true;
+        package = neovim-nightly-overlay.packages.${pkgs.system}.default;
+        viAlias = true;
+        vimAlias = true;
+        vimdiffAlias = true;
+        plugins =
+          with pkgs.vimPlugins;
+          [
             harpoon2
             snacks-nvim
             rainbow-delimiters-nvim
@@ -176,24 +192,21 @@ in
             gitsigns-nvim
             neogit
 
-            #lazydev-nvim
-
             ## UI
             vim-slime
 
             SchemaStore-nvim
-          ] ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
+          ]
+          ++ (lib.concatMap (s: s.plugins or [ ]) (lib.attrValues setups));
 
-        };
+      };
 
       xdg = {
-        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink
-          "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/config/nvim";
+        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/modules/home/neovim/config";
 
         dataFile = {
           "nvim/jdtls/java-debug" = {
-            source =
-              "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug/server/";
+            source = "${pkgs.vscode-extensions.vscjava.vscode-java-debug}/share/vscode/extensions/vscjava.vscode-java-debug/server/";
           };
           "nvim/jdtls/java-test" = {
             source = "${pkgs.vscode-extensions.vscjava.vscode-java-test}/share/vscode/extensions/vscjava.vscode-java-test/server/";

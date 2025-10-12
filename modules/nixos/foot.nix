@@ -10,11 +10,8 @@
         font = "monospace:size=12";
         pad = "14x14";
       };
-      scrollback = {
-        lines = 0; # disable scrollback, tmux does it better
-      };
       colors = with colorscheme.palette; {
-        alpha = 0.98;
+        alpha = 0.92;
         foreground = base05;
         background = base00;
         regular0 = base00; # black

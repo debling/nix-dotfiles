@@ -588,14 +588,6 @@
 
 (use-package org-roam-ui :after org-roam)
 
-(use-package elfeed
-  :custom
-  (elfeed-feeds '("http://nullprogram.com/feed/"
-                  "https://planet.emacslife.com/atom.xml"
-                  "https://cestlaz.zamansky.net/rss.xml"
-                  "https://lukesmith.xyz/index.xml"
-                  "http://www.finep.gov.br/component/ninjarsssyndicator/?feed_id=1&format=raw")))
-
 
 ;;; EMAIL
 (use-package org-msg
@@ -653,6 +645,7 @@
       mu4e-read-option-use-builtin nil
       mu4e-completing-read-function 'completing-read
       mu4e-mu-allow-temp-file t
+      mu4e-compose-format-flowed t
 )
 
 (setq mu4e-contexts
@@ -747,6 +740,9 @@ Av. Roraima 1000, prédio 2, sala 22
   (whitespace-style '(face tabs trailing space-before-tab indentation
                            tab-mark empty space-after-tab missing-newline-at-eof)))
 
+
+
+;(add-to-list 'sql-postgres-login-params '(port :default 5432) 't)
 
 (setopt sql-connection-alist
       '(("rabapp-db"

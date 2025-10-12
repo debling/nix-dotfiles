@@ -12,7 +12,7 @@
 
           (defalias
             sl (one-shot 300 lsft)
-           caps (tap-hold 200 200 esc lctl)
+            caps (tap-hold-press 150 150 esc lctl)
           )
 
           (deflayer base

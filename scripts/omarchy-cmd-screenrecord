@@ -9,10 +9,10 @@ fi
 
 screenrecording() {
   filename="$OUTPUT_DIR/screenrecording-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
-  notify-send "Screen recording starting..." -t 1000
+  notify-send "Screen recording starting in 1 sec..." -t 1000
   sleep 1
 
-  wf-recorder -f "$filename" -c libx264 -p crf=23 -p preset=medium -p movflags=+faststart "$@"
+  wf-recorder -f "$filename" --audio -c libx264 -p crf=23 -p preset=medium -p movflags=+faststart  "$@"
 }
 
 if pgrep -x wl-screenrec >/dev/null || pgrep -x wf-recorder >/dev/null; then
