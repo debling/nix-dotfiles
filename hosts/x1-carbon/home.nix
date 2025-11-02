@@ -25,25 +25,6 @@
 
   news.display = "show";
 
-  android-sdk = {
-    enable = true;
-
-    path = "${config.home.homeDirectory}/SDKs/android";
-
-    packages =
-      sdk: with sdk; [
-        build-tools-30-0-0
-        build-tools-30-0-3
-        cmdline-tools-latest
-        # emulator
-        platforms-android-33
-        platform-tools
-        sources-android-33
-        # ndk-23-1-7779620
-        cmake-3-22-1
-      ];
-  };
-
   home = {
     enableNixpkgsReleaseCheck = true;
 

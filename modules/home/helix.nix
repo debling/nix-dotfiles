@@ -1,5 +1,21 @@
 { lib, pkgs, ... }:
 {
+  xdg.configFile."codebook/codebook.toml".text = /* toml */ ''
+    # List of dictionaries to use for spell checking
+    # Default: ["en_us"]
+    # Available dictionaries:
+    #  - English: "en_us", "en_gb"
+    #  - German: "de", "de_at", "de_ch"
+    #  - Dutch: "nl_nl"
+    #  - Spanish: "es"
+    #  - French: "fr"
+    #  - Italian: "it"
+    #  - Portuguese (Brazil): "pt_br"
+    #  - Russian: "ru"
+    #  - Swedish: "sv"
+    dictionaries = ["en_us", "pt_br"]
+  '';
+
   programs.helix = {
     enable = true;
     extraPackages = [ pkgs.nodePackages.prettier pkgs.asm-lsp ];
@@ -27,7 +43,7 @@
           command = lib.getExe pkgs.codebook;
           args = [ "serve" ];
         };
-        biome = { command = "biome"; args = ["lsp-proxy"]; };
+        biome = { command = "biome"; args = [ "lsp-proxy" ]; };
         # efm-prettier-md = {
         #   command = lib.getExe pkgs.;
         #   args = ["serve"];  
@@ -76,7 +92,7 @@
         }
         {
           name = "tsx";
-          language-servers = [ { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
+          language-servers = [{ name = "typescript-language-server"; except-features = [ "format" ]; } "biome"];
         }
         {
           name = "java";
@@ -88,15 +104,15 @@
         }
         {
           name = "jsx";
-          language-servers = [ { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
+          language-servers = [{ name = "typescript-language-server"; except-features = [ "format" ]; } "biome"];
         }
         {
           name = "html";
-          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome"];
+          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome" ];
         }
         {
           name = "json";
-          language-servers = [ { name = "vscode-json-language-server"; except-features = [ "format" ]; } "biome" ];
+          language-servers = [{ name = "vscode-json-language-server"; except-features = [ "format" ]; } "biome"];
         }
         {
           name = "markdown";

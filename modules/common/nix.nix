@@ -1,7 +1,10 @@
 { config, pkgs, mainUser, ... }:
 {
   nix = {
-    settings.trusted-users = [ "root" mainUser ];
+    settings = {
+            trusted-users = [ "root" mainUser ];
+    extra-platforms = [ "aarch64-linux" ];
+    };
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

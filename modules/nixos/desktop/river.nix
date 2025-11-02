@@ -43,6 +43,7 @@
               discord = { tags = intFromBinStr "010000000"; }; # ws 2
               zen-beta = [ "ssd" { tags = intFromBinStr "001000000"; } ];
               spotify = { tags = intFromBinStr "000000001"; }; # only workspace 9
+              "*" = [ "ssd" ];
             };
         };
 

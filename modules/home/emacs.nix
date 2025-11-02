@@ -1,6 +1,13 @@
 { config, pkgs, lib, ... }:
 
 {
+
+  imports = [ ];
+
+  xdg.configFile."neomutt/mailcap".text = ''
+    *; ${pkgs.xdg-utils}/bin/xdg-open %s &
+  '';
+
   home = {
     packages = with pkgs; [
       emacsclient-commands
@@ -65,8 +72,19 @@
       sidebar.enable = true;
       vimKeys = true;
       sort = "reverse-date";
-      #unmailboxes = true;
+      unmailboxes = true;
       extraConfig = /* muttrc */ ''
+        set reverse_name
+        set fast_reply
+        set fcc_attach
+        set forward_quote
+        set sidebar_format='%D%?F? [%F]?%* %?N?%N/? %?S?%S?'
+        set mail_check_stats
+        # set mailcap_path=${config.xdg.configHome}/neomutt/mailcap
+        set mark_old = no
+        # set pgp_default_key = ""
+        auto_view text/html
+
         # Default index colors:
         color index yellow default '.*'
         color index_author red default '.*'
@@ -142,6 +160,85 @@
         mono body bold "^gpg: BAD signature from.*"
         color body red default "([a-z][a-z0-9+-]*://(((([a-z0-9_.!~*'();:&=+$,-]|%[0-9a-f][0-9a-f])*@)?((([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?|[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)(:[0-9]+)?)|([a-z0-9_.!~*'()$,;:@&=+-]|%[0-9a-f][0-9a-f])+)(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*(/([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*(;([a-z0-9_.!~*'():@&=+$,-]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?(#([a-z0-9_.!~*'();/?:@&=+$,-]|%[0-9a-f][0-9a-f])*)?|(www|ftp)\\.(([a-z0-9]([a-z0-9-]*[a-z0-9])?)\\.)*([a-z]([a-z0-9-]*[a-z0-9])?)\\.?(:[0-9]+)?(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*(/([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*(;([-a-z0-9_.!~*'():@&=+$,]|%[0-9a-f][0-9a-f])*)*)*)?(\\?([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?(#([-a-z0-9_.!~*'();/?:@&=+$,]|%[0-9a-f][0-9a-f])*)?)[^].,:;!)? \t\r\n<>\"]"
       '';
+
+      binds = [
+        {
+          map = [ "index" ];
+          key = "l";
+          action = "display-message";
+        }
+        {
+          map = [ "pager" ];
+          key = "l";
+          action = "view-attachments";
+        }
+        {
+          map = [ "attach" ];
+          key = "l";
+          action = "view-mailcap";
+        }
+        {
+          map = [
+            "pager"
+            "attach"
+          ];
+          key = "h";
+          action = "exit";
+        }
+        {
+          map = [ "index" ];
+          key = "h";
+          action = "noop";
+        }
+        {
+          map = [ "index" ];
+          key = "L";
+          action = "limit";
+        }
+        {
+          map = [ "index" ];
+          key = "N";
+          action = "toggle-new";
+        }
+        {
+          map = [
+            "index"
+            "pager"
+          ];
+          key = "\\Ck";
+          action = "sidebar-prev";
+        }
+        {
+          map = [
+            "index"
+            "pager"
+          ];
+          key = "\\Cj";
+          action = "sidebar-next";
+        }
+        {
+          map = [
+            "index"
+            "pager"
+          ];
+          key = "\\Co";
+          action = "sidebar-open";
+        }
+      ];
+
+      macros = [
+        {
+          map = [ "index" ];
+          key = "o";
+          action = "<shell-escape>notmuch new<enter>";
+        }
+        {
+          map = [ "index" ];
+          key = "\\Cf";
+          action = "<vfolder-from-query>";
+        }
+      ];
+
     };
   };
 
@@ -178,7 +275,12 @@
         };
         mu.enable = true;
         msmtp.enable = true;
-        neomutt.enable = true;
+        neomutt = {
+          enable = true;
+          extraConfig = ''
+            mailboxes `find ~/Maildir/personal -type d -name cur -exec dirname {} \; | sort | awk '{ printf "\"%s\" ", $0 }'`
+          '';
+        };
         notmuch = {
           enable = true;
           neomutt.enable = true;
@@ -218,7 +320,12 @@
         };
         mu.enable = true;
 
-        neomutt.enable = true;
+        neomutt = {
+          enable = true;
+          extraConfig = ''
+            mailboxes `find ~/Maildir/zeit -type d -name cur -exec dirname {} \; | sort | awk '{ printf "\"%s\" ", $0 }'`
+          '';
+        };
         notmuch = {
           enable = true;
           neomutt.enable = true;

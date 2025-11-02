@@ -21,6 +21,7 @@
     enable = true;
     memoryPercent = 35;
   };
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" "armv7l-linux" ];
 
   # swapDevices = [
   #   {

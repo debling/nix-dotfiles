@@ -19,7 +19,7 @@ in
         c = {
           systemPkgs = with pkgs; [
             checkmake
-            clang-tools_18 # C/C++
+            llvmPackages.clang-tools
             bear # wrap make to generate compile_commands.json
           ];
         };
@@ -80,6 +80,7 @@ in
               pmd
               checkstyle
               jdtls-with-lombok
+                lemminx
             ];
           plugins = [ pkgs.vimPlugins.nvim-jdtls ];
         };
@@ -133,7 +134,7 @@ in
             gopls # go
             terraform-ls
             ### Lua
-            sumneko-lua-language-server
+            lua-language-server
             stylua
             ltex-ls
             texlab

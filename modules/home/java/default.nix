@@ -29,6 +29,7 @@ in
     sessionVariables = {
       GRAALVM_HOME = graalvmPackages.graalvm-ce.home;
       JAVA_HOME = latest_jdk.home;
+      _JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=on";
     };
   };
 }
