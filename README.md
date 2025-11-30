@@ -3,6 +3,8 @@ System configuration for [nix-darwin](https://github.com/LnL7/nix-darwin) and
 NixOS, with user space configuration managed by
 [home-manager](https://github.com/nix-community/home-manager).
 
+![Portable NixOS](./docs/screenshot-portablenixos.png)
+
 # Bootstrap Instructions
 
 ## MacOS (MacBook Air M1)
@@ -100,8 +102,6 @@ Desktop configuration for ThinkPad X1 Carbon.
 The NixOS configuration can be found [here](./hosts/x1-carbon/).
 
 ## NixOS on Portable USB
-![Portable NixOS](./docs/screenshot-portablenixos.png)
-
 Portable NixOS configuration for USB drive using [disko](https://github.com/nix-community/disko) for declarative disk management. This setup creates a self-contained NixOS system that can boot on any x86_64 machine with all hardware profiles included.
 
 The NixOS configuration can be found [here](./hosts/portable/).
