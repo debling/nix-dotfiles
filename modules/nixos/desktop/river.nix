@@ -248,7 +248,7 @@
                     workspaceTemplate = {
                       left-margin = 10;
                       right-margin = 13;
-                      conditions = lib.fold (attr: acc: acc // attr) { } (map wsFn workspaces);
+                      conditions = lib.foldr (attr: acc: acc // attr) { } (map wsFn workspaces);
                     };
                     selectedColor = "${base02}ff";
                     occupiedUnderlineColor = "${base0B}ff";

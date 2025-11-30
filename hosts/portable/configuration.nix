@@ -17,12 +17,15 @@
       ../../modules/common/pipewire.nix
       ../../modules/common/steam.nix
       # ../../modules/desktop/dwl
-      ../../modules/desktop/river
-      ../../modules/hardware/nvidia.nix
-      ../../modules/hardware/bluetooth.nix
+      ../../modules/nixos/desktop/river.nix
+       ../../modules/nixos/nvidia.nix
+       #../../modules/hardware/nouveau.nix
+      ../../modules/nixos/bluetooth.nix
     ];
 
   documentation.dev.enable = true;
+
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   hardware.opentabletdriver.enable = true;
   services.xserver.wacom.enable = true;
@@ -42,6 +45,9 @@
     shell = pkgs.fish;
   };
 
+ users.users.kmonad.isSystemUser = true;
+  users.users.kmonad.group = "kmonad";
+  users.groups.kmonad = {};
   users.users.kmonad.extraGroups = [ "uinput" ];
 
   security.sudo.wheelNeedsPassword = false;
@@ -49,7 +55,8 @@
   home-manager.users.${mainUser} = import ./home.nix;
 
   boot.kernel.sysctl."vm.swappiness" = 200;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen; 
 
 
   boot.loader.grub = {
@@ -182,5 +189,5 @@
 
   services.fstrim.enable = true;
   services.tlp.enable = true;
-  services.logind.lidSwitchExternalPower = "ignore";
+  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 }

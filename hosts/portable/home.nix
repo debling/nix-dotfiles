@@ -7,24 +7,21 @@ in
 {
   imports = [
     ../../modules/home/common-packages.nix
-    ../../modules/home/nixos-common-pkgs.nix
-    ../../modules/editors/neovim.nix
-    ../../modules/terminals/alacritty.nix
-    ../../modules/terminals/foot.nix
-    ../../modules/home/version-control.nix
-    ../../modules/home/wayland-commons.nix
     ../../modules/home/gtk-qt.nix
+    # ../../modules/home/neovim
+    ../../modules/home/nixos-common-pkgs.nix
+    ../../modules/home/version-control.nix
+    ../../modules/nixos/foot.nix
+
     android-nixpkgs.hmModule
   ];
 
-  debling.editors.neovim.enable = true;
-
-  debling.alacritty.enable = true;
+  # debling.editors.neovim.enable = true;
 
   news.display = "show";
 
   android-sdk = {
-    enable = true;
+    enable = false;
 
     path = "${config.home.homeDirectory}/SDKs/android";
 

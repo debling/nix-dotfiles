@@ -115,7 +115,7 @@
         enable = true;
         settings = {
           default = {
-            path = config.home-manager.users.${mainUser}.home.homeDirectory + "/Wallpapers";
+            path = ../../../wallpapers;
             duration = "30m";
             transition-time = 1000;
           };
