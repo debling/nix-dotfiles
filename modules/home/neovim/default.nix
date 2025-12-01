@@ -80,7 +80,7 @@ in
               pmd
               checkstyle
               jdtls-with-lombok
-                lemminx
+              lemminx
             ];
           plugins = [ pkgs.vimPlugins.nvim-jdtls ];
         };

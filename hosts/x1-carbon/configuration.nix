@@ -78,6 +78,19 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
+  services.printing = {
+    enable = true;
+    drivers = with pkgs; [
+      cups-filters
+      cups-browsed
+    ];
+  };
 
   # Configure keymap in X11
   services = {
@@ -127,9 +140,6 @@
         options = "caps:escape"; # map caps to escape.
       };
     };
-
-    # Enable CUPS to print documents.
-    printing.enable = true;
   };
 
   # Enable touchpad support (enabled default in most desktopManager).

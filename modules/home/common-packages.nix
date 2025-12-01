@@ -80,6 +80,7 @@ in
 
   home = {
     packages = with pkgs; [
+      opencode
       # spelling
       (hunspell.withDicts (d: [
         d.pt_BR
@@ -107,7 +108,7 @@ in
       ### media tools
       ffmpeg
       imagemagick
-      cmus
+      #cmus
 
       ### nix utils
       nurl # helper for creating fetch srcs from urls

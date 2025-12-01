@@ -3,11 +3,10 @@
 {
   home.packages = with pkgs; [
     ### Image viewer
-    imv
+    #imv
     ### Video player
     mpv
     ### Music player
-    cmus
     spotify-player
 
     ### Others

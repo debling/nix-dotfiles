@@ -4,7 +4,7 @@ with pkgs;
 
 let
   withFx = jdk: jdk.override { enableJavaFX = true; };
-  latest_jdk = withFx jdk;
+  latest_jdk = withFx jdk25;
   javadoc = callPackage ./javadoc.nix { jdk = latest_jdk; };
 in
 {
@@ -13,11 +13,12 @@ in
       latest_jdk
       javadoc
       mvnd
-      scenebuilder
+      #scenebuilder
       jol
     ];
     file = {
       # Stable SDK symlinks
+      "SDKs/Java/25".source = jdk25.home;
       "SDKs/Java/21".source = jdk21.home;
       "SDKs/Java/17".source = jdk17.home;
       "SDKs/Java/11".source = jdk11.home;
