@@ -682,11 +682,15 @@
                 (mu4e-sent-messages-behavior . sent)
                 (message-sendmail-extra-arguments . ("-a" "zeit"))
                 (message-signature .
-"Denilson dos Santos Ebling
-CTO
+"Denílson dos Santos Ebling
+Diretor de Tecnologia
 Zeit Soluções em Inteligência Artificial LTDA. | https://zeit.com.br
-Av. Roraima 1000, prédio 2, sala 22
-+55 (55) 99645-5313")
+
+Telefone: +55 (55) 99645-5313
+
+Zeit - anexo a empresa HCC Energia Solar.
+Estr. Mun. Norberto José; Kipper, 2169 - Camobi
+Santa Maria - RS, 97110-530")
                 ))))
 
 (require 'mu4e-icalendar)

@@ -17,6 +17,8 @@
       ../../modules/nixos/bluetooth.nix
     ];
 
+    services.tailscale.enable = true;
+    networking.enableIPv6 = false;
   zramSwap = {
     enable = true;
     memoryPercent = 35;

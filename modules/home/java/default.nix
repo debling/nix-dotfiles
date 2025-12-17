@@ -4,7 +4,7 @@ with pkgs;
 
 let
   withFx = jdk: jdk.override { enableJavaFX = true; };
-  latest_jdk = withFx jdk25;
+  latest_jdk = jdk25;
   javadoc = callPackage ./javadoc.nix { jdk = latest_jdk; };
 in
 {
