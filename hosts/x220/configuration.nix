@@ -178,6 +178,14 @@ in
         proxyPass = "http://127.0.0.1:8686";
         proxyWebsockets = true;
       };
+
+      "/nextcloud" = {
+        proxyPass = "http://127.0.0.1:8080";
+        proxyWebsockets = true;
+        extraConfig = ''
+          client_max_body_size 10G;
+        '';
+      };
     };
   };
 
@@ -224,12 +232,19 @@ in
 
   services.prometheus = {
     enable = true;
+    exporters.node.enable = true;
     scrapeConfigs = [
       {
         job_name = "blocky";
         scrape_interval = "15s";
         static_configs = [
           { targets = [ "localhost:4000" ]; }
+        ];
+      }
+      {
+        job_name = "node";
+        static_configs = [
+          { targets = [ "localhost:9100" ]; }
         ];
       }
     ];
@@ -245,8 +260,15 @@ in
         domain = myDomain;
         root_url = "%(protocol)s://%(domain)s/grafana";
       };
-      panels.disable_sanitize_html = true;
+    panels.disable_sanitize_html = true;
+    database = {
+      type = "postgres";
+      host = "127.0.0.1:5432";
+      name = "grafana";
+      user = "grafana";
+      password = "";
     };
+  };
 
     provision = {
       enable = true;
@@ -261,6 +283,38 @@ in
       ];
     };
   };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [ "grafana" "nextcloud" ];
+    ensureUsers = [
+      {
+        name = "grafana";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      }
+    ];
+  };
+
+  services.nextcloud = {
+    enable = true;
+    hostName = "x220";
+    config = {
+      dbtype = "pgsql";
+      dbhost = "localhost";
+      dbname = "nextcloud";
+      dbuser = "nextcloud";
+      adminpassFile = "/etc/nextcloud-admin-pass";
+      adminuser = "admin";
+    };
+
+    package = pkgs.nextcloud32;
+  };
+
+  environment.etc."nextcloud-admin-pass".text = "changeme";
 
   services.homepage-dashboard = {
     enable = true;
@@ -296,9 +350,24 @@ in
           {
             Blocky = {
               href = "http://${myDomain}/blocky"; # Blocky WebUI or metrics
-              icon = "blocky";
+            icon = "blocky";
+
             };
+
           }
+
+          {
+
+            Nextcloud = {
+
+              href = "http://${myDomain}/nextcloud";
+
+              icon = "nextcloud";
+
+            };
+
+          }
+
         ];
       }
     ];
