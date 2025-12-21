@@ -23,6 +23,13 @@
       ../../modules/nixos/bluetooth.nix
     ];
 
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
   documentation.dev.enable = true;
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
@@ -154,6 +161,7 @@
     man-pages
     man-pages-posix
   ];
+  environment.localBinInPath = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

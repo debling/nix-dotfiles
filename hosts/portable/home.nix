@@ -8,7 +8,7 @@ in
   imports = [
     ../../modules/home/common-packages.nix
     ../../modules/home/gtk-qt.nix
-    # ../../modules/home/neovim
+    ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
     ../../modules/nixos/foot.nix
@@ -16,7 +16,7 @@ in
     android-nixpkgs.hmModule
   ];
 
-  # debling.editors.neovim.enable = true;
+  debling.editors.neovim.enable = true;
 
   news.display = "show";
 
