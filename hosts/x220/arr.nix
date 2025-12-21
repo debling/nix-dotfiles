@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   users.groups.media = { };
@@ -18,6 +18,18 @@
 
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
+  services.bazarr = {
+    enable = true;
+    group = "media";
+  };
+
+  services.nginx.virtualHosts."bazarr.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.bazarr.listenPort}";
+    };
+  };
 
   services.sonarr = {
     enable = true;
@@ -27,13 +39,16 @@
         AuthenticationEnabled = false;
         AuthenticationMethod = "external";
       };
-      server = {
-        UrlBase = "sonarr";
-      };
     };
-
   };
 
+  services.nginx.virtualHosts."sonarr.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.sonarr.settings.server.port}";
+    };
+  };
 
   services.prowlarr = {
     enable = true;
@@ -41,9 +56,13 @@
       auth = {
         AuthenticationMethod = "external";
       };
-      server = {
-        UrlBase = "prowlarr";
-      };
+    };
+  };
+  services.nginx.virtualHosts."prowlarr.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.prowlarr.settings.server.port}";
     };
   };
 
@@ -55,29 +74,35 @@
         AuthenticationEnabled = false;
         AuthenticationMethod = "external";
       };
-      server = {
-        UrlBase = "lidarr";
-      };
     };
   };
-
-
-
-  services.overseerr = {
-    enable = true;
+  services.nginx.virtualHosts."lidarr.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.lidarr.settings.server.port}";
+    };
   };
 
   services.jellyfin = {
     enable = true;
     group = "media";
   };
+  services.nginx.virtualHosts."jellyfin.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8096";
+    };
+  };
 
-  hardware.opengl.enable = true;
-  hardware.opengl.extraPackages = with pkgs; [
-    intel-media-driver
-  ];
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+    ];
+  };
   users.users.jellyfin.extraGroups = [ "video" ];
-
 
 
   systemd.tmpfiles.rules = [
@@ -92,9 +117,9 @@
     {
       Media =
         let
-          services = [ "sonarr" "prowlarr" "overseerr" "transmission" "jellyfin" "lidarr" ];
+          services = [ "sonarr" "bazarr" "prowlarr" "overseerr" "transmission" "jellyfin" "lidarr" ];
         in
-        map (s: ({ ${s} = { href = "/${s}"; icon = s; }; })) services;
+        map (s: ({ ${s} = { href = "https://${s}.home.debling.com.br"; icon = s; }; })) services;
     }
   ];
 

@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, mainUser, ... }:
+{
+  config,
+  pkgs,
+  mainUser,
+  ...
+}:
 
 let
   myDomain = "x220";
@@ -10,13 +15,12 @@ let
 in
 
 {
-  imports =
-    [
-      ../../modules/common/containers.nix
-      ../../modules/common/nix.nix
-      ./arr.nix
-      # ../../modules/home-assistant.nix
-    ];
+  imports = [
+    ../../modules/common/containers.nix
+    ../../modules/common/nix.nix
+    ./arr.nix
+    # ../../modules/home-assistant.nix
+  ];
 
   powerManagement.powertop.enable = true;
 
@@ -105,14 +109,18 @@ in
 
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 
-
   services.openssh.enable = true;
   networking = {
     useNetworkd = true;
     firewall = {
       enable = true;
       allowPing = true;
-      allowedTCPPorts = [ 80 443 53 22 ];
+      allowedTCPPorts = [
+        80
+        443
+        53
+        22
+      ];
       allowedUDPPorts = [ 53 ];
     };
     hostName = "x220";
@@ -135,10 +143,34 @@ in
     nameservers = [ "127.0.0.1" ];
   };
 
-  services.resolved.enable = false;
+
+/*
+  secret on /etc/secrets/hostinger like:
+      HOSTINGER_API_TOKEN=<hostinger api key>
+      HOSTINGER_PROPAGATION_TIMEOUT=300
+      HOSTINGER_POLLING_INTERVAL=30
+  */
+  security.acme = {
+    acceptTerms = true;
+    defaults = {
+      email = "d.ebling8@gmail.com";
+    };
+    certs."home.debling.com.br" = {
+      dnsProvider = "hostinger";
+      credentialsFile = "/etc/secrets/hostinger";
+      extraDomainNames = [ "*.home.debling.com.br" ];
+      group = config.services.nginx.group;
+    };
+  };
+
+  services.resolved.extraConfig = "DNSStubListener=no"; # Risable the resolved dns server on port
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    recommendedOptimisation = true;
+    recommendedGzipSettings = true;
+    recommendedBrotliSettings = true;
     virtualHosts.${myIp}.locations = {
       "/" = {
         proxyPass = "http://127.0.0.1:8082"; # homepage
@@ -155,6 +187,10 @@ in
 
       "/sonarr" = {
         proxyPass = "http://127.0.0.1:8989";
+      };
+
+      "/bazarr" = {
+        proxyPass = "http://127.0.0.1:6767";
       };
 
       "/prowlarr" = {
@@ -179,13 +215,6 @@ in
         proxyWebsockets = true;
       };
 
-      "/nextcloud" = {
-        proxyPass = "http://127.0.0.1:8080";
-        proxyWebsockets = true;
-        extraConfig = ''
-          client_max_body_size 10G;
-        '';
-      };
     };
   };
 
@@ -204,7 +233,7 @@ in
       customDNS = {
         customTTL = "1h";
         mapping = {
-          "home.arpa" = myIp;
+          "home.debling.com.br" = myIp;
           ${myDomain} = myIp;
           "router" = "192.168.0.1";
         };
@@ -260,15 +289,15 @@ in
         domain = myDomain;
         root_url = "%(protocol)s://%(domain)s/grafana";
       };
-    panels.disable_sanitize_html = true;
-    database = {
-      type = "postgres";
-      host = "127.0.0.1:5432";
-      name = "grafana";
-      user = "grafana";
-      password = "";
+      panels.disable_sanitize_html = true;
+      database = {
+        type = "postgres";
+        host = "127.0.0.1:5432";
+        name = "grafana";
+        user = "grafana";
+        password = "";
+      };
     };
-  };
 
     provision = {
       enable = true;
@@ -281,12 +310,46 @@ in
           isDefault = true;
         }
       ];
+
+      dashboards.settings.providers = [
+        {
+          name = "Nix config dashboards";
+          type = "file";
+          options =
+            let
+              blockyDashboard = pkgs.fetchurl {
+                url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
+                sha256 = "sha256-InIKXAmovhDfYqBFGDNk/Cyj0hQQVjTuyDdTumV2yOg=";
+              };
+              nodeDashboard = pkgs.fetchurl {
+                url = "https://grafana.com/api/dashboards/1860/revisions/42/download";
+                sha256 = "sha256-pNgn6xgZBEu6LW0lc0cXX2gRkQ8lg/rer34SPE3yEl4=";
+              };
+              dashboardDir = pkgs.linkFarm "grafana-dashboards" [
+                {
+                  name = "blocky-grafana.json";
+                  path = blockyDashboard;
+                }
+                {
+                  name = "node-exporter.json";
+                  path = nodeDashboard;
+                }
+              ];
+            in
+            {
+              path = dashboardDir;
+            };
+        }
+      ];
     };
   };
 
   services.postgresql = {
     enable = true;
-    ensureDatabases = [ "grafana" "nextcloud" ];
+    ensureDatabases = [
+      "grafana"
+      "nextcloud"
+    ];
     ensureUsers = [
       {
         name = "grafana";
@@ -297,11 +360,23 @@ in
         ensureDBOwnership = true;
       }
     ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+      # ipv4
+      host  all      all     127.0.0.1/32   trust
+    '';
   };
 
+  services.nginx.virtualHosts."nextcloud.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+  };
   services.nextcloud = {
     enable = true;
-    hostName = "x220";
+    hostName = "nextcloud.home.debling.com.br";
+    https = true;
+    configureRedis = true;
     config = {
       dbtype = "pgsql";
       dbhost = "localhost";
@@ -310,15 +385,39 @@ in
       adminpassFile = "/etc/nextcloud-admin-pass";
       adminuser = "admin";
     };
+    extraApps = {
+      inherit (config.services.nextcloud.package.packages.apps)
+        news
+        contacts
+        calendar
+        tasks
+        mail
+        forms
+        tables
+        whiteboard
+        onlyoffice
+        notes
+        ;
+    };
+    extraAppsEnable = true;
 
     package = pkgs.nextcloud32;
   };
 
   environment.etc."nextcloud-admin-pass".text = "changeme";
 
+  services.nginx.virtualHosts."home.debling.com.br" = {
+    useACMEHost = "home.debling.com.br";
+    forceSSL = true;
+
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8082"; # homepage
+    };
+  };
+
   services.homepage-dashboard = {
     enable = true;
-    allowedHosts = "${myDomain},${myIp},x220,x220.fable-ph.ts.net";
+    allowedHosts = "${myDomain},${myIp},home.debling.com.br,x220,x220.fable-ph.ts.net";
 
     widgets = [
       {
@@ -350,22 +449,15 @@ in
           {
             Blocky = {
               href = "http://${myDomain}/blocky"; # Blocky WebUI or metrics
-            icon = "blocky";
-
+              icon = "blocky";
             };
-
           }
 
           {
-
             Nextcloud = {
-
               href = "http://${myDomain}/nextcloud";
-
               icon = "nextcloud";
-
             };
-
           }
 
         ];
@@ -380,6 +472,5 @@ in
     nssmdns4 = true;
     openFirewall = true;
   };
-
 
 }
