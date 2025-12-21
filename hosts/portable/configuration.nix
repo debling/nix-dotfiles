@@ -18,8 +18,8 @@
       ../../modules/common/steam.nix
       # ../../modules/desktop/dwl
       ../../modules/nixos/desktop/river.nix
-       ../../modules/nixos/nvidia.nix
-       #../../modules/hardware/nouveau.nix
+      ../../modules/nixos/nvidia.nix
+      #../../modules/hardware/nouveau.nix
       ../../modules/nixos/bluetooth.nix
     ];
 
@@ -52,9 +52,9 @@
     shell = pkgs.fish;
   };
 
- users.users.kmonad.isSystemUser = true;
+  users.users.kmonad.isSystemUser = true;
   users.users.kmonad.group = "kmonad";
-  users.groups.kmonad = {};
+  users.groups.kmonad = { };
   users.users.kmonad.extraGroups = [ "uinput" ];
 
   security.sudo.wheelNeedsPassword = false;

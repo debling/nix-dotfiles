@@ -224,10 +224,8 @@
               else
                 throw "Have you forgotten to run nixos-anywhere with `--generate-hardware-config nixos-facter ${reportPath}`?";
           }
-          home-manager.nixosModules.home-manager
           {
             nixpkgs = nixpkgsConfig;
-            home-manager = homeManagerConfiguration;
           }
         ];
       };

@@ -2,20 +2,27 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, mainUser, ... }:
+{
+  config,
+  pkgs,
+  mainUser,
+  ...
+}:
+
+let
+  myDomain = "x220";
+  myIp = "192.168.0.254";
+in
 
 {
-  imports =
-    [
-      ../../modules/common/containers.nix
-      ../../modules/common/fonts.nix
-      ../../modules/common/networking.nix
-      ../../modules/common/nix.nix
-      ../../modules/common/pipewire.nix
-      ../../modules/desktop/dwl
-      ../../modules/hardware/bluetooth.nix
-      ../../modules/home-assistant.nix
-    ];
+  imports = [
+    ../../modules/common/containers.nix
+    ../../modules/common/nix.nix
+    ./arr.nix
+    # ../../modules/home-assistant.nix
+  ];
+
+  powerManagement.powertop.enable = true;
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
@@ -47,10 +54,6 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
   ];
 
-  home-manager.users.${mainUser} = import ./home.nix;
-
-  networking.hostName = "x220"; # Define your hostname.
-
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
 
@@ -63,61 +66,20 @@
 
   # Enable the X11 windowing system.
   services = {
-    # Enable touchpad support (enabled default in most desktopManager).
-    libinput.enable = true;
-
-    avahi = {
-      enable = true;
-      nssmdns4 = true;
-      publish = {
-        enable = true;
-        addresses = true;
-        domain = true;
-        hinfo = true;
-        userServices = true;
-        workstation = true;
-      };
-    };
-
-    displayManager.autoLogin.user = mainUser;
-
-    xserver = {
-      enable = true;
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
-
-      xkb = {
-        layout = "br";
-        variant = "thinkpad";
-        options = "caps:escape"; # map caps to escape.
-      };
-    };
-
+    fstrim.enable = true;
     tlp.enable = true;
-    power-profiles-daemon.enable = false;
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment = {
     systemPackages = with pkgs; [
-      bluez
       # uxplay
-      # neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       tmux
       wget
-      # alacritty
       git
-
-      # bitwarden
-      # bitwarden-cli
-      # spotify
+      gnumake
     ];
-
-
-    sessionVariables = {
-      _JAVA_AWT_WM_NONREPARENTING = "1";
-    };
   };
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -129,7 +91,6 @@
       enable = true;
       enableSSHSupport = true;
     };
-    zsh.enable = true;
     neovim.enable = true;
   };
 
@@ -145,4 +106,371 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
+
+  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
+
+  services.openssh.enable = true;
+  networking = {
+    useNetworkd = true;
+    firewall = {
+      enable = true;
+      allowPing = true;
+      allowedTCPPorts = [
+        80
+        443
+        53
+        22
+      ];
+      allowedUDPPorts = [ 53 ];
+    };
+    hostName = "x220";
+    useDHCP = false;
+    enableIPv6 = false;
+    interfaces.enp0s25 = {
+      ipv4.addresses = [
+        {
+          address = myIp;
+          prefixLength = 24;
+        }
+      ];
+      useDHCP = false;
+      wakeOnLan.enable = true;
+    };
+    defaultGateway = {
+      address = "192.168.0.1";
+      interface = "enp0s25";
+    };
+    nameservers = [ "127.0.0.1" ];
+  };
+
+
+/*
+  secret on /etc/secrets/hostinger like:
+      HOSTINGER_API_TOKEN=<hostinger api key>
+      HOSTINGER_PROPAGATION_TIMEOUT=300
+      HOSTINGER_POLLING_INTERVAL=30
+  */
+  security.acme = {
+    acceptTerms = true;
+    defaults = {
+      email = "d.ebling8@gmail.com";
+    };
+    certs."home.debling.com.br" = {
+      dnsProvider = "hostinger";
+      credentialsFile = "/etc/secrets/hostinger";
+      extraDomainNames = [ "*.home.debling.com.br" ];
+      group = config.services.nginx.group;
+    };
+  };
+
+  services.resolved.extraConfig = "DNSStubListener=no"; # Risable the resolved dns server on port
+  services.nginx = {
+    enable = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    recommendedOptimisation = true;
+    recommendedGzipSettings = true;
+    recommendedBrotliSettings = true;
+    virtualHosts.${myIp}.locations = {
+      "/" = {
+        proxyPass = "http://127.0.0.1:8082"; # homepage
+      };
+
+      "/blocky/" = {
+        proxyPass = "http://127.0.0.1:4000/";
+      };
+
+      "/grafana/" = {
+        proxyPass = "http://127.0.0.1:3000/";
+        proxyWebsockets = true;
+      };
+
+      "/sonarr" = {
+        proxyPass = "http://127.0.0.1:8989";
+      };
+
+      "/bazarr" = {
+        proxyPass = "http://127.0.0.1:6767";
+      };
+
+      "/prowlarr" = {
+        proxyPass = "http://127.0.0.1:9696";
+      };
+
+      "/overseerr" = {
+        proxyPass = "http://127.0.0.1:5055";
+      };
+
+      "/transmission" = {
+        proxyPass = "http://127.0.0.1:9091";
+      };
+
+      "/jellyfin" = {
+        proxyPass = "http://127.0.0.1:8096";
+        proxyWebsockets = true;
+      };
+
+      "/lidarr" = {
+        proxyPass = "http://127.0.0.1:8686";
+        proxyWebsockets = true;
+      };
+
+    };
+  };
+
+  services.blocky = {
+    enable = true;
+    settings = {
+      ports.http = 4000;
+      upstreams.groups.default = [
+        "https://dns.adguard-dns.com"
+        "tcp-tls:1.1.1.1:853"
+        "https://dns.quad9.net/dns-query"
+        # "tcp-tls://dns.adguard-dns.com"
+        "https://1.1.1.1/dns-query"
+      ];
+
+      customDNS = {
+        customTTL = "1h";
+        mapping = {
+          "home.debling.com.br" = myIp;
+          ${myDomain} = myIp;
+          "router" = "192.168.0.1";
+        };
+      };
+      prometheus.enable = true;
+
+      caching.prefetching = true;
+
+      blocking = {
+        denylists.ads = [
+          "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
+          "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+          "https://mirror1.malwaredomains.com/files/justdomains"
+          "http://sysctl.org/cameleon/hosts"
+          "https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist"
+          "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
+        ];
+        clientGroupsBlock.default = [ "ads" ];
+        blockType = "zeroIp";
+      };
+
+      # dnssec.validate = true;
+    };
+  };
+
+  services.prometheus = {
+    enable = true;
+    exporters.node.enable = true;
+    scrapeConfigs = [
+      {
+        job_name = "blocky";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:4000" ]; }
+        ];
+      }
+      {
+        job_name = "node";
+        static_configs = [
+          { targets = [ "localhost:9100" ]; }
+        ];
+      }
+    ];
+  };
+
+  services.grafana = {
+    enable = true;
+    declarativePlugins = with pkgs.grafanaPlugins; [
+      grafana-piechart-panel
+    ];
+    settings = {
+      server = {
+        domain = myDomain;
+        root_url = "%(protocol)s://%(domain)s/grafana";
+      };
+      panels.disable_sanitize_html = true;
+      database = {
+        type = "postgres";
+        host = "127.0.0.1:5432";
+        name = "grafana";
+        user = "grafana";
+        password = "";
+      };
+    };
+
+    provision = {
+      enable = true;
+      datasources.settings.datasources = [
+        {
+          name = "Prometheus";
+          type = "prometheus";
+          url = "http://localhost:9090";
+          access = "proxy";
+          isDefault = true;
+        }
+      ];
+
+      dashboards.settings.providers = [
+        {
+          name = "Nix config dashboards";
+          type = "file";
+          options =
+            let
+              blockyDashboard = pkgs.fetchurl {
+                url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
+                sha256 = "sha256-InIKXAmovhDfYqBFGDNk/Cyj0hQQVjTuyDdTumV2yOg=";
+              };
+              nodeDashboard = pkgs.fetchurl {
+                url = "https://grafana.com/api/dashboards/1860/revisions/42/download";
+                sha256 = "sha256-pNgn6xgZBEu6LW0lc0cXX2gRkQ8lg/rer34SPE3yEl4=";
+              };
+              dashboardDir = pkgs.linkFarm "grafana-dashboards" [
+                {
+                  name = "blocky-grafana.json";
+                  path = blockyDashboard;
+                }
+                {
+                  name = "node-exporter.json";
+                  path = nodeDashboard;
+                }
+              ];
+            in
+            {
+              path = dashboardDir;
+            };
+        }
+      ];
+    };
+  };
+
+  services.postgresql = {
+    enable = true;
+    ensureDatabases = [
+      "grafana"
+      "nextcloud"
+    ];
+    ensureUsers = [
+      {
+        name = "grafana";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "nextcloud";
+        ensureDBOwnership = true;
+      }
+    ];
+    authentication = pkgs.lib.mkOverride 10 ''
+      #type database  DBuser  auth-method
+      local all       all     trust
+      # ipv4
+      host  all      all     127.0.0.1/32   trust
+    '';
+  };
+
+  services.nginx.virtualHosts."nextcloud.home.debling.com.br" = {
+    forceSSL = true;
+    useACMEHost = "home.debling.com.br";
+  };
+  services.nextcloud = {
+    enable = true;
+    hostName = "nextcloud.home.debling.com.br";
+    https = true;
+    configureRedis = true;
+    config = {
+      dbtype = "pgsql";
+      dbhost = "localhost";
+      dbname = "nextcloud";
+      dbuser = "nextcloud";
+      adminpassFile = "/etc/nextcloud-admin-pass";
+      adminuser = "admin";
+    };
+    extraApps = {
+      inherit (config.services.nextcloud.package.packages.apps)
+        news
+        contacts
+        calendar
+        tasks
+        mail
+        forms
+        tables
+        whiteboard
+        onlyoffice
+        notes
+        ;
+    };
+    extraAppsEnable = true;
+
+    package = pkgs.nextcloud32;
+  };
+
+  environment.etc."nextcloud-admin-pass".text = "changeme";
+
+  services.nginx.virtualHosts."home.debling.com.br" = {
+    useACMEHost = "home.debling.com.br";
+    forceSSL = true;
+
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:8082"; # homepage
+    };
+  };
+
+  services.homepage-dashboard = {
+    enable = true;
+    allowedHosts = "${myDomain},${myIp},home.debling.com.br,x220,x220.fable-ph.ts.net";
+
+    widgets = [
+      {
+        resources = {
+          cpu = true;
+          disk = "/";
+          memory = true;
+        };
+      }
+      {
+        search = {
+          provider = "duckduckgo";
+          target = "_blank";
+        };
+      }
+    ];
+
+    # Example of linking services (Grafana, Blocky UI, etc.)
+    services = [
+      {
+        Geral = [
+          {
+            Grafana = {
+              href = "http://${myDomain}/grafana";
+              icon = "grafana";
+            };
+          }
+
+          {
+            Blocky = {
+              href = "http://${myDomain}/blocky"; # Blocky WebUI or metrics
+              icon = "blocky";
+            };
+          }
+
+          {
+            Nextcloud = {
+              href = "http://${myDomain}/nextcloud";
+              icon = "nextcloud";
+            };
+          }
+
+        ];
+      }
+    ];
+  };
+
+  services.tailscale.enable = true;
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
 }
