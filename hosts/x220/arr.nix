@@ -24,7 +24,6 @@
   };
 
   services.nginx.virtualHosts."bazarr.home.debling.com.br" = {
-    forceSSL = true;
     useACMEHost = "home.debling.com.br";
     locations."/" = {
       proxyPass = "http://127.0.0.1:${builtins.toString config.services.bazarr.listenPort}";

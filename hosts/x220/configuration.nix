@@ -12,8 +12,16 @@
 let
   myDomain = "x220";
   myIp = "192.168.0.254";
+  makeNginxLocalProxy = port: ({
+    forceSSL = true;
+    http3 = true;
+    quic = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString port}";
+    };
+    });
 in
-
 {
   imports = [
     ../../modules/common/containers.nix
@@ -79,6 +87,8 @@ in
       wget
       git
       gnumake
+      htop
+      ncdu
     ];
   };
 
@@ -107,7 +117,7 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
 
-  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   services.openssh.enable = true;
   networking = {
@@ -163,7 +173,7 @@ in
     };
   };
 
-  services.resolved.extraConfig = "DNSStubListener=no"; # Risable the resolved dns server on port
+  services.resolved.extraConfig = "DNSStubListener=no"; # Disable the resolved dns server on port
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -179,42 +189,6 @@ in
       "/blocky/" = {
         proxyPass = "http://127.0.0.1:4000/";
       };
-
-      "/grafana/" = {
-        proxyPass = "http://127.0.0.1:3000/";
-        proxyWebsockets = true;
-      };
-
-      "/sonarr" = {
-        proxyPass = "http://127.0.0.1:8989";
-      };
-
-      "/bazarr" = {
-        proxyPass = "http://127.0.0.1:6767";
-      };
-
-      "/prowlarr" = {
-        proxyPass = "http://127.0.0.1:9696";
-      };
-
-      "/overseerr" = {
-        proxyPass = "http://127.0.0.1:5055";
-      };
-
-      "/transmission" = {
-        proxyPass = "http://127.0.0.1:9091";
-      };
-
-      "/jellyfin" = {
-        proxyPass = "http://127.0.0.1:8096";
-        proxyWebsockets = true;
-      };
-
-      "/lidarr" = {
-        proxyPass = "http://127.0.0.1:8686";
-        proxyWebsockets = true;
-      };
-
     };
   };
 
@@ -234,16 +208,14 @@ in
         customTTL = "1h";
         mapping = {
           "home.debling.com.br" = myIp;
-          ${myDomain} = myIp;
-          "router" = "192.168.0.1";
+          "router.arpa" = "192.168.0.1";
         };
       };
       prometheus.enable = true;
-
       caching.prefetching = true;
-
       blocking = {
         denylists.ads = [
+          "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/ultimate.txt"
           "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
           "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
           "https://mirror1.malwaredomains.com/files/justdomains"
@@ -253,6 +225,11 @@ in
         ];
         clientGroupsBlock.default = [ "ads" ];
         blockType = "zeroIp";
+      };
+      queryLog = {
+        type= "postgresql";
+        target = "postgres://blocky@localhost:5432/blocky";
+        logRetentionDays =  7;
       };
 
       # dnssec.validate = true;
@@ -279,6 +256,7 @@ in
     ];
   };
 
+  services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} = makeNginxLocalProxy 3000;
   services.grafana = {
     enable = true;
     declarativePlugins = with pkgs.grafanaPlugins; [
@@ -286,8 +264,8 @@ in
     ];
     settings = {
       server = {
-        domain = myDomain;
-        root_url = "%(protocol)s://%(domain)s/grafana";
+        domain = "grafana.home.debling.com.br";
+        root_url = "%(protocol)s://%(domain)s";
       };
       panels.disable_sanitize_html = true;
       database = {
@@ -308,6 +286,20 @@ in
           url = "http://localhost:9090";
           access = "proxy";
           isDefault = true;
+          editable = true;
+        }
+        {
+          name = "Blocky PostgreSQL";
+          type = "postgres";
+          url = "localhost:5432";
+          database = "blocky";
+          user = "blocky";
+          jsonData = {
+             sslmode = "disable";
+             postgresVersion = 1400;
+             timescaledb = false;
+          };
+          editable = true;
         }
       ];
 
@@ -317,6 +309,10 @@ in
           type = "file";
           options =
             let
+              blockyQueryDashboard = pkgs.fetchurl {
+                url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
+                sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
+              };
               blockyDashboard = pkgs.fetchurl {
                 url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
                 sha256 = "sha256-InIKXAmovhDfYqBFGDNk/Cyj0hQQVjTuyDdTumV2yOg=";
@@ -326,6 +322,10 @@ in
                 sha256 = "sha256-pNgn6xgZBEu6LW0lc0cXX2gRkQ8lg/rer34SPE3yEl4=";
               };
               dashboardDir = pkgs.linkFarm "grafana-dashboards" [
+                {
+                  name = "blocky-query-grafana-postgres.json";
+                  path = blockyQueryDashboard;
+                }
                 {
                   name = "blocky-grafana.json";
                   path = blockyDashboard;
@@ -349,6 +349,7 @@ in
     ensureDatabases = [
       "grafana"
       "nextcloud"
+      "blocky"
     ];
     ensureUsers = [
       {
@@ -357,6 +358,10 @@ in
       }
       {
         name = "nextcloud";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "blocky";
         ensureDBOwnership = true;
       }
     ];
@@ -408,7 +413,6 @@ in
 
   services.nginx.virtualHosts."home.debling.com.br" = {
     useACMEHost = "home.debling.com.br";
-    forceSSL = true;
 
     locations."/" = {
       proxyPass = "http://127.0.0.1:8082"; # homepage
