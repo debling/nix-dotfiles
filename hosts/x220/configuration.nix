@@ -19,14 +19,17 @@ let
     useACMEHost = "home.debling.com.br";
     locations."/" = {
       proxyPass = "http://127.0.0.1:${builtins.toString port}";
+      proxyWebsockets = true;
     };
-    });
+  });
 in
 {
   imports = [
     ../../modules/common/containers.nix
     ../../modules/common/nix.nix
     ./arr.nix
+    ./samba.nix
+    #./sso.nix
     # ../../modules/home-assistant.nix
   ];
 
@@ -153,12 +156,11 @@ in
     nameservers = [ "127.0.0.1" ];
   };
 
-
-/*
-  secret on /etc/secrets/hostinger like:
-      HOSTINGER_API_TOKEN=<hostinger api key>
-      HOSTINGER_PROPAGATION_TIMEOUT=300
-      HOSTINGER_POLLING_INTERVAL=30
+  /*
+    secret on /etc/secrets/hostinger like:
+        HOSTINGER_API_TOKEN=<hostinger api key>
+        HOSTINGER_PROPAGATION_TIMEOUT=300
+        HOSTINGER_POLLING_INTERVAL=30
   */
   security.acme = {
     acceptTerms = true;
@@ -197,17 +199,18 @@ in
     settings = {
       ports.http = 4000;
       upstreams.groups.default = [
-        "https://dns.adguard-dns.com"
-        "tcp-tls:1.1.1.1:853"
         "https://dns.quad9.net/dns-query"
-        # "tcp-tls://dns.adguard-dns.com"
+        "https://dns.adguard-dns.com"
         "https://1.1.1.1/dns-query"
+        "tcp-tls:1.1.1.1:853"
+        # "tcp-tls://dns.adguard-dns.com"
       ];
+      bootstrapDns = "9.9.9.9";
 
       customDNS = {
         customTTL = "1h";
         mapping = {
-          "home.debling.com.br" = myIp;
+          "home.debling.com.br" = "${myIp},100.83.30.120";
           "router.arpa" = "192.168.0.1";
         };
       };
@@ -227,9 +230,13 @@ in
         blockType = "zeroIp";
       };
       queryLog = {
-        type= "postgresql";
+        type = "postgresql";
         target = "postgres://blocky@localhost:5432/blocky";
-        logRetentionDays =  7;
+        logRetentionDays = 90;
+      };
+      clientLookup = {
+        upstream = "192.168.0.1";
+        singleNameOrder = [ 1 ];
       };
 
       # dnssec.validate = true;
@@ -256,7 +263,8 @@ in
     ];
   };
 
-  services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} = makeNginxLocalProxy 3000;
+  services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} =
+    makeNginxLocalProxy 3000;
   services.grafana = {
     enable = true;
     declarativePlugins = with pkgs.grafanaPlugins; [
@@ -282,22 +290,24 @@ in
       datasources.settings.datasources = [
         {
           name = "Prometheus";
+          uid = "prometheus";
           type = "prometheus";
           url = "http://localhost:9090";
           access = "proxy";
           isDefault = true;
-          editable = true;
+          editable = false;
         }
         {
           name = "Blocky PostgreSQL";
           type = "postgres";
+          uid = "blocky-postgresql";
           url = "localhost:5432";
           database = "blocky";
           user = "blocky";
           jsonData = {
-             sslmode = "disable";
-             postgresVersion = 1400;
-             timescaledb = false;
+            sslmode = "disable";
+            postgresVersion = 1400;
+            timescaledb = false;
           };
           editable = true;
         }
@@ -309,10 +319,17 @@ in
           type = "file";
           options =
             let
-              blockyQueryDashboard = pkgs.fetchurl {
-                url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
-                sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
-              };
+              blockyQueryDashboardRaw = pkgs.fetchurl {
+                  url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
+                  sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
+                };
+              configuredBlockyQueryDashboard = pkgs.writeText "blocky-query-grafana-postgres.json"
+                (builtins.replaceStrings
+                  [ "\${DS_POSTGRES}" ]
+                  [ "Blocky PostgreSQL" ]
+                  (builtins.readFile blockyQueryDashboardRaw)
+                );
+
               blockyDashboard = pkgs.fetchurl {
                 url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
                 sha256 = "sha256-InIKXAmovhDfYqBFGDNk/Cyj0hQQVjTuyDdTumV2yOg=";
@@ -324,7 +341,7 @@ in
               dashboardDir = pkgs.linkFarm "grafana-dashboards" [
                 {
                   name = "blocky-query-grafana-postgres.json";
-                  path = blockyQueryDashboard;
+                  path = configuredBlockyQueryDashboard;
                 }
                 {
                   name = "blocky-grafana.json";
@@ -350,6 +367,7 @@ in
       "grafana"
       "nextcloud"
       "blocky"
+      "authelia"
     ];
     ensureUsers = [
       {
@@ -362,6 +380,10 @@ in
       }
       {
         name = "blocky";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "authelia";
         ensureDBOwnership = true;
       }
     ];
@@ -411,14 +433,7 @@ in
 
   environment.etc."nextcloud-admin-pass".text = "changeme";
 
-  services.nginx.virtualHosts."home.debling.com.br" = {
-    useACMEHost = "home.debling.com.br";
-
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:8082"; # homepage
-    };
-  };
-
+  services.nginx.virtualHosts."home.debling.com.br" = makeNginxLocalProxy 8082;
   services.homepage-dashboard = {
     enable = true;
     allowedHosts = "${myDomain},${myIp},home.debling.com.br,x220,x220.fable-ph.ts.net";
@@ -445,21 +460,21 @@ in
         Geral = [
           {
             Grafana = {
-              href = "http://${myDomain}/grafana";
+              href = "https://grafana.home.debling.com.br";
               icon = "grafana";
             };
           }
 
           {
             Blocky = {
-              href = "http://${myDomain}/blocky"; # Blocky WebUI or metrics
+              href = "https://blocky.home.debling.com.br"; # Blocky WebUI or metrics
               icon = "blocky";
             };
           }
 
           {
             Nextcloud = {
-              href = "http://${myDomain}/nextcloud";
+              href = "https://nextcloud.home.debling.com.br";
               icon = "nextcloud";
             };
           }
@@ -469,7 +484,10 @@ in
     ];
   };
 
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "server";
+  };
 
   services.avahi = {
     enable = true;

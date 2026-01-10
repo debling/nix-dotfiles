@@ -80,6 +80,10 @@ in
 
   home = {
     packages = with pkgs; [
+      agenix-cli
+      age
+      zathura
+      kicad
       opencode
       # spelling
       (hunspell.withDicts (d: [
@@ -327,6 +331,7 @@ in
         "*" = {
           controlMaster = "auto";
           controlPersist = "15m";
+          controlPath = "~/.ssh/%r@%h:%p";
         };
         "i-*".proxyCommand =
           "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";

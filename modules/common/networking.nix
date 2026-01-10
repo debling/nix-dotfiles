@@ -31,7 +31,7 @@
   systemd.network.wait-online.enable = false;
 
   systemd.network.networks."10-wan" = {
-    matchConfig.Name = "*";
+    matchConfig.Name = "!tailscale0";
     networkConfig = {
       DHCP = "ipv4";
       IPv6AcceptRA = false;

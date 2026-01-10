@@ -16,8 +16,15 @@
     };
   };
 
+  services.nginx.virtualHosts."transmission.home.debling.com.br" = {
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.transmission.settings.rpc-port}";
+    };
+  };
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
+
   services.bazarr = {
     enable = true;
     group = "media";
@@ -116,7 +123,7 @@
     {
       Media =
         let
-          services = [ "sonarr" "bazarr" "prowlarr" "overseerr" "transmission" "jellyfin" "lidarr" ];
+          services = [ "sonarr" "bazarr" "prowlarr" "transmission" "jellyfin" "lidarr" ];
         in
         map (s: ({ ${s} = { href = "https://${s}.home.debling.com.br"; icon = s; }; })) services;
     }
