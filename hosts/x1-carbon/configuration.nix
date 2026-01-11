@@ -21,7 +21,6 @@
     enable = true;
     useRoutingFeatures = "client";
     };
-    networking.enableIPv6 = false;
   zramSwap = {
     enable = true;
     memoryPercent = 35;

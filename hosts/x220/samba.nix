@@ -9,9 +9,17 @@
   };
   users.groups.netshare = {};
 
-  # 2. Create the storage directory owned by netshare
+  # Create users for private shares
+  users.users.vivianedn = {
+    isNormalUser = true;
+    description = "Viviane's user for Samba";
+  };
+
+  # 2. Create the storage directories
   systemd.tmpfiles.rules = [
-    "d /srv/samba/shared 0770 netshare netshare -"
+    "d /srv/samba/public 0777 netshare netshare -"
+    "d /srv/samba/debling 0700 debling debling -"
+    "d /srv/samba/vivianedn 0700 vivianedn vivianedn -"
   ];
 
   # 3. Configure Samba
@@ -31,16 +39,35 @@
         "fruit:model" = "MacSamba";
       };
 
-      "SharedFiles" = {
-        "path" = "/srv/samba/shared";
+      "public" = {
+        "path" = "/srv/samba/public";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "yes";
+        "force user" = "netshare";
+        "force group" = "netshare";
+        "create mask" = "0666";
+        "directory mask" = "0777";
+      };
+
+      "debling" = {
+        "path" = "/srv/samba/debling";
         "browseable" = "yes";
         "read only" = "no";
         "guest ok" = "no";
-        # Force all files created via network to be owned by netshare
-        "force user" = "netshare";
-        "force group" = "netshare";
-        "create mask" = "0660";
-        "directory mask" = "0770";
+        "valid users" = "debling";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+      };
+
+      "viviane" = {
+        "path" = "/srv/samba/vivianedn";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "valid users" = "vivianedn";
+        "create mask" = "0644";
+        "directory mask" = "0755";
       };
     };
   };
