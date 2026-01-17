@@ -13,22 +13,6 @@
     };
   };
 
-environment.etc."authelia/users.yml" = {
-  mode = "0400";
-  user = "authelia-main";
-  group = "authelia-main";
-
-  text = ''
-users:
-  debling:
-    displayname: "Denílson"
-    password: "$argon2id$v=19$m=65536,t=3,p=4$pwgLJm/K+XA0d7hkyq86gw$31VLdNuc8mua2C5wzJj3rAcMt0shyEEW4VqG+XVBqXo"
-    email: denilson@home.debling.com.br
-    groups:
-      - grafana-admin
-'';
-};
-
 
 services.authelia.instances.main = {
     enable = true;
@@ -50,8 +34,19 @@ services.authelia.instances.main = {
       log.level = "info";
 
       authentication_backend = {
-        file = {
-          path = "/etc/authelia/users.yml";
+        ldap = {
+          url = "ldaps://home.debling.com.br";
+          base_dn = "dc=home,dc=debling,dc=com,br";
+          username_attribute = "cn";
+          additional_users_dn = "";
+          users_filter = "(&({username_attribute}={input})(objectClass=person))";
+          additional_groups_dn = "";
+          groups_filter = "(&(member={dn})(objectClass=groupOfNames))";
+          group_name_attribute = "cn";
+          mail_attribute = "mail";
+          display_name_attribute = "displayName";
+          user = "cn=admin,dc=home,dc=debling,dc=com,br";
+          password = "test";
         };
       };
 

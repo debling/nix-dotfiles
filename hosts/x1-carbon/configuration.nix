@@ -174,7 +174,6 @@
     };
     fish.enable = true;
     neovim.enable = true;
-    adb.enable = true;
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,

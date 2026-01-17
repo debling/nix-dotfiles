@@ -213,6 +213,7 @@
           inputs.disko.nixosModules.disko
           ./hosts/x220/disko.nix
           ./hosts/x220/configuration.nix
+          ./modules/nixos/glauth.nix
           inputs.nixos-facter-modules.nixosModules.facter
           {
             config.facter.reportPath =

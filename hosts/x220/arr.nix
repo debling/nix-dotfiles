@@ -1,5 +1,19 @@
 { config, lib, pkgs, ... }:
 
+let 
+
+  makeNginxLocalProxy = port: {
+    forceSSL = true;
+    http3 = true;
+    quic = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString port}";
+      proxyWebsockets = true;
+    };
+  };
+
+in
 {
   users.groups.media = { };
   services.transmission = {
@@ -16,12 +30,7 @@
     };
   };
 
-  services.nginx.virtualHosts."transmission.home.debling.com.br" = {
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString config.services.transmission.settings.rpc-port}";
-    };
-  };
+  services.nginx.virtualHosts."transmission.home.debling.com.br" = makeNginxLocalProxy config.services.transmission.settings.rpc-port;
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
 

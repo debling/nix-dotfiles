@@ -1,38 +1,66 @@
-{
+{pkgs, ...}:
+
+let 
+
+  makeNginxLocalProxy = port: {
+    forceSSL = true;
+    http3 = true;
+    quic = true;
+    useACMEHost = "home.debling.com.br";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${builtins.toString port}";
+      proxyWebsockets = true;
+    };
+  };
+
+in
+    {
+
+    services.nginx.virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
   services.home-assistant = {
     enable = true;
     openFirewall = true;
+    extraPackages = python3packages: with python3packages; [
+      gtts
+      zlib-ng
+      isal
+      caldav
+            python-otbr-api
+            pychromecast
+            radios
+    ];
     extraComponents = [
-      # Components required to complete the onboarding
+      "default_config"
       "esphome"
+      "tile"
+      "matter"
+      "moon"
+      "sun"
+      "zha"
+      "zone"
+      "mobile_app"
       "met"
-      "radio_browser"
-      "upnp"
-      "google_assistant"
-      "google"
-      "cast"
-      "bluetooth"
-      "media_source"
-      "ffmpeg"
+      "isal"
+      "tuya"
+      "tplink"
     ];
     config = {
-      # Includes dependencies for a basic setup
-      # https://www.home-assistant.io/integrations/default_config/
-      default_config = { };
-      homeassistant = {
-        media_dirs = {
-          media = "/media";
-          recormedia_sourceding = "/mnt/recordings";
-        };
-      };
-      camera = [
-        {
-          platform = "ffmpeg";
+            mobile_app = {};
 
-          name = "webcam";
-          input = "/dev/video1";
-        }
-      ];
+      http = {
+        server_host = [
+          "127.0.0.1"
+        ];
+        trusted_proxies = [ "127.0.0.1" ];
+        use_x_forwarded_for = true;
+        server_port = 8123;
+
+      };
+      homeassistant = {
+        unit_system = "metric";
+        latitude = 29.6895;
+        longitude = 53.7923;
+      };
     };
   };
 }

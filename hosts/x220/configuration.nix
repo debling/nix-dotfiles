@@ -27,10 +27,11 @@ in
   imports = [
     ../../modules/common/containers.nix
     ../../modules/common/nix.nix
+    ../../modules/nixos/glauth.nix
     ./arr.nix
     ./samba.nix
-    #./sso.nix
-    # ../../modules/home-assistant.nix
+    # ./sso.nix
+    ../../modules/nixos/home-assistant.nix
   ];
 
   powerManagement.powertop.enable = true;
@@ -192,6 +193,7 @@ in
         proxyPass = "http://127.0.0.1:4000/";
       };
     };
+    virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
   };
 
   services.blocky = {
@@ -394,6 +396,71 @@ in
       host  all      all     127.0.0.1/32   trust
     '';
   };
+
+  services.glauth = {
+     enable = true;
+     group = "nginx";
+     settings = {
+        ldaps = {
+          enabled = true;
+          listen = "0.0.0.0:636";
+          cert = "/var/lib/acme/home.debling.com.br/fullchain.pem";
+          key = "/var/lib/acme/home.debling.com.br/key.pem";
+        };
+       backend = {
+         datastore = "config";
+         baseDN = "dc=home,dc=debling,dc=com,br";
+       };
+       users = [
+          {
+            name = "admin";
+            uidnumber = 999;
+            primarygroup = 999;
+            password = "test";
+          }
+         {
+           name = "debling";
+           uidnumber = 1000;
+           primarygroup = 1000;
+           mail = "denilson@debling.com.br";
+           givenname = "Denílson";
+           sn = "Ebling";
+           passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
+         }
+         {
+           name = "vivianedn";
+           uidnumber = 1001;
+           primarygroup = 1000;
+           mail = "viviane@debling.com.br";
+           givenname = "Viviane";
+           sn = "DN";
+           passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
+         }
+       ];
+      groups = [
+        {
+          name = "admin";
+          gidnumber = 999;
+          members = [ "admin" ];
+        }
+        {
+          name = "debling";
+          gidnumber = 1000;
+          members = [ "debling" ];
+        }
+        {
+          name = "vivianedn";
+          gidnumber = 1001;
+          members = [ "vivianedn" ];
+        }
+      ];
+      behaviors = {
+        allowlocalanonymous = true;
+      };
+     };
+  };
+
+
 
   services.nginx.virtualHosts."nextcloud.home.debling.com.br" = {
     forceSSL = true;

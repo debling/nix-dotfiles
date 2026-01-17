@@ -18,8 +18,8 @@
   # 2. Create the storage directories
   systemd.tmpfiles.rules = [
     "d /srv/samba/public 0777 netshare netshare -"
-    "d /srv/samba/debling 0700 debling debling -"
-    "d /srv/samba/vivianedn 0700 vivianedn vivianedn -"
+    "d /srv/samba/debling 0770 debling debling -"
+    "d /srv/samba/vivianedn 0770 vivianedn vivianedn -"
   ];
 
   # 3. Configure Samba
