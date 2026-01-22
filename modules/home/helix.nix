@@ -18,7 +18,10 @@
 
   programs.helix = {
     enable = true;
-    extraPackages = [ pkgs.nodePackages.prettier pkgs.asm-lsp ];
+    extraPackages = [
+      pkgs.nodePackages.prettier
+      pkgs.asm-lsp
+    ];
     themes = {
       transparent_bg = {
         inherits = "gruvbox_dark_hard";
@@ -43,10 +46,13 @@
           command = lib.getExe pkgs.codebook;
           args = [ "serve" ];
         };
-        biome = { command = "biome"; args = [ "lsp-proxy" ]; };
+        biome = {
+          command = "biome";
+          args = [ "lsp-proxy" ];
+        };
         # efm-prettier-md = {
         #   command = lib.getExe pkgs.;
-        #   args = ["serve"];  
+        #   args = ["serve"];
         # };
         astro-ls = {
           command = lib.getExe pkgs.astro-language-server;
@@ -58,13 +64,20 @@
           args = [
             "--stdio"
           ];
-          file-types = [ "ts" "typescript" "html" ];
+          file-types = [
+            "ts"
+            "typescript"
+            "html"
+          ];
         };
       };
       grammar = [
         {
           name = "asm";
-          source = { git = "https://github.com/RubixDev/tree-sitter-asm"; rev = "04962e15f6b464cf1d75eada59506dc25090e186"; };
+          source = {
+            git = "https://github.com/RubixDev/tree-sitter-asm";
+            rev = "04962e15f6b464cf1d75eada59506dc25090e186";
+          };
         }
       ];
       language = [
@@ -72,56 +85,123 @@
           name = "fasm";
           scope = "source.fasm";
           comment-token = ";";
-          indent = { tab-width = 4; unit = "    "; };
+          indent = {
+            tab-width = 4;
+            unit = "    ";
+          };
           language-servers = [ "asm-lsp" ];
           grammar = "asm";
           file-types = [ "fasm" ];
         }
         {
           name = "astro";
-          language-servers = [ "astro-ls" "tailwindcss-ls" ];
+          language-servers = [
+            "astro-ls"
+            "tailwindcss-ls"
+          ];
           formatter = {
             command = "prettier";
-            args = [ "--plugin" "prettier-plugin-astro" "--parser" "astro" ];
+            args = [
+              "--plugin"
+              "prettier-plugin-astro"
+              "--parser"
+              "astro"
+            ];
           };
           auto-format = true;
         }
         {
           name = "typescript";
-          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "biome" ];
+          language-servers = [
+            "angular"
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
         }
         {
           name = "tsx";
-          language-servers = [{ name = "typescript-language-server"; except-features = [ "format" ]; } "biome"];
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
         }
         {
           name = "java";
-          language-servers = [ "codebook" "jdtls" ];
+          language-servers = [
+            "codebook"
+            "jdtls"
+          ];
         }
         {
           name = "javascript";
-          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome" ];
+          language-servers = [
+            "angular"
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "vscode-eslint-language-server"
+            "biome"
+          ];
         }
         {
           name = "jsx";
-          language-servers = [{ name = "typescript-language-server"; except-features = [ "format" ]; } "biome"];
+          language-servers = [
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
         }
         {
           name = "html";
-          language-servers = [ "angular" { name = "typescript-language-server"; except-features = [ "format" ]; } "vscode-eslint-language-server" "biome" ];
+          language-servers = [
+            "angular"
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            "vscode-eslint-language-server"
+            "biome"
+          ];
         }
         {
           name = "json";
-          language-servers = [{ name = "vscode-json-language-server"; except-features = [ "format" ]; } "biome"];
+          language-servers = [
+            {
+              name = "vscode-json-language-server";
+              except-features = [ "format" ];
+            }
+            "biome"
+          ];
         }
         {
           name = "markdown";
-          language-servers = [ "codebook" "marksman" ];
+          language-servers = [
+            "codebook"
+            "marksman"
+          ];
         }
         {
           name = "clojure";
-          indent = { tab-width = 2; unit = "  "; };
-          formatter = { command = "cljfmt"; args = [ "fix" "-" ]; };
+          indent = {
+            tab-width = 2;
+            unit = "  ";
+          };
+          formatter = {
+            command = "cljfmt";
+            args = [
+              "fix"
+              "-"
+            ];
+          };
           auto-format = true;
         }
       ];

@@ -1,7 +1,6 @@
-local lsp = require('lspconfig')
 local utils = require('debling.config_utils')
 
-lsp.nixd.setup({
+vim.lsp.config('nixd', {
   settings = {
     nixd = {
       formatting = {
@@ -10,6 +9,7 @@ lsp.nixd.setup({
     },
   },
 })
+vim.lsp.enable('nixd')
 
 utils.null_ls_register(
   function(builtins)

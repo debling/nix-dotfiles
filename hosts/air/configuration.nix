@@ -5,10 +5,19 @@
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
-      trusted-users = [ "debling" "@admin" ];
+      trusted-users = [
+        "debling"
+        "@admin"
+      ];
       # auto-optimise-store = true;
-      experimental-features = [ "nix-command" "flakes" ];
-      extra-platforms = [ "x86_64-darwin" "aarch64-darwin" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      extra-platforms = [
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
     };
 
     # Enable the linux builder, which allows to build packages, and most important

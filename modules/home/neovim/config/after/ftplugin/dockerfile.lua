@@ -1,7 +1,7 @@
-local lsp = require('lspconfig')
 local utils = require('debling.config_utils')
 
-lsp.dockerls.setup({})
+vim.lsp.config('dockerls', {})
+vim.lsp.enable('dockerls')
 
 utils.null_ls_register(
   function(builtins)

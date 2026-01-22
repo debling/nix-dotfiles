@@ -1,8 +1,9 @@
-{ config
-, lib
-, pkgs
-, neovim-nightly-overlay
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  neovim-nightly-overlay,
+  ...
 }:
 
 let

@@ -1,6 +1,6 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 
-let 
+let
 
   makeNginxLocalProxy = port: {
     forceSSL = true;
@@ -14,21 +14,22 @@ let
   };
 
 in
-    {
+{
 
-    services.nginx.virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
+  services.nginx.virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
   services.home-assistant = {
     enable = true;
     openFirewall = true;
-    extraPackages = python3packages: with python3packages; [
-      gtts
-      zlib-ng
-      isal
-      caldav
-            python-otbr-api
-            pychromecast
-            radios
-    ];
+    extraPackages =
+      python3packages: with python3packages; [
+        gtts
+        zlib-ng
+        isal
+        caldav
+        python-otbr-api
+        pychromecast
+        radios
+      ];
     extraComponents = [
       "default_config"
       "esphome"
@@ -45,7 +46,7 @@ in
       "tplink"
     ];
     config = {
-            mobile_app = {};
+      mobile_app = { };
 
       http = {
         server_host = [

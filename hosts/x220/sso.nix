@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 
 {
   services.nginx.virtualHosts."authelia.home.debling.com.br" = {
@@ -13,18 +13,18 @@
     };
   };
 
-
-services.authelia.instances.main = {
+  services.authelia.instances.main = {
     enable = true;
 
-    secrets = let
+    secrets =
+      let
         jwtSecretFile = pkgs.writeText "authelia-jwt-secret" "CHANGE_ME_SUPER_RANDOM_JWT_SECRET";
         storageKeyFile = pkgs.writeText "authelia-storage-key" "CHANGE_ME_32+_BYTE_RANDOM_KEY";
       in
-        {
-          jwtSecretFile = jwtSecretFile;
-          storageEncryptionKeyFile = storageKeyFile;
-    };
+      {
+        jwtSecretFile = jwtSecretFile;
+        storageEncryptionKeyFile = storageKeyFile;
+      };
 
     settings = {
       server = {
@@ -78,13 +78,12 @@ services.authelia.instances.main = {
         ];
       };
 
-    notifier = {
-      filesystem = {
-        filename = "/tmp/authelia/notification.txt";
+      notifier = {
+        filesystem = {
+          filename = "/tmp/authelia/notification.txt";
+        };
       };
     };
-    };
   };
-
 
 }

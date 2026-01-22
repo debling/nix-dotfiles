@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.services.glauth;
@@ -11,17 +16,32 @@ in
 
     settings = lib.mkOption {
       type = settingsFormat.type;
-      default = {};
+      default = { };
     };
 
-    user = lib.mkOption { type = lib.types.str; default = "glauth"; };
-    group = lib.mkOption { type = lib.types.str; default = "glauth"; };
-    dataDir = lib.mkOption { type = lib.types.path; default = "/var/lib/glauth"; };
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "glauth";
+    };
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "glauth";
+    };
+    dataDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/glauth";
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    users.users.${cfg.user} = { isSystemUser = true; group = cfg.group; home = cfg.dataDir; createHome = true; extraGroups = [ "nginx" ]; };
-    users.groups.${cfg.group} = {};
+    users.users.${cfg.user} = {
+      isSystemUser = true;
+      group = cfg.group;
+      home = cfg.dataDir;
+      createHome = true;
+      extraGroups = [ "nginx" ];
+    };
+    users.groups.${cfg.group} = { };
 
     environment.etc."glauth.cfg".source = settingsFormat.generate "glauth-config" cfg.settings;
 

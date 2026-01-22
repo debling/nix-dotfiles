@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
 
@@ -57,10 +62,12 @@
 
           });
         in
-        (pkgs.emacsPackagesFor emacsPkg).emacsWithPackages (epkgs: with epkgs; [
-          mu4e
-          treesit-grammars.with-all-grammars
-        ]);
+        (pkgs.emacsPackagesFor emacsPkg).emacsWithPackages (
+          epkgs: with epkgs; [
+            mu4e
+            treesit-grammars.with-all-grammars
+          ]
+        );
     };
 
     mbsync.enable = true;
@@ -242,12 +249,10 @@
     };
   };
 
-
   xdg.configFile.emacs = {
     source = ../../config/emacs;
     recursive = true;
   };
-
 
   accounts.email.accounts = {
     personal =
@@ -271,7 +276,11 @@
           enable = true;
           create = "both";
           expunge = "both";
-          patterns = [ "*" "![Gmail]/All Mail" "![Gmail]/Important" ];
+          patterns = [
+            "*"
+            "![Gmail]/All Mail"
+            "![Gmail]/Important"
+          ];
         };
         mu.enable = true;
         msmtp.enable = true;
@@ -319,17 +328,35 @@
           expunge = "both";
         };
         mu.enable = true;
+      };
 
-        neomutt = {
-          enable = true;
-          extraConfig = ''
-            mailboxes `find ~/Maildir/zeit -type d -name cur -exec dirname {} \; | sort | awk '{ printf "\"%s\" ", $0 }'`
-          '';
+    zeit-contato =
+      let
+        addr = "contato@zeit.com.br";
+      in
+      {
+        realName = "Zeit Contato";
+        address = addr;
+        userName = addr;
+        passwordCommand = "${lib.getExe pkgs.rbw} get 'email zeit' | tr --delete '\\n'";
+        msmtp.enable = true;
+        imap = {
+          host = "imap.kinghost.net";
+          port = 993;
+          tls.enable = true;
         };
-        notmuch = {
-          enable = true;
-          neomutt.enable = true;
+        smtp = {
+          host = "smtp.kinghost.net";
+          port = 465;
+          tls.enable = true;
         };
+
+        mbsync = {
+          enable = true;
+          create = "both";
+          expunge = "both";
+        };
+        mu.enable = true;
       };
   };
 

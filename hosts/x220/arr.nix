@@ -1,6 +1,11 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let 
+let
 
   makeNginxLocalProxy = port: {
     forceSSL = true;
@@ -8,7 +13,7 @@ let
     quic = true;
     useACMEHost = "home.debling.com.br";
     locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString port}";
+      proxyPass = "http://127.0.0.1:${toString port}";
       proxyWebsockets = true;
     };
   };
@@ -30,7 +35,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts."transmission.home.debling.com.br" = makeNginxLocalProxy config.services.transmission.settings.rpc-port;
+  services.nginx.virtualHosts."transmission.home.debling.com.br" =
+    makeNginxLocalProxy config.services.transmission.settings.rpc-port;
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
 
@@ -39,12 +45,8 @@ in
     group = "media";
   };
 
-  services.nginx.virtualHosts."bazarr.home.debling.com.br" = {
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString config.services.bazarr.listenPort}";
-    };
-  };
+  services.nginx.virtualHosts."bazarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.bazarr.listenPort;
 
   services.sonarr = {
     enable = true;
@@ -57,13 +59,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts."sonarr.home.debling.com.br" = {
-    forceSSL = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString config.services.sonarr.settings.server.port}";
-    };
-  };
+  services.nginx.virtualHosts."sonarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.sonarr.settings.server.port;
 
   services.prowlarr = {
     enable = true;
@@ -73,13 +70,8 @@ in
       };
     };
   };
-  services.nginx.virtualHosts."prowlarr.home.debling.com.br" = {
-    forceSSL = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString config.services.prowlarr.settings.server.port}";
-    };
-  };
+  services.nginx.virtualHosts."prowlarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.prowlarr.settings.server.port;
 
   services.lidarr = {
     enable = true;
@@ -91,13 +83,8 @@ in
       };
     };
   };
-  services.nginx.virtualHosts."lidarr.home.debling.com.br" = {
-    forceSSL = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString config.services.lidarr.settings.server.port}";
-    };
-  };
+  services.nginx.virtualHosts."lidarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.lidarr.settings.server.port;
 
   services.jellyfin = {
     enable = true;
@@ -119,7 +106,6 @@ in
   };
   users.users.jellyfin.extraGroups = [ "video" ];
 
-
   systemd.tmpfiles.rules = [
     "d /srv/media 2775 root media -"
     "d /srv/media/downloads 2775 root media -"
@@ -132,11 +118,22 @@ in
     {
       Media =
         let
-          services = [ "sonarr" "bazarr" "prowlarr" "transmission" "jellyfin" "lidarr" ];
+          services = [
+            "sonarr"
+            "bazarr"
+            "prowlarr"
+            "transmission"
+            "jellyfin"
+            "lidarr"
+          ];
         in
-        map (s: ({ ${s} = { href = "https://${s}.home.debling.com.br"; icon = s; }; })) services;
+        map (s: ({
+          ${s} = {
+            href = "https://${s}.home.debling.com.br";
+            icon = s;
+          };
+        })) services;
     }
   ];
-
 
 }

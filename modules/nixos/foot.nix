@@ -1,4 +1,9 @@
-{ lib, pkgs, colorscheme, ... }:
+{
+  lib,
+  pkgs,
+  colorscheme,
+  ...
+}:
 
 {
   programs.foot = {
@@ -10,7 +15,7 @@
         font = "monospace:size=12";
         pad = "14x14";
       };
-      colors = with colorscheme.palette; {
+      colors-dark = with colorscheme.palette; {
         alpha = 0.92;
         foreground = base05;
         background = base00;

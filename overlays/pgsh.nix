@@ -1,4 +1,9 @@
-{ lib, buildNpmPackage, fetchFromGitHub, fetchYarnDeps }:
+{
+  lib,
+  buildNpmPackage,
+  fetchFromGitHub,
+  fetchYarnDeps,
+}:
 
 let
   repo = "pgsh";

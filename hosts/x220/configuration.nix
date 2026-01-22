@@ -176,7 +176,7 @@ in
     };
   };
 
-  services.resolved.extraConfig = "DNSStubListener=no"; # Disable the resolved dns server on port
+  services.resolved.settings.Resolve.DNSStubListener = "no"; # Disable the resolved dns server on port
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -322,15 +322,14 @@ in
           options =
             let
               blockyQueryDashboardRaw = pkgs.fetchurl {
-                  url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
-                  sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
-                };
-              configuredBlockyQueryDashboard = pkgs.writeText "blocky-query-grafana-postgres.json"
-                (builtins.replaceStrings
-                  [ "\${DS_POSTGRES}" ]
-                  [ "Blocky PostgreSQL" ]
-                  (builtins.readFile blockyQueryDashboardRaw)
-                );
+                url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
+                sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
+              };
+              configuredBlockyQueryDashboard = pkgs.writeText "blocky-query-grafana-postgres.json" (
+                builtins.replaceStrings [ "\${DS_POSTGRES}" ] [ "Blocky PostgreSQL" ] (
+                  builtins.readFile blockyQueryDashboardRaw
+                )
+              );
 
               blockyDashboard = pkgs.fetchurl {
                 url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
@@ -398,45 +397,45 @@ in
   };
 
   services.glauth = {
-     enable = true;
-     group = "nginx";
-     settings = {
-        ldaps = {
-          enabled = true;
-          listen = "0.0.0.0:636";
-          cert = "/var/lib/acme/home.debling.com.br/fullchain.pem";
-          key = "/var/lib/acme/home.debling.com.br/key.pem";
-        };
-       backend = {
-         datastore = "config";
-         baseDN = "dc=home,dc=debling,dc=com,br";
-       };
-       users = [
-          {
-            name = "admin";
-            uidnumber = 999;
-            primarygroup = 999;
-            password = "test";
-          }
-         {
-           name = "debling";
-           uidnumber = 1000;
-           primarygroup = 1000;
-           mail = "denilson@debling.com.br";
-           givenname = "Denílson";
-           sn = "Ebling";
-           passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
-         }
-         {
-           name = "vivianedn";
-           uidnumber = 1001;
-           primarygroup = 1000;
-           mail = "viviane@debling.com.br";
-           givenname = "Viviane";
-           sn = "DN";
-           passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
-         }
-       ];
+    enable = true;
+    group = "nginx";
+    settings = {
+      ldaps = {
+        enabled = true;
+        listen = "0.0.0.0:636";
+        cert = "/var/lib/acme/home.debling.com.br/fullchain.pem";
+        key = "/var/lib/acme/home.debling.com.br/key.pem";
+      };
+      backend = {
+        datastore = "config";
+        baseDN = "dc=home,dc=debling,dc=com,br";
+      };
+      users = [
+        {
+          name = "admin";
+          uidnumber = 999;
+          primarygroup = 999;
+          password = "test";
+        }
+        {
+          name = "debling";
+          uidnumber = 1000;
+          primarygroup = 1000;
+          mail = "denilson@debling.com.br";
+          givenname = "Denílson";
+          sn = "Ebling";
+          passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
+        }
+        {
+          name = "vivianedn";
+          uidnumber = 1001;
+          primarygroup = 1000;
+          mail = "viviane@debling.com.br";
+          givenname = "Viviane";
+          sn = "DN";
+          passbcrypt = "$2b$05$lqmU9.4FFEnbpkO9i0/QYO/gKBJlp46QPQJlTBrXWpkaK12I.ep8u";
+        }
+      ];
       groups = [
         {
           name = "admin";
@@ -457,10 +456,8 @@ in
       behaviors = {
         allowlocalanonymous = true;
       };
-     };
+    };
   };
-
-
 
   services.nginx.virtualHosts."nextcloud.home.debling.com.br" = {
     forceSSL = true;

@@ -1,6 +1,6 @@
-{ pkgs
-, jdk ? pkgs.jdk
-,
+{
+  pkgs,
+  jdk ? pkgs.jdk,
 }:
 
 with pkgs;
@@ -9,8 +9,14 @@ stdenv.mkDerivation {
   name = "${jdk.name}-javadoc";
 
   nativeBuildInputs = [ makeWrapper ];
-  buildInputs = [ jdk unzip ];
-  phases = [ "buildPhase" "installPhase" ];
+  buildInputs = [
+    jdk
+    unzip
+  ];
+  phases = [
+    "buildPhase"
+    "installPhase"
+  ];
 
   buildPhase = ''
     unzip -q "${jdk}/lib/src.zip" -d src/

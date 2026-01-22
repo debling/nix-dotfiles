@@ -120,6 +120,38 @@ vim.lsp.config('ltex', {
 })
 vim.lsp.enable('ltex')
 
+vim.lsp.config('biome', {
+  capabilities = {
+    documentFormattingProvider = true,
+  },
+})
+vim.lsp.enable('biome')
+
+vim.lsp.config('tailwindcss', {
+  capabilities = {
+    documentFormattingProvider = true,
+  },
+})
+vim.lsp.enable('tailwindcss')
+
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      runtime = {
+        version = "LuaJIT",
+      },
+      diagnostics = {
+        globals = { "vim" },
+      },
+      workspace = {
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      telemetry = {
+        enable = true,
+      },
+    },
+  },
+})
 vim.lsp.enable('lua_ls')
 
 local null_ls = require('null-ls')
@@ -128,24 +160,19 @@ null_ls.setup({
   sources = {
     null_ls.builtins.hover.dictionary,
     null_ls.builtins.hover.printenv,
-
-    -- Javascript
-    null_ls.builtins.formatting.prettier,
-
+ 
     -- General text
     null_ls.builtins.completion.spell,
-
+ 
     -- -- Terraform
     null_ls.builtins.diagnostics.trivy,
     null_ls.builtins.diagnostics.terraform_validate,
     null_ls.builtins.formatting.terraform_fmt,
-
-    null_ls.builtins.formatting.clang_format,
-
+ 
     null_ls.builtins.diagnostics.checkmake,
-
+ 
+    null_ls.builtins.formatting.clang_format,
     null_ls.builtins.formatting.shfmt,
-
     null_ls.builtins.formatting.stylua,
   },
 })
@@ -165,7 +192,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       end
       client.server_capabilities.completionProvider.triggerCharacters = chars
       vim.lsp.completion.enable(true, client.id, ev.buf, {
-        autotrigger = true,
+        autotrigger = false,
       })
     end
   end,
@@ -202,3 +229,13 @@ utils.map(
   function() snippet_jump_or_send_keys('<c-l>', JUMP_DIRECTION.next) end,
   { silent = true, noremap = false }
 )
+
+-- Format on save using native LSP when available
+vim.api.nvim_create_autocmd('BufWritePre', {
+  callback = function()
+    vim.lsp.buf.format({
+      async = false,
+      timeout_ms = 1000,
+    })
+  end,
+})

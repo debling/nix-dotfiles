@@ -59,7 +59,7 @@
                     # foreground garbage collections to be asynchronous
                     # "lazytime"
                     # Do not synchronously update access or modification times.
-                    # Improves IO performance and flash durability. 
+                    # Improves IO performance and flash durability.
                     "compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime,nodiscard"
                   ];
                 };

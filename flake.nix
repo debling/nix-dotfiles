@@ -1,7 +1,6 @@
 {
   description = "";
 
-
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
@@ -58,8 +57,6 @@
 
     flake-utils.url = "github:numtide/flake-utils";
 
-
-
     # overlays
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -105,12 +102,13 @@
   };
 
   outputs =
-    { nixpkgs
-    , darwin
-    , nix-on-droid
-    , home-manager
-    , flake-utils
-    , ...
+    {
+      nixpkgs,
+      darwin,
+      nix-on-droid,
+      home-manager,
+      flake-utils,
+      ...
     }@inputs:
     let
       # Configuration for `nixpkgs`
@@ -151,7 +149,13 @@
       username = "debling";
 
       specialArgs = {
-        inherit (inputs) android-nixpkgs alacritty-themes nix-index-database nix-colors neovim-nightly-overlay;
+        inherit (inputs)
+          android-nixpkgs
+          alacritty-themes
+          nix-index-database
+          nix-colors
+          neovim-nightly-overlay
+          ;
         mainUser = username;
         colorscheme = inputs.nix-colors.colorschemes.gruvbox-dark-hard;
       };
@@ -174,7 +178,6 @@
           ./hosts/portable/disko.nix
 
           ./hosts/portable/configuration.nix
-
 
           home-manager.nixosModules.home-manager
 
@@ -242,7 +245,7 @@
           # `home-manager` module
           home-manager.darwinModules.home-manager
 
-          ({ pkgs, ... }: {
+          {
             networking.hostName = "air-m1";
             nixpkgs = nixpkgsConfig;
             users.knownUsers = [ username ];
@@ -253,13 +256,15 @@
             };
             # `home-manager` config
             home-manager = homeManagerConfiguration;
-          })
+          }
         ];
       };
 
       nixOnDroidConfigurations.default = nix-on-droid.lib.nixOnDroidConfiguration {
         pkgs = import nixpkgs {
-          config = { allowUnfree = true; };
+          config = {
+            allowUnfree = true;
+          };
           system = flake-utils.lib.system.aarch64-darwin;
         };
         extraSpecialArgs = specialArgs;
@@ -268,12 +273,22 @@
         ];
       };
 
-      formatter = flake-utils.lib.eachDefaultSystemMap (sys: nixpkgs.legacyPackages.${sys}.nixpkgs-fmt);
+      formatter = flake-utils.lib.eachDefaultSystemMap (
+        sys:
+        let
+          pkgs = import nixpkgs { system = sys; };
+        in
+        pkgs.nixfmt-tree
+      );
 
-      packages = flake-utils.lib.eachDefaultSystemMap (sys:
-        import nixpkgs (nixpkgsConfig // {
-          system = sys;
-        })
+      packages = flake-utils.lib.eachDefaultSystemMap (
+        sys:
+        import nixpkgs (
+          nixpkgsConfig
+          // {
+            system = sys;
+          }
+        )
       );
     };
 }

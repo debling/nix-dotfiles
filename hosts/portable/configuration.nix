@@ -2,27 +2,30 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ lib, pkgs, mainUser, ... }:
+{
+  lib,
+  pkgs,
+  mainUser,
+  ...
+}:
 
 {
-  imports =
-    [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
 
-      ../../modules/common/containers.nix
-      ../../modules/common/fonts.nix
-      ../../modules/common/networking.nix
-      ../../modules/common/nix.nix
-      ../../modules/common/pipewire.nix
-      ../../modules/common/steam.nix
-      # ../../modules/desktop/dwl
-      ../../modules/nixos/desktop/river.nix
-      ../../modules/nixos/nvidia.nix
-      #../../modules/hardware/nouveau.nix
-      ../../modules/nixos/bluetooth.nix
-    ];
-
+    ../../modules/common/containers.nix
+    ../../modules/common/fonts.nix
+    ../../modules/common/networking.nix
+    ../../modules/common/nix.nix
+    ../../modules/common/pipewire.nix
+    ../../modules/common/steam.nix
+    # ../../modules/desktop/dwl
+    ../../modules/nixos/desktop/river.nix
+    ../../modules/nixos/nvidia.nix
+    #../../modules/hardware/nouveau.nix
+    ../../modules/nixos/bluetooth.nix
+  ];
 
   services.avahi = {
     enable = true;
@@ -63,8 +66,7 @@
 
   boot.kernel.sysctl."vm.swappiness" = 200;
   #boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen; 
-
+  #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
 
   boot.loader.grub = {
     enable = true;
@@ -94,7 +96,6 @@
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-
   # Configure keymap in X11
   services = {
     kmonad = {
@@ -114,22 +115,20 @@
 
     greetd = {
       enable = true;
-      settings =
-        {
-          initial_session = {
-            user = "debling";
-            command = "river";
-          };
-          default_session = {
-            command =
-              ''
-                ${lib.getExe pkgs.greetd.tuigreet} \
-                  --cmd river \
-                  --asterisks --remember --remember-user-session --time
-              '';
-            user = "debling";
-          };
+      settings = {
+        initial_session = {
+          user = "debling";
+          command = "river";
         };
+        default_session = {
+          command = ''
+            ${lib.getExe pkgs.greetd.tuigreet} \
+              --cmd river \
+              --asterisks --remember --remember-user-session --time
+          '';
+          user = "debling";
+        };
+      };
     };
 
     displayManager = {

@@ -1,12 +1,13 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, pkg-config
-, wayland
-, wayland-protocols
-, pixman
-, fcft
-, wayland-scanner
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  pkg-config,
+  wayland,
+  wayland-protocols,
+  pixman,
+  fcft,
+  wayland-scanner,
 }:
 
 stdenv.mkDerivation {
@@ -20,9 +21,16 @@ stdenv.mkDerivation {
     hash = "sha256-Bu20IqRwBP1WRBgbcEQU4Q2BZ2FBnVaySOTsCn0iSSE=";
   };
 
-
-  nativeBuildInputs = [ pkg-config wayland-scanner ];
-  buildInputs = [ wayland wayland-protocols fcft pixman ];
+  nativeBuildInputs = [
+    pkg-config
+    wayland-scanner
+  ];
+  buildInputs = [
+    wayland
+    wayland-protocols
+    fcft
+    pixman
+  ];
 
   makeFlags = [ "PREFIX=$(out)" ];
 

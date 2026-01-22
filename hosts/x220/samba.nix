@@ -7,7 +7,7 @@
     group = "netshare";
     description = "Dedicated network share user";
   };
-  users.groups.netshare = {};
+  users.groups.netshare = { };
 
   # Create users for private shares
   users.users.vivianedn = {

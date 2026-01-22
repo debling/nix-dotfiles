@@ -1,8 +1,9 @@
-{ config
-, pkgs
-, colorscheme
-, mainUser
-, ...
+{
+  config,
+  pkgs,
+  colorscheme,
+  mainUser,
+  ...
 }:
 
 {

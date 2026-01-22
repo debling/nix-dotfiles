@@ -1,8 +1,16 @@
-{ config, pkgs, mainUser, ... }:
+{
+  config,
+  pkgs,
+  mainUser,
+  ...
+}:
 {
   nix = {
     settings = {
-      trusted-users = [ "root" mainUser ];
+      trusted-users = [
+        "root"
+        mainUser
+      ];
       extra-platforms = [ "aarch64-linux" ];
     };
     extraOptions = ''
@@ -12,7 +20,6 @@
     settings.auto-optimise-store = true;
     daemonCPUSchedPolicy = "idle";
   };
-
 
   system.activationScripts.update-diff = {
     supportsDryActivation = true;
@@ -30,7 +37,7 @@
   # $ ./myapp
   # bash: ./myapp: No such file or directory
   #
-  # $ nix-alien myapp            
+  # $ nix-alien myapp
   # Run the binary inside a FHS shell with all needed shared dependencies to execute the binary
   environment.systemPackages = [ pkgs.nix-alien ];
   programs.nix-ld.enable = true;

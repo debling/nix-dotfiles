@@ -9,7 +9,6 @@
     package = pkgs.rose-pine-cursor;
   };
 
-
   qt = {
     enable = pkgs.stdenv.isLinux;
     platformTheme.name = "adwaita";

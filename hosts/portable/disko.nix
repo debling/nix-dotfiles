@@ -59,7 +59,6 @@
                     # checksum (to avoid corruption)
                     # "compress_chksum"
 
-
                     # "atgc"
                     # "gc_merge"
                     # Enable better garbage collector, and enable some
@@ -67,7 +66,7 @@
 
                     # - "lazytime"
                     # Do not synchronously update access or modification times.
-                    # Improves IO performance and flash durability. 
+                    # Improves IO performance and flash durability.
                     "compress_algorithm=zstd:6,compress_chksum,atgc,gc_merge,lazytime,nodiscard"
                   ];
                 };

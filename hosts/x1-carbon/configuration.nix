@@ -2,25 +2,29 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ lib, pkgs, mainUser, ... }:
+{
+  lib,
+  pkgs,
+  mainUser,
+  ...
+}:
 
 {
-  imports =
-    [
-      ../../modules/common/containers.nix
-      ../../modules/common/fonts.nix
-      ../../modules/common/networking.nix
-      ../../modules/common/nix.nix
-      ../../modules/common/pipewire.nix
-      ../../modules/nixos/desktop/river.nix
-      ../../modules/nixos/keyboard.nix
-      ../../modules/nixos/bluetooth.nix
-    ];
+  imports = [
+    ../../modules/common/containers.nix
+    ../../modules/common/fonts.nix
+    ../../modules/common/networking.nix
+    ../../modules/common/nix.nix
+    ../../modules/common/pipewire.nix
+    ../../modules/nixos/desktop/river.nix
+    ../../modules/nixos/keyboard.nix
+    ../../modules/nixos/bluetooth.nix
+  ];
 
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
-    };
+  };
   zramSwap = {
     enable = true;
     memoryPercent = 35;
@@ -53,7 +57,6 @@
     ];
     hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
   };
-
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -110,25 +113,22 @@
       ];
     };
 
-
     greetd = {
       enable = true;
-      settings =
-        {
-          initial_session = {
-            user = "debling";
-            command = "river";
-          };
-          default_session = {
-            command =
-              ''
-                ${lib.getExe pkgs.tuigreet} \
-                  --cmd river \
-                  --asterisks --remember --remember-user-session --time
-              '';
-            user = "debling";
-          };
+      settings = {
+        initial_session = {
+          user = "debling";
+          command = "river";
         };
+        default_session = {
+          command = ''
+            ${lib.getExe pkgs.tuigreet} \
+              --cmd river \
+              --asterisks --remember --remember-user-session --time
+          '';
+          user = "debling";
+        };
+      };
     };
 
     displayManager = {
@@ -161,6 +161,8 @@
     flashrom
 
     uv
+
+    android-tools
   ];
   environment.localBinInPath = true;
 
@@ -197,4 +199,5 @@
 
   services.tlp.enable = true;
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
+  services.fprintd.enable = true;
 }

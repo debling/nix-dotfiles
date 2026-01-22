@@ -2,6 +2,7 @@
   services.kanata = {
     enable = true;
     keyboards.common = {
+      extraArgs = [ "--nodelay" ];
       extraDefCfg = "process-unmapped-keys yes";
       config = # lisp
         ''

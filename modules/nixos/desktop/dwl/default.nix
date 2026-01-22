@@ -1,5 +1,10 @@
-{ lib, pkgs, nix-colors, colorscheme, ... }:
-
+{
+  lib,
+  pkgs,
+  nix-colors,
+  colorscheme,
+  ...
+}:
 
 let
   dwlb = pkgs.callPackage ./dwlb.nix { };
@@ -51,7 +56,6 @@ let
     conf = ./slstatus-config.h;
   };
 
-
   dwl-run = pkgs.writeShellScriptBin "dwl-run" ''
     set -x
 
@@ -101,19 +105,27 @@ in
     };
 
     services.displayManager.sessionPackages = [
-      ((pkgs.writeTextDir "share/wayland-sessions/dwl.desktop" ''
-        [Desktop Entry]
-        Name=dwl
-        Exec=dwl-run
-        Type=Application
-      '').overrideAttrs (_: { passthru.providedSessions = [ "dwl" ]; }))
+      (
+        (pkgs.writeTextDir "share/wayland-sessions/dwl.desktop" ''
+          [Desktop Entry]
+          Name=dwl
+          Exec=dwl-run
+          Type=Application
+        '').overrideAttrs
+        (_: {
+          passthru.providedSessions = [ "dwl" ];
+        })
+      )
     ];
 
     systemd.user.targets.dwl-session = {
       description = "dwl compositor session";
       documentation = [ "man:systemd.special(7)" ];
       bindsTo = [ "graphical-session.target" ];
-      wants = [ "graphical-session-pre.target" "xdg-desktop-autostart.target" ];
+      wants = [
+        "graphical-session-pre.target"
+        "xdg-desktop-autostart.target"
+      ];
       after = [ "graphical-session-pre.target" ];
       before = [ "xdg-desktop-autostart.target" ];
     };
@@ -144,7 +156,10 @@ in
       script = "${lib.getExe slstatus} -s | ${lib.getExe dwlb} -status-stdin all -ipc";
       bindsTo = [ "dwlb.service" ];
       wantedBy = [ "dwlb.service" ];
-      restartTriggers = [ dwlb slstatus ];
+      restartTriggers = [
+        dwlb
+        slstatus
+      ];
     };
 
     security = {

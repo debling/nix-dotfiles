@@ -29,18 +29,32 @@
           short = true;
           branch = true;
         };
-        pull = { rebase = true; };
-        push = { autoSetupRemote = true; };
-        rebase = { autoStash = true; };
-        rerere = { enabled = true; };
-        branch = { sort = "-committerdate"; };
+        pull = {
+          rebase = true;
+        };
+        push = {
+          autoSetupRemote = true;
+        };
+        rebase = {
+          autoStash = true;
+        };
+        rerere = {
+          enabled = true;
+        };
+        branch = {
+          sort = "-committerdate";
+        };
       };
       lfs.enable = true;
       signing = {
         key = "CCBC8AA1AF062142";
         signByDefault = true;
       };
-      ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
+      ignores = [
+        ".dir-locals.el"
+        ".envrc"
+        ".DS_Store"
+      ];
     };
 
     delta = {

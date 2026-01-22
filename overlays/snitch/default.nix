@@ -1,4 +1,8 @@
-{ buildGoModule, fetchFromGitHub, lib }:
+{
+  buildGoModule,
+  fetchFromGitHub,
+  lib,
+}:
 
 let
   rev = "da4c8d5c1ca9b7d72dcdaa61f9d93bc2e12b7a5e";

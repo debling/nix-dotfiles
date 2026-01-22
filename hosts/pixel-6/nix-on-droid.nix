@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   android-integration = {
@@ -46,7 +51,6 @@
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
-
 
   # Set your time zone
   time.timeZone = "America/Sao_Paulo";

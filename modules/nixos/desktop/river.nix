@@ -1,4 +1,10 @@
-{ lib, pkgs, mainUser, colorscheme, ... }:
+{
+  lib,
+  pkgs,
+  mainUser,
+  colorscheme,
+  ...
+}:
 
 {
   imports = [ ./wayland.nix ];
@@ -29,7 +35,8 @@
         rule-add = {
           "-app-id" =
             let
-              intFromBinStr = str:
+              intFromBinStr =
+                str:
                 lib.pipe str [
                   lib.stringToCharacters
                   lib.reverseList
@@ -38,11 +45,23 @@
                 ];
             in
             {
-              emacs = [ "ssd" { tags = intFromBinStr "100000000"; } ]; # ws 1
-              Slack = { tags = intFromBinStr "010000000"; }; # ws 2
-              discord = { tags = intFromBinStr "010000000"; }; # ws 2
-              zen-beta = [ "ssd" { tags = intFromBinStr "001000000"; } ];
-              spotify = { tags = intFromBinStr "000000001"; }; # only workspace 9
+              emacs = [
+                "ssd"
+                { tags = intFromBinStr "100000000"; }
+              ]; # ws 1
+              Slack = {
+                tags = intFromBinStr "010000000";
+              }; # ws 2
+              discord = {
+                tags = intFromBinStr "010000000";
+              }; # ws 2
+              zen-beta = [
+                "ssd"
+                { tags = intFromBinStr "001000000"; }
+              ];
+              spotify = {
+                tags = intFromBinStr "000000001";
+              }; # only workspace 9
               "*" = [ "ssd" ];
             };
         };
@@ -226,7 +245,6 @@
       '';
     };
 
-
     programs = {
       yambar = {
         enable = true;
@@ -256,7 +274,10 @@
                       stack = [
                         { background.color = selectedColor; }
                         {
-                          underline = { size = 4; color = occupiedUnderlineColor; };
+                          underline = {
+                            size = 4;
+                            color = occupiedUnderlineColor;
+                          };
                         }
                       ];
                     };
@@ -272,9 +293,13 @@
                         "state == urgent".map = workspaceTemplate // {
                           deco.background.color = "${base09}ff";
                         };
-                        "state == focused".map = workspaceTemplate // { deco = bgDefault; };
+                        "state == focused".map = workspaceTemplate // {
+                          deco = bgDefault;
+                        };
                         "state == visible && ~occupied".map = workspaceTemplate;
-                        "state == visible && occupied".map = workspaceTemplate // { deco = bgDefault; };
+                        "state == visible && occupied".map = workspaceTemplate // {
+                          deco = bgDefault;
+                        };
                         "state == unfocused && occupied".map = workspaceTemplate;
                         "state == invisible && ~occupied".empty = { };
                         "state == invisible && occupied".map = workspaceTemplate;
@@ -289,7 +314,12 @@
                 foreign-toplevel.content.map.conditions = {
                   "~activated".empty = { };
                   activated = [
-                    { string = { text = "{app-id}"; foreground = "${base0B}ff"; }; }
+                    {
+                      string = {
+                        text = "{app-id}";
+                        foreground = "${base0B}ff";
+                      };
+                    }
                     { string.text = ": {title}"; }
                   ];
                 };
@@ -302,15 +332,38 @@
                   poll-interval = 1000;
                   content.map.conditions."name == wlp2s0".map =
                     let
-                      base = { margin = 10; };
+                      base = {
+                        margin = 10;
+                      };
                     in
                     {
-                      default = { string = { text = "  "; foreground = "ffffff66"; } // base; };
+                      default = {
+                        string = {
+                          text = "  ";
+                          foreground = "ffffff66";
+                        }
+                        // base;
+                      };
                       conditions = {
-                        "state == down" = { string = { text = "  "; foreground = "ff0000ff"; } // base; };
+                        "state == down" = {
+                          string = {
+                            text = "  ";
+                            foreground = "ff0000ff";
+                          }
+                          // base;
+                        };
                         "state == up" = [
-                          { string = { text = "  "; }; }
-                          { string = { text = "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s"; } // base; }
+                          {
+                            string = {
+                              text = "  ";
+                            };
+                          }
+                          {
+                            string = {
+                              text = "{ssid} {dl-speed:mb}/{ul-speed:mb} Mb/s";
+                            }
+                            // base;
+                          }
                         ];
                       };
                     };
@@ -324,8 +377,18 @@
                   content.map.conditions =
                     let
                       states = [
-                        { string = { text = "   "; foreground = "ff0000ff"; }; }
-                        { string = { text = "   "; foreground = "ffa600ff"; }; }
+                        {
+                          string = {
+                            text = "   ";
+                            foreground = "ff0000ff";
+                          };
+                        }
+                        {
+                          string = {
+                            text = "   ";
+                            foreground = "ffa600ff";
+                          };
+                        }
                         { string.text = "   "; }
                         { string.text = "   "; }
                         { string.text = "   "; }
@@ -334,10 +397,20 @@
                         { string.text = "   "; }
                         { string.text = "   "; }
                         { string.text = "   "; }
-                        { string = { text = "   "; foreground = "00ff00ff"; }; }
+                        {
+                          string = {
+                            text = "   ";
+                            foreground = "00ff00ff";
+                          };
+                        }
                       ];
                       template = [
-                        { ramp = { tag = "capacity"; items = states; }; }
+                        {
+                          ramp = {
+                            tag = "capacity";
+                            items = states;
+                          };
+                        }
                         { string.text = "{capacity}% {estimate}"; }
                       ];
                     in
@@ -346,11 +419,21 @@
                       "state == discharging" = template;
                       "state == \"not charging\"" = template;
                       "state == charging" = [
-                        { string = { text = "  "; foreground = "00ff00ff"; }; }
+                        {
+                          string = {
+                            text = "  ";
+                            foreground = "00ff00ff";
+                          };
+                        }
                         { string.text = "{capacity}% {estimate}"; }
                       ];
                       "state == full" = [
-                        { string = { text = "  "; foreground = "00ff00ff"; }; }
+                        {
+                          string = {
+                            text = "  ";
+                            foreground = "00ff00ff";
+                          };
+                        }
                         { string.text = "{capacity}% full"; }
                       ];
                     };
@@ -360,13 +443,20 @@
               {
                 backlight = {
                   name = "intel_backlight";
-                  content = [{ string = { text = "  {percent}%"; margin = 10; }; }];
+                  content = [
+                    {
+                      string = {
+                        text = "  {percent}%";
+                        margin = 10;
+                      };
+                    }
+                  ];
                 };
               }
               {
                 clock = {
                   time-format = "  %H:%M";
-                  content = [{ string.text = "{date} {time}"; }];
+                  content = [ { string.text = "{date} {time}"; } ];
                 };
               }
             ];

@@ -6,6 +6,26 @@ require('snacks').setup({
   indent = { enabled = true },
 })
 
+-- Snacks toggle keymaps
+vim.keymap.set(
+  'n',
+  '<leader>tw',
+  function() require('snacks').toggle.word_wrap() end,
+  { desc = 'Toggle Word Wrap' }
+)
+vim.keymap.set(
+  'n',
+  '<leader>ts',
+  function() require('snacks').toggle.spell() end,
+  { desc = 'Toggle Spell' }
+)
+vim.keymap.set(
+  'n',
+  '<leader>tn',
+  function() require('snacks').toggle.line_number() end,
+  { desc = 'Toggle Line Numbers' }
+)
+
 require('debling.basic_options')
 
 require('debling.lsp_config')
@@ -47,13 +67,12 @@ require('obsidian').setup({
   ui = {
     enable = false,
   },
-  legacy_commands = false;
+  legacy_commands = false,
 })
 
 utils.nmap('<leader>og', '<cmd>Obsidian search<CR>')
 utils.nmap('<leader>of', '<cmd>Obsidian quick_switch<CR>')
 utils.nmap('<leader>ow', '<cmd>Obsidian workspace<CR>')
-
 
 vim.g['conjure#mapping#doc_word'] = 'gk'
 
@@ -95,10 +114,18 @@ end)
 
 require('gitsigns').setup()
 
+-- Format keybinding
+vim.keymap.set(
+  'n',
+  '<leader>fm',
+  function() require('debling.config_utils').format_buffer() end,
+  { desc = 'Format buffer with LSP' }
+)
+
 -- --
 -- -- UI setup
 -- --
-vim.o.winborder = "rounded"
+vim.o.winborder = 'rounded'
 vim.o.termguicolors = true
 vim.cmd.colorscheme('retrobox')
 vim.cmd.hi('Normal ctermbg=none guibg=none')

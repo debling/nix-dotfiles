@@ -39,6 +39,14 @@ function M.vmap(key, effect, opts) M.map({ 'v' }, key, effect, opts) end
 ---@param opts table | nil
 function M.imap(key, effect, opts) M.map({ 'i' }, key, effect, opts) end
 
+--- Format buffer using LSP
+function M.format_buffer()
+  vim.lsp.buf.format({
+    async = false,
+    timeout_ms = 1000,
+  })
+end
+
 ---@tag lazy-require
 
 ---@brief [[
@@ -124,7 +132,7 @@ end
 
 ---@alias PathSeparator '/' | '\'
 ---@type PathSeparator
-M.path_sep = vim.loop.os_uname().sysname:match('Windows') and '\\' or '/' --[[@as PathSeparator]]
+M.path_sep = vim.uv.os_uname().sysname:match('Windows') and '\\' or '/' --[[@as PathSeparator]]
 
 ---@param ... string[]
 ---@return string

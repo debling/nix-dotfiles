@@ -1,8 +1,9 @@
-{ pkgs
-, config
-, lib
-, nix-index-database
-, ...
+{
+  pkgs,
+  config,
+  lib,
+  nix-index-database,
+  ...
 }:
 
 let
@@ -15,7 +16,12 @@ in
     ./emacs.nix
     ./helix.nix
     ./java
+    ./opencode
   ];
+
+  programs.opencode = {
+    enable = true;
+  };
 
   programs.nix-index-database.comma.enable = true;
   programs.nix-index.enable = true;

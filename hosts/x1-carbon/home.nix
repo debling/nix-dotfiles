@@ -1,9 +1,10 @@
-{ config
-, lib
-, pkgs
-, android-nixpkgs
-, mainUser
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  android-nixpkgs,
+  mainUser,
+  ...
 }:
 
 {
@@ -52,7 +53,6 @@
       nodejs
       nodePackages.pnpm
       pipenv
-
 
       (python313.withPackages (
         ps: with ps; [
