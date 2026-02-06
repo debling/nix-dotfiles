@@ -142,7 +142,7 @@ in
             ### nix
             nixd # language server
             statix # static analysis
-            nixfmt-rfc-style
+            nixfmt
             marksman
           ]
           ++ (lib.concatMap (s: s.systemPkgs) (lib.attrValues setups));

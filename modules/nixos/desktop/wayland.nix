@@ -100,7 +100,6 @@
         settings = {
           default-timeout = 10 * 1000;
           layer = "overlay";
-          icon-path = "${pkgs.rose-pine-icon-theme}/share/icons/rose-prine-dawn";
           background-color = "#${base00}";
           text-color = "#${base05}";
           border-color = "#${base0D}";

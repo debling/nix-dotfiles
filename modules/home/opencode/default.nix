@@ -5,6 +5,10 @@
     agents = {
       documentation-engineer = ./agent-documentation-engineer.md;
       mobile-developer = ./agent-mobile-developer.md;
+      cloud-engineer = ./agent-cloud.md;
+      terraform-engineer = ./agent-terraform.md;
+      backend-developer = ./agent-backend-developer.md;
+      frontend-developer = ./agent-frontend-developer.md;
     };
 
     skills = {

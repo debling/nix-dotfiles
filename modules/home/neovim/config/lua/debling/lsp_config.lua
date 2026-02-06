@@ -138,13 +138,13 @@ vim.lsp.config('lua_ls', {
   settings = {
     Lua = {
       runtime = {
-        version = "LuaJIT",
+        version = 'LuaJIT',
       },
       diagnostics = {
-        globals = { "vim" },
+        globals = { 'vim' },
       },
       workspace = {
-        library = vim.api.nvim_get_runtime_file("", true),
+        library = vim.api.nvim_get_runtime_file('', true),
       },
       telemetry = {
         enable = true,
@@ -160,17 +160,17 @@ null_ls.setup({
   sources = {
     null_ls.builtins.hover.dictionary,
     null_ls.builtins.hover.printenv,
- 
+
     -- General text
     null_ls.builtins.completion.spell,
- 
+
     -- -- Terraform
     null_ls.builtins.diagnostics.trivy,
     null_ls.builtins.diagnostics.terraform_validate,
     null_ls.builtins.formatting.terraform_fmt,
- 
+
     null_ls.builtins.diagnostics.checkmake,
- 
+
     null_ls.builtins.formatting.clang_format,
     null_ls.builtins.formatting.shfmt,
     null_ls.builtins.formatting.stylua,
@@ -229,13 +229,3 @@ utils.map(
   function() snippet_jump_or_send_keys('<c-l>', JUMP_DIRECTION.next) end,
   { silent = true, noremap = false }
 )
-
--- Format on save using native LSP when available
-vim.api.nvim_create_autocmd('BufWritePre', {
-  callback = function()
-    vim.lsp.buf.format({
-      async = false,
-      timeout_ms = 1000,
-    })
-  end,
-})

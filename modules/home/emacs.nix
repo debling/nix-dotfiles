@@ -338,7 +338,7 @@
         realName = "Zeit Contato";
         address = addr;
         userName = addr;
-        passwordCommand = "${lib.getExe pkgs.rbw} get 'email zeit' | tr --delete '\\n'";
+        passwordCommand = "${lib.getExe pkgs.rbw} get 'email contato' | tr --delete '\\n'";
         msmtp.enable = true;
         imap = {
           host = "imap.kinghost.net";

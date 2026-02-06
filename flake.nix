@@ -64,12 +64,9 @@
     };
 
     neovim-nightly-overlay = {
-      url = "github:nix-community/neovim-nightly-overlay";
+      # url = "github:nix-community/neovim-nightly-overlay";
+      url = "github:Prince213/neovim-nightly-overlay/push-nttnuzwkprtq";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    helix = {
-      url = "github:helix-editor/helix";
     };
 
     zig-overlay = {
@@ -122,7 +119,6 @@
           inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
-          inputs.helix.overlays.default
 
           (final: prev: {
             snitch = prev.callPackage overlays/snitch/default.nix { };

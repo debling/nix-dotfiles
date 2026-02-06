@@ -20,6 +20,18 @@
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
+networking.firewall.allowedTCPPorts = [
+  5555 # Common port for ADB over Wi-Fi
+];
+networking.firewall.allowedTCPPortRanges = [
+{ from = 1714; to = 1764; }
+];
+
+
+networking.firewall.allowedUDPPortRanges = [
+  { from = 49152; to = 65535; }
+   { from = 1714; to = 1764; }
+];
 
   services.tailscale = {
     enable = true;
@@ -200,4 +212,5 @@
   services.tlp.enable = true;
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
   services.fprintd.enable = true;
+
 }
