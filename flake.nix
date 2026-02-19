@@ -35,7 +35,6 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
 
     # Modules
     android-nixpkgs = {
@@ -191,9 +190,6 @@
           inputs.disko.nixosModules.disko
           ./hosts/x1-carbon/disko.nix
 
-          inputs.nixos-facter-modules.nixosModules.facter
-          { config.facter.reportPath = ./hosts/x1-carbon/facter.json; }
-
           ./hosts/x1-carbon/configuration.nix
 
           home-manager.nixosModules.home-manager
@@ -213,17 +209,7 @@
           ./hosts/x220/disko.nix
           ./hosts/x220/configuration.nix
           ./modules/nixos/glauth.nix
-          inputs.nixos-facter-modules.nixosModules.facter
-          {
-            config.facter.reportPath =
-              let
-                reportPath = ./hosts/x220/facter.json;
-              in
-              if builtins.pathExists reportPath then
-                reportPath
-              else
-                throw "Have you forgotten to run nixos-anywhere with `--generate-hardware-config nixos-facter ${reportPath}`?";
-          }
+
           {
             nixpkgs = nixpkgsConfig;
           }

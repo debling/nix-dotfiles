@@ -20,6 +20,9 @@
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
+
+    hardware.facter.reportPath = ./facter.json;
+
 networking.firewall.allowedTCPPorts = [
   5555 # Common port for ADB over Wi-Fi
 ];

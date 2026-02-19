@@ -9,7 +9,7 @@
 {
   imports = [ ./wayland.nix ];
 
-  environment.systemPackages = [ pkgs.river-ultitile ];
+  environment.systemPackages =  with pkgs; [ river-ultitile ];
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
@@ -67,13 +67,18 @@
         };
 
         map = {
-          normal = {
+          normal = let 
+            withFloatingTerm = program: "spawn 'footclient -a float-term --window-size-chars=150x40 -E ${program}'";
+          in {
             "Super Return" = "spawn 'footclient -E'";
             "Super Space" = "spawn fuzzel";
             "Super Q" = "close";
             "Super Y" = "spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'";
             "Super S" = "spawn omarchy-cmd-screenrecord";
             "Super P" = "spawn omarchy-cmd-screenshot";
+            "Super B" = withFloatingTerm (lib.getExe pkgs.bluetui);
+            "Super V" = withFloatingTerm (lib.getExe pkgs.wiremix);
+            "Super+Shift N" = withFloatingTerm (lib.getExe pkgs.impala);
           };
         };
 

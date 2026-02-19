@@ -72,8 +72,11 @@
     wlr.enable = true;
     extraPortals = [
       pkgs.xdg-desktop-portal-gtk
+      pkgs.kdePackages.xdg-desktop-portal-kde
     ];
   };
+
+    programs.kdeconnect.enable = true;
 
   home-manager.users.${mainUser} = {
     # systemd.user.services.wbg = {

@@ -34,6 +34,8 @@ in
     ../../modules/nixos/home-assistant.nix
   ];
 
+    hardware.facter.reportPath = ./facter.json;
+
   powerManagement.powertop.enable = true;
 
   boot = {
