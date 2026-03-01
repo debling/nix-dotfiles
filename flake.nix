@@ -171,7 +171,6 @@
 
           inputs.disko.nixosModules.disko
           ./hosts/portable/disko.nix
-
           ./hosts/portable/configuration.nix
 
           home-manager.nixosModules.home-manager
@@ -194,6 +193,23 @@
 
           home-manager.nixosModules.home-manager
 
+          {
+            nixpkgs = nixpkgsConfig;
+            home-manager = homeManagerConfiguration;
+          }
+        ];
+      };
+
+
+      nixosConfigurations.ryzen = nixpkgs.lib.nixosSystem {
+        system = flake-utils.lib.system.x86_64-linux;
+        specialArgs = specialArgs;
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./hosts/ryzen/disko.nix
+          ./hosts/ryzen/configuration.nix
+
+          home-manager.nixosModules.home-manager
           {
             nixpkgs = nixpkgsConfig;
             home-manager = homeManagerConfiguration;

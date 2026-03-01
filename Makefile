@@ -31,6 +31,11 @@ iso/run:
 vm/build:
 	nix build .#nixosConfigurations.live.config.system.build.vm
 
+.PHONY: gc
 gc:
 	nix-collect-garbage -d
 	sudo nix-collect-garbage -d
+
+.PHONY: facter
+facter:
+	sudo nix run --option experimental-features "nix-command flakes" nixpkgs#nixos-facter -- -o facter.json

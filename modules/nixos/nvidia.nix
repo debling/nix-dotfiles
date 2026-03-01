@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
@@ -33,16 +33,17 @@
     # Enable the Nvidia settings menu,
     # accessible via `nvidia-settings`.
     nvidiaSettings = true;
-
-    prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true; # Lets you use `nvidia-offload %command%` in steam
-      };
-
-      intelBusId = "PCI:00:02:0";
-      # amdgpuBusId = "PCI:0:0:0";
-      nvidiaBusId = "PCI:01:00:0";
-    };
   };
+
+programs.nix-ld.libraries = with pkgs; [
+  stdenv.cc.cc
+  zlib
+  cudaPackages.cudatoolkit
+  cudaPackages.libcutensor
+  cudaPackages.libcublas
+  cudaPackages.libcusolver
+  cudaPackages.cuda_cudart
+];
+
+  nixpkgs.config.cudaSupport = true;
 }

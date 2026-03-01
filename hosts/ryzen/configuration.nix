@@ -3,7 +3,6 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  lib,
   pkgs,
   mainUser,
   ...
@@ -11,8 +10,6 @@
 
 {
   imports = [
-    # Include the results of the hardware scan.
-    ./hardware-configuration.nix
 
     ../../modules/common/containers.nix
     ../../modules/common/fonts.nix
@@ -20,12 +17,18 @@
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
-    # ../../modules/desktop/dwl
     ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/nvidia.nix
-    #../../modules/hardware/nouveau.nix
     ../../modules/nixos/bluetooth.nix
   ];
+
+    hardware.facter.reportPath = ./facter.json;
+
+  zramSwap = {
+    enable = true;
+    memoryPercent = 35;
+  };
+
 
   services.avahi = {
     enable = true;
@@ -67,27 +70,18 @@
 
   home-manager.users.${mainUser} = import ./home.nix;
 
-  boot.kernel.sysctl."vm.swappiness" = 200;
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
 
-  boot.loader.grub = {
-    enable = true;
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-    memtest86.enable = true;
-    extraEntries = ''
-      menuentry "Reboot" --class restart {
-        reboot
-      }
+    kernelParams = [ "quiet" ];
+    kernel.sysctl."vm.swappiness" = 200;
 
-      menuentry "Shutdown" --class shutdown {
-        halt
-      }
-    '';
+    loader.timeout = 0;
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
   };
 
-  networking.hostName = "nixos-portable"; # Define your hostname.
+  networking.hostName = "ryzen"; # Define your hostname.
 
   # Set your time zone.
   time.timeZone = "America/Sao_Paulo";
@@ -124,11 +118,7 @@
           command = "river";
         };
         default_session = {
-          command = ''
-            ${lib.getExe pkgs.greetd.tuigreet} \
-              --cmd river \
-              --asterisks --remember --remember-user-session --time
-          '';
+          command = "dbus-run-session river";
           user = "debling";
         };
       };
@@ -201,5 +191,13 @@
 
   services.fstrim.enable = true;
   services.tlp.enable = true;
-  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
+  services.btrfs.autoScrub = {
+      enable = true;
+      interval = "weekly";
+  };
+  nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 14d";
+  };
 }

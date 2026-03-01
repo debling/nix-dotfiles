@@ -11,7 +11,7 @@
 
     ### Others
     anydesk
-    libreoffice
+    #libreoffice
     obsidian
     spotify
     zoom-us

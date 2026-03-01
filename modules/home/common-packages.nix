@@ -168,27 +168,27 @@ in
 
       ".ideavimrc".source = ./../../config/.ideavimrc;
 
-      ".psqlrc".text = ''
-        \pset null '(null)'
+      # ".psqlrc".text = ''
+      #   \pset null '(null)'
 
-        \pset linestyle unicode
-        \pset border 2
+      #   \pset linestyle unicode
+      #   \pset border 2
 
-        -- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
-        -- \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
+      #   -- http://www.postgresql.org/docs/9.3/static/app-psql.html#APP-PSQL-PROMPTING
+      #   -- \set PROMPT1 '%[%033[1m%]%M %n@%/%R%[%033[0m%]%# '
 
-        -- PROMPT2 is printed when the prompt expects more input, like when you type
-        -- SELECT * FROM<enter>. %R shows what type of input it expects.
-        -- \set PROMPT2 '[more] %R > '
+      #   -- PROMPT2 is printed when the prompt expects more input, like when you type
+      #   -- SELECT * FROM<enter>. %R shows what type of input it expects.
+      #   -- \set PROMPT2 '[more] %R > '
 
-        -- Show how long each query takes to execute
-        \timing
+      #   -- Show how long each query takes to execute
+      #   \timing
 
-        \x auto
-        \set VERBOSITY verbose
-        \set HISTCONTROL ignoredups
-        \set COMP_KEYWORD_CASE upper
-      '';
+      #   \x auto
+      #   \set VERBOSITY verbose
+      #   \set HISTCONTROL ignoredups
+      #   \set COMP_KEYWORD_CASE upper
+      # '';
     };
 
   };
