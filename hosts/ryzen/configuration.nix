@@ -85,23 +85,12 @@
     };
 
     xserver = {
-      wacom.enable = true;
-
-      # Enable the GNOME Desktop Environment.
-      # displayManager.gdm.enable = true;
-      # desktopManager.gnome.enable = true;
-      xkb = {
-        layout = "br";
-        options = "caps:escape"; # map caps to escape.
-      };
     };
 
     # Enable CUPS to print documents.
     printing.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

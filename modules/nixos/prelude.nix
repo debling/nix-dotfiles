@@ -24,4 +24,12 @@
     nssmdns4 = true;
     openFirewall = true;
   };
+
+  # X11 keyboard configuration (applies only if X server is enabled)
+  services.xserver.xkb = {
+    layout = "br";
+    options = "caps:escape";
+  };
+  services.xserver.wacom.enable = true;
+  services.libinput.enable = true;
 }
