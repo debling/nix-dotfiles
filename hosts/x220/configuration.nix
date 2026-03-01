@@ -26,6 +26,7 @@ in
 {
   imports = [
     ../../modules/nixos/prelude.nix
+    ../../modules/nixos/users.nix
     ../../modules/common/containers.nix
     ../../modules/common/nix.nix
     ../../modules/nixos/glauth.nix
@@ -52,19 +53,7 @@ in
     enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${mainUser} = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel" # Enable ‘sudo’ for the user.
-      "docker"
-      "podman" # docker and podman without sudo
-    ];
-    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
-    shell = pkgs.fish;
-  };
-  security.sudo.wheelNeedsPassword = false;
-
+  # Define a user account. Don't forget to set a password with 'passwd'.
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
   ];

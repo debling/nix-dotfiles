@@ -15,6 +15,7 @@
     ./hardware-configuration.nix
 
     ../../modules/nixos/prelude.nix
+    ../../modules/nixos/users.nix
     ../../modules/common/containers.nix
     ../../modules/common/fonts.nix
     ../../modules/common/networking.nix
@@ -38,31 +39,6 @@
     useRoutingFeatures = "client";
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.debling = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel" # sudo commands without password
-      "docker" # docker commands without root
-      "adbusers" # android `adb` command
-      "input"
-      "uinput" # access to udev access (in use by kmonad)
-      "dialout" # access to wserial ports
-    ];
-    hashedPassword = "$y$j9T$O4qn0aOF8U9FQPiMXsv41/$CkOtnJbkV4lcZcCwQnUL0u4xlfoYhvN.9pCUzT2uFI5";
-    shell = pkgs.fish;
-  };
-
-  users.users.kmonad.isSystemUser = true;
-  users.users.kmonad.group = "kmonad";
-  users.groups.kmonad = { };
-  users.users.kmonad.extraGroups = [ "uinput" ];
-
-  security.sudo.wheelNeedsPassword = false;
-
-  home-manager.users.${mainUser} = import ./home.nix;
-
-  boot.kernel.sysctl."vm.swappiness" = 200;
   #boot.kernelPackages = pkgs.linuxPackages_latest;
   #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
 
