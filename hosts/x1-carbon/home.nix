@@ -38,7 +38,6 @@
       gh
 
       gnumake
-      snitch
       maven
 
       ### Editors/IDEs
@@ -92,13 +91,6 @@
 
       glow
     ];
-  };
-
-  xdg.configFile = {
-    snitch = {
-      source = ../../config/snitch;
-      recursive = true;
-    };
   };
 
   systemd.user.startServices = "sd-switch";

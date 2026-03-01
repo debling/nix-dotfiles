@@ -11,6 +11,7 @@
 
 {
   imports = [
+    ../../modules/nixos/prelude.nix
     ../../modules/common/containers.nix
     ../../modules/common/fonts.nix
     ../../modules/common/networking.nix
@@ -21,20 +22,28 @@
     ../../modules/nixos/bluetooth.nix
   ];
 
-    hardware.facter.reportPath = ./facter.json;
+  hardware.facter.reportPath = ./facter.json;
 
-networking.firewall.allowedTCPPorts = [
-  5555 # Common port for ADB over Wi-Fi
-];
-networking.firewall.allowedTCPPortRanges = [
-{ from = 1714; to = 1764; }
-];
+  networking.firewall.allowedTCPPorts = [
+    5555 # Common port for ADB over Wi-Fi
+  ];
+  networking.firewall.allowedTCPPortRanges = [
+    {
+      from = 1714;
+      to = 1764;
+    }
+  ];
 
-
-networking.firewall.allowedUDPPortRanges = [
-  { from = 49152; to = 65535; }
-   { from = 1714; to = 1764; }
-];
+  networking.firewall.allowedUDPPortRanges = [
+    {
+      from = 49152;
+      to = 65535;
+    }
+    {
+      from = 1714;
+      to = 1764;
+    }
+  ];
 
   services.tailscale = {
     enable = true;
@@ -89,22 +98,6 @@ networking.firewall.allowedUDPPortRanges = [
   };
 
   networking.hostName = "x1-carbon"; # Define your hostname.
-
-  # Set your time zone.
-  time.timeZone = "America/Sao_Paulo";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true; # use xkb.options in tty.
-  };
-
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    openFirewall = true;
-  };
 
   services.printing = {
     enable = true;
@@ -183,15 +176,6 @@ networking.firewall.allowedUDPPortRanges = [
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs = {
-    mtr.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    fish.enable = true;
-    neovim.enable = true;
-  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

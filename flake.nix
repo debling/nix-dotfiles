@@ -120,7 +120,6 @@
           inputs.nix-alien.overlays.default
 
           (final: prev: {
-            snitch = prev.callPackage overlays/snitch/default.nix { };
             zls = inputs.zls.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
 
@@ -199,7 +198,6 @@
           }
         ];
       };
-
 
       nixosConfigurations.ryzen = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;

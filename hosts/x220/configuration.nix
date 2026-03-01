@@ -25,6 +25,7 @@ let
 in
 {
   imports = [
+    ../../modules/nixos/prelude.nix
     ../../modules/common/containers.nix
     ../../modules/common/nix.nix
     ../../modules/nixos/glauth.nix
@@ -34,7 +35,7 @@ in
     ../../modules/nixos/home-assistant.nix
   ];
 
-    hardware.facter.reportPath = ./facter.json;
+  hardware.facter.reportPath = ./facter.json;
 
   powerManagement.powertop.enable = true;
 
@@ -68,16 +69,6 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
   ];
 
-  # Set your time zone.
-  time.timeZone = "America/Sao_Paulo";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true; # use xkbOptions in tty.
-  };
-
   # Enable the X11 windowing system.
   services = {
     fstrim.enable = true;
@@ -100,15 +91,6 @@ in
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs.mtr.enable = true;
-  programs = {
-    fish.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    neovim.enable = true;
-  };
 
   # Copy the NixOS configuration file and link it from the resulting system
   # (/run/current-system/configuration.nix). This is useful in case you
@@ -553,12 +535,6 @@ in
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "server";
-  };
-
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    openFirewall = true;
   };
 
 }

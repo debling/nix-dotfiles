@@ -10,7 +10,7 @@
 
 {
   imports = [
-
+    ../../modules/nixos/prelude.nix
     ../../modules/common/containers.nix
     ../../modules/common/fonts.nix
     ../../modules/common/networking.nix
@@ -22,18 +22,11 @@
     ../../modules/nixos/bluetooth.nix
   ];
 
-    hardware.facter.reportPath = ./facter.json;
+  hardware.facter.reportPath = ./facter.json;
 
   zramSwap = {
     enable = true;
     memoryPercent = 35;
-  };
-
-
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    openFirewall = true;
   };
 
   documentation.dev.enable = true;
@@ -83,16 +76,6 @@
 
   networking.hostName = "ryzen"; # Define your hostname.
 
-  # Set your time zone.
-  time.timeZone = "America/Sao_Paulo";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true; # use xkb.options in tty.
-  };
-
   # Configure keymap in X11
   services = {
     kmonad = {
@@ -129,7 +112,7 @@
     };
 
     xserver = {
-        wacom.enable = true;
+      wacom.enable = true;
 
       # Enable the GNOME Desktop Environment.
       # displayManager.gdm.enable = true;
@@ -160,15 +143,6 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
-  programs = {
-    mtr.enable = true;
-    gnupg.agent = {
-      enable = true;
-      enableSSHSupport = true;
-    };
-    fish.enable = true;
-    neovim.enable = true;
-  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
@@ -192,12 +166,12 @@
   services.fstrim.enable = true;
   services.tlp.enable = true;
   services.btrfs.autoScrub = {
-      enable = true;
-      interval = "weekly";
+    enable = true;
+    interval = "weekly";
   };
   nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 14d";
   };
 }
