@@ -76,7 +76,7 @@
     ];
   };
 
-    programs.kdeconnect.enable = true;
+  programs.kdeconnect.enable = true;
 
   home-manager.users.${mainUser} = {
     # systemd.user.services.wbg = {

@@ -9,7 +9,7 @@
 {
   imports = [ ./wayland.nix ];
 
-  environment.systemPackages =  with pkgs; [ river-ultitile ];
+  environment.systemPackages = with pkgs; [ river-ultitile ];
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "1";
@@ -26,6 +26,23 @@
   };
 
   services.graphical-desktop.enable = true;
+
+  # Greetd display manager with auto-login
+  services.greetd = {
+    enable = true;
+    settings = {
+      initial_session = {
+        user = mainUser;
+        command = "river";
+      };
+      default_session = {
+        command = "dbus-run-session river";
+        user = mainUser;
+      };
+    };
+  };
+
+  services.displayManager.autoLogin.user = mainUser;
 
   home-manager.users.${mainUser} = {
     wayland.windowManager.river = {
@@ -67,19 +84,22 @@
         };
 
         map = {
-          normal = let 
-            withFloatingTerm = program: "spawn 'footclient -a float-term --window-size-chars=150x40 -E ${program}'";
-          in {
-            "Super Return" = "spawn 'footclient -E'";
-            "Super Space" = "spawn fuzzel";
-            "Super Q" = "close";
-            "Super Y" = "spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'";
-            "Super S" = "spawn omarchy-cmd-screenrecord";
-            "Super P" = "spawn omarchy-cmd-screenshot";
-            "Super B" = withFloatingTerm (lib.getExe pkgs.bluetui);
-            "Super V" = withFloatingTerm (lib.getExe pkgs.wiremix);
-            "Super+Shift N" = withFloatingTerm (lib.getExe pkgs.impala);
-          };
+          normal =
+            let
+              withFloatingTerm =
+                program: "spawn 'footclient -a float-term --window-size-chars=150x40 -E ${program}'";
+            in
+            {
+              "Super Return" = "spawn 'footclient -E'";
+              "Super Space" = "spawn fuzzel";
+              "Super Q" = "close";
+              "Super Y" = "spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'";
+              "Super S" = "spawn omarchy-cmd-screenrecord";
+              "Super P" = "spawn omarchy-cmd-screenshot";
+              "Super B" = withFloatingTerm (lib.getExe pkgs.bluetui);
+              "Super V" = withFloatingTerm (lib.getExe pkgs.wiremix);
+              "Super+Shift N" = withFloatingTerm (lib.getExe pkgs.impala);
+            };
         };
 
         spawn = [

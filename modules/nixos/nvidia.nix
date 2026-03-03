@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   # Enable OpenGL
   hardware.graphics = {
     enable = true;
@@ -35,15 +36,15 @@
     nvidiaSettings = true;
   };
 
-programs.nix-ld.libraries = with pkgs; [
-  stdenv.cc.cc
-  zlib
-  cudaPackages.cudatoolkit
-  cudaPackages.libcutensor
-  cudaPackages.libcublas
-  cudaPackages.libcusolver
-  cudaPackages.cuda_cudart
-];
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    cudaPackages.cudatoolkit
+    cudaPackages.libcutensor
+    cudaPackages.libcublas
+    cudaPackages.libcusolver
+    cudaPackages.cuda_cudart
+  ];
 
   nixpkgs.config.cudaSupport = true;
 }

@@ -3,9 +3,7 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  lib,
   pkgs,
-  mainUser,
   ...
 }:
 
@@ -38,9 +36,6 @@
     enable = true;
     useRoutingFeatures = "client";
   };
-
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
-  #boot.kernelPackages = pkgs.linuxKernel.kernels.linux_zen;
 
   boot.loader.grub = {
     enable = true;
@@ -76,30 +71,7 @@
     udev.extraRules = ''
       KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
     '';
-
-    greetd = {
-      enable = true;
-      settings = {
-        initial_session = {
-          user = "debling";
-          command = "river";
-        };
-        default_session = {
-          command = ''
-            ${lib.getExe pkgs.greetd.tuigreet} \
-              --cmd river \
-              --asterisks --remember --remember-user-session --time
-          '';
-          user = "debling";
-        };
-      };
-    };
-
-    displayManager = {
-      autoLogin.user = mainUser;
-    };
-
-    xserver = {
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

@@ -16,18 +16,21 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "umask=0077" "defaults" ]
+                mountOptions = [
+                  "umask=0077"
+                  "defaults"
+                ];
               };
             };
 
             swap = {
-                size = "16G";
-                content = {
-                    type = "luks";
-                    name = "crypt-swap";
-                    settings.allowDiscards = true;
-                    content.type = "swap";
-                };
+              size = "16G";
+              content = {
+                type = "luks";
+                name = "crypt-swap";
+                settings.allowDiscards = true;
+                content.type = "swap";
+              };
             };
 
             luks = {
@@ -42,22 +45,38 @@
                   subvolumes = {
                     "@root" = {
                       mountpoint = "/";
-                      mountOptions = [ "noatime" "compress=zstd:3" "space_cache=v2" ];
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd:3"
+                        "space_cache=v2"
+                      ];
                     };
 
                     "@home" = {
                       mountpoint = "/home";
-                      mountOptions = [ "noatime" "compress=zstd:5" "space_cache=v2" ];
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd:5"
+                        "space_cache=v2"
+                      ];
                     };
 
                     "@nix" = {
                       mountpoint = "/nix";
-                      mountOptions = [ "noatime" "compress=zstd:3" "space_cache=v2" "commit=120" ];
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd:3"
+                        "space_cache=v2"
+                        "commit=120"
+                      ];
                     };
 
                     "@var" = {
                       mountpoint = "/var";
-                      mountOptions = [ "noatime" "compress=zstd:3" ];
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd:3"
+                      ];
                     };
                   };
                 };
@@ -66,7 +85,6 @@
           };
         };
       };
-
 
       # 2TB HDD — ARCHIVE + CACHE
       ryzenHdd = {
@@ -116,8 +134,6 @@
           };
         };
       };
-
     };
-
   };
 }

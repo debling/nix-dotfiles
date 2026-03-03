@@ -72,14 +72,17 @@
         gui = {
           nerdFontsVersion = "3";
         };
-        git.pagers = [
+        git = {
+          overrideGpg = true;
+          pagers = [
 
-          {
-            colorArg = "always";
-            pager = "delta --syntax-theme=gruvbox-dark --paging=never";
-          }
+            {
+              colorArg = "always";
+              pager = "delta --syntax-theme=gruvbox-dark --paging=never";
+            }
 
-        ];
+          ];
+        };
       };
     };
 

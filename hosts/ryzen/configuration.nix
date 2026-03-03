@@ -35,17 +35,16 @@
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   hardware.opentabletdriver.enable = true;
-  services.tailscale = {
+  debling.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
   };
 
-    kernel.sysctl."vm.swappiness" = 200;
+  kernel.sysctl."vm.swappiness" = 200;
 
-    loader.timeout = 0;
-    loader.systemd-boot.enable = true;
-    loader.efi.canTouchEfiVariables = true;
-  };
+  loader.timeout = 0;
+  loader.systemd-boot.enable = true;
+  loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "ryzen"; # Define your hostname.
 
@@ -66,31 +65,12 @@
       KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
     '';
 
-    greetd = {
-      enable = true;
-      settings = {
-        initial_session = {
-          user = "debling";
-          command = "river";
-        };
-        default_session = {
-          command = "dbus-run-session river";
-          user = "debling";
-        };
-      };
-    };
-
-    displayManager = {
-      autoLogin.user = mainUser;
-    };
-
     xserver = {
     };
 
     # Enable CUPS to print documents.
     printing.enable = true;
   };
-
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget

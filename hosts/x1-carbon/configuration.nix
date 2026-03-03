@@ -67,7 +67,6 @@
 
   hardware.opentabletdriver.enable = true;
 
-
   home-manager.users.${mainUser} = import ./home.nix;
 
   boot = {
@@ -105,32 +104,13 @@
       ];
     };
 
-    greetd = {
-      enable = true;
-      settings = {
-        initial_session = {
-          user = "debling";
-          command = "river";
-        };
-        default_session = {
-          command = ''
-            ${lib.getExe pkgs.tuigreet} \
-              --cmd river \
-              --asterisks --remember --remember-user-session --time
-          '';
-          user = "debling";
-        };
-      };
-    };
-
-    displayManager = {
-      autoLogin.user = mainUser;
-    };
-
     xserver = {
       # Enable the GNOME Desktop Environment.
       # displayManager.gdm.enable = true;
       # desktopManager.gnome.enable = true;
+    };
+
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
