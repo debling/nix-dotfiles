@@ -74,7 +74,7 @@
     };
 
     zls = {
-      url = "github:zigtools/zls/829f566c1203ab98612577885a85e07eb0101961";
+      url = "github:zigtools/zls";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         zig-overlay.follows = "zig-overlay";
