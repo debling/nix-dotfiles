@@ -20,31 +20,29 @@ in
   services.home-assistant = {
     enable = true;
     openFirewall = true;
-    extraPackages =
-      python3packages: with python3packages; [
-        gtts
-        zlib-ng
-        isal
-        caldav
-        python-otbr-api
-        pychromecast
-        radios
-      ];
+    #extraPackages =
+    #  python3packages: with python3packages; [
+    #    gtts
+    #    zlib-ng
+    #    isal
+    #    caldav
+    #    python-otbr-api
+    #    pychromecast
+    #    radios
+    #  ];
     extraComponents = [
       "default_config"
-      "esphome"
-      "tile"
-      "matter"
       "moon"
       "sun"
-      "zha"
-      "zone"
       "mobile_app"
-      "met"
-      "isal"
       "tuya"
+      "cast"
       "tplink"
+      "jellyfin"
+      "lg_netcast"
+      "transmission"
     ];
+    customComponents = with pkgs.home-assistant-custom-components; [ localtuya ];
     config = {
       mobile_app = { };
 

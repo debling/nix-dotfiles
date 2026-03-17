@@ -12,16 +12,16 @@
 let
   myDomain = "x220";
   myIp = "192.168.0.254";
-  makeNginxLocalProxy = port: ({
+  makeNginxLocalProxy = port: {
     forceSSL = true;
     http3 = true;
     quic = true;
     useACMEHost = "home.debling.com.br";
     locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString port}";
+      proxyPass = "http://127.0.0.1:${toString port}";
       proxyWebsockets = true;
     };
-  });
+  };
 in
 {
   imports = [
@@ -31,11 +31,16 @@ in
     ../../modules/common/nix.nix
     ../../modules/nixos/glauth.nix
     ./arr.nix
-    ./samba.nix
+    #./samba.nix
     # ./sso.nix
     ../../modules/nixos/home-assistant.nix
+    ./speedtest.nix
   ];
 
+  documentation.enable = false;
+  documentation.man.enable = false;
+  documentation.info.enable = false;
+  documentation.doc.enable = false;
   hardware.facter.reportPath = ./facter.json;
 
   powerManagement.powertop.enable = true;
@@ -246,6 +251,7 @@ in
       grafana-piechart-panel
     ];
     settings = {
+      security.secret_key = "dfda4e08b850eacfb5bcda8aa51c0b1bb0236cfeea274990880d6c90e3d3a726";
       server = {
         domain = "grafana.home.debling.com.br";
         root_url = "%(protocol)s://%(domain)s";
@@ -295,8 +301,8 @@ in
           options =
             let
               blockyQueryDashboardRaw = pkgs.fetchurl {
-                url = "https://raw.githubusercontent.com/0xERR0R/blocky/refs/heads/main/docs/blocky-query-grafana-postgres.json";
-                sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk=";
+                url = "https://raw.githubusercontent.com/0xERR0R/blocky/67dababac07d292533242a34ddfa5942ea8e813d/docs/blocky-query-grafana-postgres.json";
+                sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk";
               };
               configuredBlockyQueryDashboard = pkgs.writeText "blocky-query-grafana-postgres.json" (
                 builtins.replaceStrings [ "\${DS_POSTGRES}" ] [ "Blocky PostgreSQL" ] (
@@ -305,8 +311,8 @@ in
               );
 
               blockyDashboard = pkgs.fetchurl {
-                url = "https://0xerr0r.github.io/blocky/latest/blocky-grafana.json";
-                sha256 = "sha256-InIKXAmovhDfYqBFGDNk/Cyj0hQQVjTuyDdTumV2yOg=";
+                url = "https://raw.githubusercontent.com/0xERR0R/blocky/67dababac07d292533242a34ddfa5942ea8e813d/docs/blocky-grafana.json";
+                sha256 = "sha256-zsSOO41NAuDsX2erlvwzt+fwuIEYfxnzVosJjDzUztA=";
               };
               nodeDashboard = pkgs.fetchurl {
                 url = "https://grafana.com/api/dashboards/1860/revisions/42/download";
@@ -451,7 +457,6 @@ in
     };
     extraApps = {
       inherit (config.services.nextcloud.package.packages.apps)
-        news
         contacts
         calendar
         tasks
@@ -465,7 +470,7 @@ in
     };
     extraAppsEnable = true;
 
-    package = pkgs.nextcloud32;
+    package = pkgs.nextcloud33;
   };
 
   environment.etc."nextcloud-admin-pass".text = "changeme";
@@ -516,6 +521,13 @@ in
             };
           }
 
+          {
+            HomeAssistant = {
+              href = "https://assistant.home.debling.com.br";
+              icon = "home-assistant";
+            };
+          }
+
         ];
       }
     ];
@@ -524,6 +536,7 @@ in
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "server";
+    openFirewall = true;
   };
 
 }
