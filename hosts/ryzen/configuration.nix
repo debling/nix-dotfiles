@@ -22,6 +22,10 @@
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/bluetooth.nix
   ];
+  programs.mosh.enable = true;
+  programs.mosh.openFirewall = true;
+
+  home-manager.users.${mainUser} = import ./home.nix;
 
   hardware.facter.reportPath = ./facter.json;
 
@@ -34,24 +38,43 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  hardware.opentabletdriver.enable = true;
-  debling.tailscale = {
+  # hardware.opentabletdriver.enable = true;
+  services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
   };
 
-  kernel.sysctl."vm.swappiness" = 200;
+  boot = {
+    kernel.sysctl."vm.swappiness" = 200;
 
-  loader.timeout = 0;
-  loader.systemd-boot.enable = true;
-  loader.efi.canTouchEfiVariables = true;
+    loader.timeout = 0;
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+  };
 
-  networking.hostName = "ryzen"; # Define your hostname.
+  networking = {
+    hostName = "ryzen"; # Define your hostname.
+    interfaces.enp37s0 = {
+      ipv4.addresses = [
+        {
+          address = "192.168.0.20";
+          prefixLength = 24;
+        }
+      ];
+      useDHCP = false;
+      wakeOnLan.enable = true;
+    };
+    defaultGateway = {
+      address = "192.168.0.1";
+      interface = "enp37s0";
+    };
+    nameservers = [ "192.168.0.254" ];
+  };
 
   # Configure keymap in X11
   services = {
     kmonad = {
-      enable = true;
+      enable = false;
       keyboards = {
         k6Out = {
           defcfg.enable = false;
@@ -60,14 +83,6 @@
         };
       };
     };
-
-    udev.extraRules = ''
-      KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
-    '';
-
-    xserver = {
-    };
-
     # Enable CUPS to print documents.
     printing.enable = true;
   };
@@ -79,7 +94,6 @@
     zen-browser
     man-pages
     man-pages-posix
-    android-tools
   ];
   environment.localBinInPath = true;
 
@@ -106,7 +120,6 @@
   system.stateVersion = "24.11"; # Did you read the comment?
 
   services.fstrim.enable = true;
-  services.tlp.enable = true;
   services.btrfs.autoScrub = {
     enable = true;
     interval = "weekly";

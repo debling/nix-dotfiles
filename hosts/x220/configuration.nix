@@ -343,6 +343,7 @@ in
 
   services.postgresql = {
     enable = true;
+    extensions = ps: [ ps.postgis ];
     ensureDatabases = [
       "grafana"
       "nextcloud"
@@ -538,5 +539,4 @@ in
     useRoutingFeatures = "server";
     openFirewall = true;
   };
-
 }

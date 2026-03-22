@@ -28,19 +28,19 @@
   services.graphical-desktop.enable = true;
 
   # Greetd display manager with auto-login
-  services.greetd = {
-    enable = true;
-    settings = {
-      initial_session = {
-        user = mainUser;
-        command = "river";
-      };
-      default_session = {
-        command = "dbus-run-session river";
-        user = mainUser;
-      };
-    };
-  };
+  # services.greetd = {
+  #   enable = true;
+  #   settings = {
+  #     initial_session = {
+  #       user = mainUser;
+  #       command = "river";
+  #     };
+  #     default_session = {
+  #       command = "dbus-run-session river";
+  #       user = mainUser;
+  #     };
+  #   };
+  # };
 
   services.displayManager.autoLogin.user = mainUser;
 
