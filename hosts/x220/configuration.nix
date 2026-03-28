@@ -349,8 +349,12 @@ in
       "nextcloud"
       "blocky"
       "authelia"
+      "radarr"
     ];
     ensureUsers = [
+      {
+        name = "radarr";
+      }
       {
         name = "grafana";
         ensureDBOwnership = true;

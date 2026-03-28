@@ -18,10 +18,27 @@
     ../../modules/common/networking.nix
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
-    ../../modules/nixos/desktop/river.nix
+    # ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
+  # Enable the COSMIC login manager
+  services.displayManager.cosmic-greeter.enable = true;
+
+  # Enable the COSMIC desktop environment
+  services.desktopManager.cosmic.enable = true;
+
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = mainUser;
+  };
+
+  services.system76-scheduler.enable = true;
+  programs.firefox.preferences = {
+    # disable libadwaita theming for Firefox
+    "widget.gtk.libadwaita-colors.enabled" = false;
+  };
+  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   hardware.facter.reportPath = ./facter.json;
 
@@ -115,6 +132,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+  cosmic-clipboard-manager
     zen-browser
     man-pages
     man-pages-posix
@@ -151,7 +169,6 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
 
-  services.tlp.enable = true;
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
   services.fprintd.enable = true;
 

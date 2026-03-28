@@ -28,7 +28,7 @@ in
         zig = {
           systemPkgs = with pkgs; [
             zigpkgs.master
-            zls
+            #zls
           ];
         };
 
@@ -204,7 +204,7 @@ in
       };
 
       xdg = {
-        configFile.nvim.source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Workspace/debling/nix-dotfiles/modules/home/neovim/config";
+        configFile.nvim.source = ./config;
 
         dataFile = {
           "nvim/jdtls/java-debug" = {

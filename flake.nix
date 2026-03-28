@@ -14,6 +14,8 @@
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    nixpkgs-cosmic-fix.url = "github:NixOS/nixpkgs/e77ad6622b575f5ed1b82072196a8f6c70ece868";
+
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -100,6 +102,7 @@
   outputs =
     {
       nixpkgs,
+      nixpkgs-cosmic-fix,
       darwin,
       nix-on-droid,
       home-manager,
@@ -119,9 +122,19 @@
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
 
-          (final: prev: {
+          (final: prev: let 
+            cosmic-fix = import nixpkgs-cosmic-fix {
+                    config = nixpkgsConfig;
+                    system = final.system;
+                };
+          in {
             zls = inputs.zls.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
+
+            cosmic-applets = cosmic-fix.cosmic-applets;
+            cosmic-settings-daemon = cosmic-fix.cosmic-settings-daemon;
+            
+            cosmic-clipboard-manager = prev.callPackage ./cosmic-clipboard-manager.nix {};
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {

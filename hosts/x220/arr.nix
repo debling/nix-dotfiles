@@ -86,6 +86,33 @@ in
   services.nginx.virtualHosts."lidarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.lidarr.settings.server.port;
 
+  services.radarr = {
+    enable = true;
+    group = "media";
+    settings = {
+      auth = {
+        Enabled = false;
+        Method = "External";
+        Required = false;
+      };
+      postgres = {
+          host = "localhost";
+          user = "radarr";
+          password = "radarr";
+          maindb = "radarr";
+          logdb = "radarr";
+        };
+    };
+  };
+  services.nginx.virtualHosts."radarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.radarr.settings.server.port;
+
+  services.jellyseerr = {
+    enable = true;
+  };
+  services.nginx.virtualHosts."seerr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.jellyseerr.port;
+
   services.jellyfin = {
     enable = true;
     group = "media";
@@ -121,10 +148,12 @@ in
           services = [
             "sonarr"
             "bazarr"
+            "radarr"
             "prowlarr"
             "transmission"
             "jellyfin"
             "lidarr"
+            "seerr"
           ];
         in
         map (s: ({
