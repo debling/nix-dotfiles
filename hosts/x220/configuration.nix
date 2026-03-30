@@ -164,7 +164,7 @@ in
     recommendedBrotliSettings = true;
     virtualHosts.${myIp}.locations = {
       "/" = {
-        proxyPass = "http://127.0.0.1:8082"; # homepage
+        proxyPass = "http://127.0.0.1:8096"; # jellyfin
       };
 
       "/blocky/" = {
@@ -343,6 +343,7 @@ in
 
   services.postgresql = {
     enable = true;
+    package =  pkgs.postgresql_17;
     extensions = ps: [ ps.postgis ];
     ensureDatabases = [
       "grafana"
