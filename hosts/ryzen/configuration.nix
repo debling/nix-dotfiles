@@ -21,6 +21,7 @@
     ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/bluetooth.nix
+    ./alloy.nix
   ];
   programs.mosh.enable = true;
   programs.mosh.openFirewall = true;

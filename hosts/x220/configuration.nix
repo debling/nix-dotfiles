@@ -225,7 +225,12 @@ in
 
   services.prometheus = {
     enable = true;
+    extraFlags = [ "--web.enable-remote-write-receiver" ];
     exporters.node.enable = true;
+    exporters.postgres = {
+      enable = true;
+      runAsLocalSuperUser = true;
+    };
     scrapeConfigs = [
       {
         job_name = "blocky";
@@ -236,8 +241,16 @@ in
       }
       {
         job_name = "node";
+        scrape_interval = "15s";
         static_configs = [
           { targets = [ "localhost:9100" ]; }
+        ];
+      }
+      {
+        job_name = "postgres";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9187" ]; }
         ];
       }
     ];
@@ -277,6 +290,9 @@ in
           access = "proxy";
           isDefault = true;
           editable = false;
+          jsonData = {
+            timeInterval = "15s";
+          };
         }
         {
           name = "Blocky PostgreSQL";
@@ -318,6 +334,15 @@ in
                 url = "https://grafana.com/api/dashboards/1860/revisions/42/download";
                 sha256 = "sha256-pNgn6xgZBEu6LW0lc0cXX2gRkQ8lg/rer34SPE3yEl4=";
               };
+              postgresDashboardRaw = pkgs.fetchurl {
+                url = "https://grafana.com/api/dashboards/9628/revisions/latest/download";
+                sha256 = "sha256-UhusNAZbyt7fJV/DhFUK4FKOmnTpG0R15YO2r+nDnMc=";
+              };
+              configuredPostgresDashboard = pkgs.writeText "postgres-exporter.json" (
+                builtins.replaceStrings [ "\${DS_PROMETHEUS}" ] [ "Prometheus" ] (
+                  builtins.readFile postgresDashboardRaw
+                )
+              );
               dashboardDir = pkgs.linkFarm "grafana-dashboards" [
                 {
                   name = "blocky-query-grafana-postgres.json";
@@ -331,6 +356,10 @@ in
                   name = "node-exporter.json";
                   path = nodeDashboard;
                 }
+                {
+                  name = "postgres-exporter.json";
+                  path = configuredPostgresDashboard;
+                }
               ];
             in
             {
@@ -343,7 +372,7 @@ in
 
   services.postgresql = {
     enable = true;
-    package =  pkgs.postgresql_17;
+    package = pkgs.postgresql_17;
     extensions = ps: [ ps.postgis ];
     ensureDatabases = [
       "grafana"

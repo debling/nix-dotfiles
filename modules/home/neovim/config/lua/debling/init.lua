@@ -127,8 +127,8 @@ vim.keymap.set(
 -- --
 vim.o.winborder = 'rounded'
 vim.o.termguicolors = true
-vim.o.background = 'light'
--- vim.cmd.colorscheme('retrobox')
+--vim.o.background = 'light'
+vim.cmd.colorscheme('retrobox')
 vim.cmd.hi('Normal ctermbg=none guibg=none')
 
 -- Show lsp sever status/progress in the botton right corner
