@@ -6,7 +6,6 @@
 }:
 
 let
-
   makeNginxLocalProxy = port: {
     forceSSL = true;
     http3 = true;
@@ -18,6 +17,20 @@ let
     };
   };
 
+  commonSettingsFor = name: {
+      auth = {
+        Enabled = false;
+        Method = "External";
+        Required = false;
+      };
+      postgres = {
+          host = "localhost";
+          user = name;
+          password = name;
+          maindb = name;
+          logdb = name;
+        };
+    };
 in
 {
   users.groups.media = { };
@@ -43,6 +56,7 @@ in
   services.bazarr = {
     enable = true;
     group = "media";
+   # settings = commonSettingsFor "bazarr";
   };
 
   services.nginx.virtualHosts."bazarr.home.debling.com.br" =
@@ -51,24 +65,15 @@ in
   services.sonarr = {
     enable = true;
     group = "media";
-    settings = {
-      auth = {
-        AuthenticationEnabled = false;
-        AuthenticationMethod = "external";
-      };
+    settings = commonSettingsFor "sonarr";
     };
-  };
 
   services.nginx.virtualHosts."sonarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.sonarr.settings.server.port;
 
   services.prowlarr = {
     enable = true;
-    settings = {
-      auth = {
-        AuthenticationMethod = "external";
-      };
-    };
+    settings = commonSettingsFor "prowlarr";
   };
   services.nginx.virtualHosts."prowlarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.prowlarr.settings.server.port;
@@ -76,12 +81,7 @@ in
   services.lidarr = {
     enable = true;
     group = "media";
-    settings = {
-      auth = {
-        AuthenticationEnabled = false;
-        AuthenticationMethod = "external";
-      };
-    };
+    settings = commonSettingsFor "lidarr";
   };
   services.nginx.virtualHosts."lidarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.lidarr.settings.server.port;
@@ -89,29 +89,16 @@ in
   services.radarr = {
     enable = true;
     group = "media";
-    settings = {
-      auth = {
-        Enabled = false;
-        Method = "External";
-        Required = false;
-      };
-      postgres = {
-          host = "localhost";
-          user = "radarr";
-          password = "radarr";
-          maindb = "radarr";
-          logdb = "radarr";
-        };
-    };
-  };
+    settings = commonSettingsFor "radarr";
+ };
   services.nginx.virtualHosts."radarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.radarr.settings.server.port;
 
-  services.jellyseerr = {
+  services.seerr = {
     enable = true;
   };
   services.nginx.virtualHosts."seerr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.jellyseerr.port;
+    makeNginxLocalProxy config.services.seerr.port;
 
   services.jellyfin = {
     enable = true;
@@ -138,6 +125,7 @@ in
     "d /srv/media/downloads 2775 root media -"
     "d /srv/media/incomplete 2775 root media -"
     "d /srv/media/tv 2775 root media -"
+    "d /srv/media/movies 2775 root media -"
     "d /srv/media/music 2775 root media -"
   ];
 

@@ -380,10 +380,31 @@ in
       "blocky"
       "authelia"
       "radarr"
+      "bazarr"
+      "sonarr"
+      "lidarr"
+      "prowlarr"
     ];
     ensureUsers = [
       {
+        name = "prowlarr";
+        ensureDBOwnership = true;
+      }
+      {
         name = "radarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "bazarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "sonarr";
+        ensureDBOwnership = true;
+      }
+      {
+        name = "lidarr";
+        ensureDBOwnership = true;
       }
       {
         name = "grafana";
