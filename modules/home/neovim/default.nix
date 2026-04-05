@@ -36,7 +36,7 @@ in
           systemPkgs = with pkgs; [
             hadolint
             dockerfile-language-server
-            nodePackages.bash-language-server
+            bash-language-server
             shellcheck
             shfmt
           ];
@@ -112,10 +112,10 @@ in
             emmet-ls
             html-tidy
             #hurl
-            nodePackages."@tailwindcss/language-server"
-            nodePackages.typescript-language-server
-            nodePackages.vscode-langservers-extracted
-            nodePackages.yaml-language-server
+            tailwindcss-language-server
+            typescript-language-server
+            vscode-langservers-extracted
+            yaml-language-server
             prettier
           ];
           plugins = with pkgs.vimPlugins; [

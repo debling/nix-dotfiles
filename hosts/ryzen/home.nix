@@ -70,7 +70,7 @@ in
       # ansible
       clojure # Lisp language with sane concurrency
       nodejs
-      nodePackages.pnpm
+      pnpm
       pipenv
 
       (python312.withPackages (

@@ -172,4 +172,5 @@
   services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
   services.fprintd.enable = true;
 
+  programs.kdeconnect.enable = true;
 }

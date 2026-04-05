@@ -104,6 +104,12 @@ in
     enable = true;
     group = "media";
   };
+
+  environment.systemPackages = [
+    pkgs.jellyfin
+    pkgs.jellyfin-web
+    pkgs.jellyfin-ffmpeg
+  ];
   services.nginx.virtualHosts."jellyfin.home.debling.com.br" = {
     forceSSL = true;
     useACMEHost = "home.debling.com.br";

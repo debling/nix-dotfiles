@@ -19,7 +19,7 @@
   programs.helix = {
     enable = true;
     extraPackages = [
-      pkgs.nodePackages.prettier
+      pkgs.prettier
       pkgs.asm-lsp
     ];
     themes = {

@@ -139,6 +139,9 @@ in
 
       #awscli2
       #ssm-session-manager-plugin
+
+      mosh
+      jellyfin-media-player
     ];
 
     sessionPath = [
