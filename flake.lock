@@ -547,22 +547,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-cosmic-fix": {
-      "locked": {
-        "lastModified": 1774296761,
-        "narHash": "sha256-O3iji2iXcnAWqRLd4IZVpTQBr+ysAeWMX3DM231/fp8=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e77ad6622b575f5ed1b82072196a8f6c70ece868",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e77ad6622b575f5ed1b82072196a8f6c70ece868",
-        "type": "github"
-      }
-    },
     "nixpkgs-docs": {
       "locked": {
         "lastModified": 1705957679,
@@ -731,7 +715,6 @@
         "nix-index-database": "nix-index-database_2",
         "nix-on-droid": "nix-on-droid",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-cosmic-fix": "nixpkgs-cosmic-fix",
         "nixpkgs-wayland": "nixpkgs-wayland",
         "zen-browser": "zen-browser",
         "zig-overlay": "zig-overlay",

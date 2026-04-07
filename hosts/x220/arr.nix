@@ -103,7 +103,16 @@ in
   services.jellyfin = {
     enable = true;
     group = "media";
+    hardwareAcceleration = {
+        enable = true;
+        type = "vaapi";
+        device = "/dev/dri/renderD12";
+    };
   };
+
+    nixpkgs.config.packageOverrides = pkgs: {
+        intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+    };
 
   environment.systemPackages = [
     pkgs.jellyfin
@@ -117,11 +126,15 @@ in
       proxyPass = "http://127.0.0.1:8096";
     };
   };
-
+  systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "i965";
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "i965"; };
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver
+        intel-ocl
+        intel-vaapi-driver
+        libva-vdpau-driver
+        intel-compute-runtime-legacy1
     ];
   };
   users.users.jellyfin.extraGroups = [ "video" ];

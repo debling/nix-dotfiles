@@ -86,6 +86,7 @@ in
 
   home = {
     packages = with pkgs; [
+        wezterm
       agenix-cli
       age
       zathura

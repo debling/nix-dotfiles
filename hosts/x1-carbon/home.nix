@@ -71,7 +71,7 @@
       # poetry
 
       # unrar
-      postgresql_15
+      postgresql_17
 
       taskwarrior-tui
       timewarrior
