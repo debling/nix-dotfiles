@@ -86,7 +86,7 @@ in
 
   home = {
     packages = with pkgs; [
-        wezterm
+    libnotify
       agenix-cli
       age
       zathura

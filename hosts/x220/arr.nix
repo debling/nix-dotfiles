@@ -18,19 +18,19 @@ let
   };
 
   commonSettingsFor = name: {
-      auth = {
-        Enabled = false;
-        Method = "External";
-        Required = false;
-      };
-      postgres = {
-          host = "localhost";
-          user = name;
-          password = name;
-          maindb = name;
-          logdb = name;
-        };
+    auth = {
+      Enabled = false;
+      Method = "External";
+      Required = false;
     };
+    postgres = {
+      host = "localhost";
+      user = name;
+      password = name;
+      maindb = name;
+      logdb = name;
+    };
+  };
 in
 {
   users.groups.media = { };
@@ -56,7 +56,7 @@ in
   services.bazarr = {
     enable = true;
     group = "media";
-   # settings = commonSettingsFor "bazarr";
+    # settings = commonSettingsFor "bazarr";
   };
 
   services.nginx.virtualHosts."bazarr.home.debling.com.br" =
@@ -66,7 +66,7 @@ in
     enable = true;
     group = "media";
     settings = commonSettingsFor "sonarr";
-    };
+  };
 
   services.nginx.virtualHosts."sonarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.sonarr.settings.server.port;
@@ -90,9 +90,23 @@ in
     enable = true;
     group = "media";
     settings = commonSettingsFor "radarr";
- };
+  };
   services.nginx.virtualHosts."radarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.radarr.settings.server.port;
+
+  services.readarr = {
+    enable = true;
+    group = "media";
+    settings = {
+    auth = {
+      Enabled = false;
+      Method = "External";
+      Required = false;
+    };
+    }; 
+  };
+  services.nginx.virtualHosts."readarr.home.debling.com.br" =
+    makeNginxLocalProxy config.services.readarr.settings.server.port;
 
   services.seerr = {
     enable = true;
@@ -119,6 +133,50 @@ in
     pkgs.jellyfin-web
     pkgs.jellyfin-ffmpeg
   ];
+
+  services.prometheus.exporters = {
+    exportarr-sonarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.sonarr.settings.server.port}";
+      apiKeyFile = config.age.secrets."sonarr-api-key".path;
+      port = 9708;
+    };
+
+    exportarr-radarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.radarr.settings.server.port}";
+      apiKeyFile = config.age.secrets."radarr-api-key".path;
+      port = 9709;
+    };
+
+    exportarr-lidarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.lidarr.settings.server.port}";
+      apiKeyFile = config.age.secrets."lidarr-api-key".path;
+      port = 9710;
+    };
+
+    exportarr-prowlarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.prowlarr.settings.server.port}";
+      apiKeyFile = config.age.secrets."prowlarr-api-key".path;
+      port = 9711;
+    };
+
+    exportarr-bazarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.bazarr.listenPort}";
+      apiKeyFile = config.age.secrets."bazarr-api-key".path;
+      port = 9712;
+    };
+
+    exportarr-readarr = {
+      enable = true;
+      url = "http://127.0.0.1:${toString config.services.readarr.settings.server.port}";
+      apiKeyFile = config.age.secrets."readarr-api-key".path;
+      port = 9713;
+    };
+  };
   services.nginx.virtualHosts."jellyfin.home.debling.com.br" = {
     forceSSL = true;
     useACMEHost = "home.debling.com.br";
@@ -146,6 +204,7 @@ in
     "d /srv/media/tv 2775 root media -"
     "d /srv/media/movies 2775 root media -"
     "d /srv/media/music 2775 root media -"
+    "d /srv/media/books 2775 root media -"
   ];
 
   services.homepage-dashboard.services = [
@@ -161,6 +220,7 @@ in
             "jellyfin"
             "lidarr"
             "seerr"
+            "readarr"
           ];
         in
         map (s: ({

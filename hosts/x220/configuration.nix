@@ -253,6 +253,48 @@ in
           { targets = [ "localhost:9187" ]; }
         ];
       }
+      {
+        job_name = "exportarr-sonarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9708" ]; }
+        ];
+      }
+      {
+        job_name = "exportarr-radarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9709" ]; }
+        ];
+      }
+      {
+        job_name = "exportarr-lidarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9710" ]; }
+        ];
+      }
+      {
+        job_name = "exportarr-prowlarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9711" ]; }
+        ];
+      }
+      {
+        job_name = "exportarr-bazarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9712" ]; }
+        ];
+      }
+      {
+        job_name = "exportarr-readarr";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "localhost:9713" ]; }
+        ];
+      }
     ];
   };
 
@@ -360,6 +402,13 @@ in
                   name = "postgres-exporter.json";
                   path = configuredPostgresDashboard;
                 }
+                {
+                  name = "exportarr-arr-dashboard.json";
+                  path = pkgs.fetchurl {
+                    url = "https://raw.githubusercontent.com/onedr0p/exportarr/master/examples/grafana/dashboard2.json";
+                    sha256 = "b05e5f5053eeeab745ff81d463b79fa9aca2adaf2cdef4ad4b17170acdf1f969";
+                  };
+                }
               ];
             in
             {
@@ -384,8 +433,13 @@ in
       "sonarr"
       "lidarr"
       "prowlarr"
+      "readarr"
     ];
     ensureUsers = [
+      {
+        name = "readarr";
+        ensureDBOwnership = true;
+      }
       {
         name = "prowlarr";
         ensureDBOwnership = true;
@@ -593,5 +647,14 @@ in
     enable = true;
     useRoutingFeatures = "server";
     openFirewall = true;
+  };
+
+  age.secrets = {
+    sonarr-api-key.file = ../../secrets/sonarr-api-key.age;
+    radarr-api-key.file = ../../secrets/radarr-api-key.age;
+    lidarr-api-key.file = ../../secrets/lidarr-api-key.age;
+    prowlarr-api-key.file = ../../secrets/prowlarr-api-key.age;
+    bazarr-api-key.file = ../../secrets/bazarr-api-key.age;
+    readarr-api-key.file = ../../secrets/readarr-api-key.age;
   };
 }
