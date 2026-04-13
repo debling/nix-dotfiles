@@ -29,7 +29,6 @@
                 type = "luks";
                 name = "crypted-root";
                 settings.allowDiscards = true;
-                passwordFile = "/tmp/secret.key";
                 content = {
                   type = "filesystem";
                   format = "f2fs";

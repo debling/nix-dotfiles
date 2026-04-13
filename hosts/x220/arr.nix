@@ -134,49 +134,6 @@ in
     pkgs.jellyfin-ffmpeg
   ];
 
-  services.prometheus.exporters = {
-    exportarr-sonarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.sonarr.settings.server.port}";
-      apiKeyFile = config.age.secrets."sonarr-api-key".path;
-      port = 9708;
-    };
-
-    exportarr-radarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.radarr.settings.server.port}";
-      apiKeyFile = config.age.secrets."radarr-api-key".path;
-      port = 9709;
-    };
-
-    exportarr-lidarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.lidarr.settings.server.port}";
-      apiKeyFile = config.age.secrets."lidarr-api-key".path;
-      port = 9710;
-    };
-
-    exportarr-prowlarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.prowlarr.settings.server.port}";
-      apiKeyFile = config.age.secrets."prowlarr-api-key".path;
-      port = 9711;
-    };
-
-    exportarr-bazarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.bazarr.listenPort}";
-      apiKeyFile = config.age.secrets."bazarr-api-key".path;
-      port = 9712;
-    };
-
-    exportarr-readarr = {
-      enable = true;
-      url = "http://127.0.0.1:${toString config.services.readarr.settings.server.port}";
-      apiKeyFile = config.age.secrets."readarr-api-key".path;
-      port = 9713;
-    };
-  };
   services.nginx.virtualHosts."jellyfin.home.debling.com.br" = {
     forceSSL = true;
     useACMEHost = "home.debling.com.br";

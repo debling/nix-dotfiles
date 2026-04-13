@@ -15,8 +15,9 @@
         font = "monospace:size=12";
         pad = "14x14";
       };
+      desktop-notifications.inhibit-when-focused = false;
       colors-dark = with colorscheme.palette; {
-        alpha = 0.92;
+        alpha = 0.95;
         foreground = base05;
         background = base00;
         regular0 = base00; # black

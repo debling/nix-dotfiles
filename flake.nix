@@ -14,6 +14,8 @@
     # Package set
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+    agenix.url = "github:ryantm/agenix";
+
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -221,6 +223,7 @@
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [
+          inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./hosts/x220/disko.nix
           ./hosts/x220/configuration.nix
