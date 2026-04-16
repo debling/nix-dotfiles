@@ -142,6 +142,7 @@ in
         HOSTINGER_PROPAGATION_TIMEOUT=300
         HOSTINGER_POLLING_INTERVAL=30
   */
+  age.secrets.acme_hostinger.file = ../../secrets/acme_hostinger.age;
   security.acme = {
     acceptTerms = true;
     defaults = {
@@ -149,7 +150,7 @@ in
     };
     certs."home.debling.com.br" = {
       dnsProvider = "hostinger";
-      credentialsFile = "/etc/secrets/hostinger";
+      credentialsFile = config.age.secrets.acme_hostinger.path;
       extraDomainNames = [ "*.home.debling.com.br" ];
       group = config.services.nginx.group;
     };

@@ -4,4 +4,6 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPUuCteGtKvL12/cAu9GwaLVWjWEtGHh6mTr1cfFwWGV root@x220"
   ];
 in
-{ }
+{
+    "acme_hostinger.age".publicKeys = keys;
+}
