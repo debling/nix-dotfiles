@@ -18,7 +18,7 @@
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
-    ../../modules/nixos/desktop/river.nix
+    # ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/nvidia.nix
     ../../modules/nixos/bluetooth.nix
     ./alloy.nix

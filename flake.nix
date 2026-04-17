@@ -65,8 +65,7 @@
     };
 
     neovim-nightly-overlay = {
-      # url = "github:nix-community/neovim-nightly-overlay";
-      url = "github:Prince213/neovim-nightly-overlay/push-nttnuzwkprtq";
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -79,7 +78,6 @@
       url = "github:zigtools/zls";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        zig-overlay.follows = "zig-overlay";
       };
     };
 
@@ -90,11 +88,6 @@
 
     nix-alien = {
       url = "github:thiagokokada/nix-alien";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    blink-cmp = {
-      url = "github:Saghen/blink.cmp";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -135,10 +128,6 @@
                 rev = "38417d8172f6c9201495f6388d6d5f6334b19e02";
                 hash = "sha256-ikwOVtR5cXZGd2GE/O4ej6cOQZomyEKkPcKe08EtPw0=";
               };
-            };
-
-            vimPlugins = prev.vimPlugins // {
-              blink-cmp = inputs.blink-cmp.packages.${prev.system}.blink-cmp;
             };
           })
         ];
