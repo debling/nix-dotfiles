@@ -1,9 +1,21 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   myIp = "10.0.10.1";
   routerIp = "10.0.0.1";
   domain = "home.debling.com.br";
+
+  dhcp-event-hook = pkgs.buildGoModule {
+    pname = "dhcp-event-hook";
+    version = "0.1.0";
+    src = ./dhcp-event-hook;
+    vendorHash = "sha256-0UkzlWkeDopzFruNEBY0COoK8nRvwHGyefBAVOVsDfo=";
+  };
 in
 {
   networking = {
@@ -72,6 +84,9 @@ in
       host-record = [
         "x220,${myIp}"
       ];
+
+      dhcp-script = "${dhcp-event-hook}/bin/dhcp-event-hook";
+      script-arp = true;
     };
   };
 

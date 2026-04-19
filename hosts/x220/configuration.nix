@@ -159,6 +159,7 @@ in
       "lidarr"
       "prowlarr"
       "readarr"
+      "dhcp"
     ];
     ensureUsers = [
       {
@@ -201,6 +202,10 @@ in
         name = "authelia";
         ensureDBOwnership = true;
       }
+      {
+        name = "dhcp";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = pkgs.lib.mkOverride 10 ''
       #type database  DBuser  auth-method
@@ -208,6 +213,24 @@ in
       # ipv4
       host  all      all     127.0.0.1/32   trust
     '';
+  };
+
+  systemd.services.dhcp-db-init = {
+    requires = [ "postgresql.service" ];
+    after = [ "postgresql.service" ];
+    wantedBy = [ "multi-user.target" ];
+    path = [ config.services.postgresql.package ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "dhcp";
+      ExecStart = "${config.services.postgresql.package}/bin/psql -d dhcp -f ${./dhcp-schema.sql}";
+      RemainAfterExit = true;
+    };
+  };
+
+  systemd.services.dnsmasq = {
+    requires = [ "dhcp-db-init.service" ];
+    after = [ "dhcp-db-init.service" ];
   };
 
   services.glauth = {
