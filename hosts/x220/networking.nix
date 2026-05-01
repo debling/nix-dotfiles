@@ -19,6 +19,11 @@ let
 in
 {
   networking = {
+      domain = domain;
+      search = [domain];
+      hosts = {
+          "127.0.0.2" = lib.mkForce [];
+      };
     useNetworkd = true;
     firewall = {
       enable = true;
@@ -68,7 +73,7 @@ in
       domain = domain;
       local = "/${domain}/";
       expand-hosts = true;
-      authoritative = true;
+      dhcp-authoritative = true;
       log-dhcp = true;
 
       dhcp-range = [ "10.0.0.100,10.0.0.200,255.255.0.0,12h" ];
@@ -76,17 +81,22 @@ in
         "3,${routerIp}"
         "6,${myIp}"
         "15,${domain}"
+        "option:domain-search,${domain}"
+
       ];
       dhcp-host = [
         "30:9c:23:02:e9:b6,10.0.10.2,ryzen"
       ];
 
+     address = "/home.debling.com.br/${myIp}";
+
       host-record = [
         "x220,${myIp}"
+        "router,${routerIp}"
       ];
 
-      dhcp-script = "${dhcp-event-hook}/bin/dhcp-event-hook";
-      script-arp = true;
+      #dhcp-script = "${dhcp-event-hook}/bin/dhcp-event-hook";
+      #script-arp = true;
     };
   };
 
@@ -96,7 +106,6 @@ in
       ports.http = 4000;
       upstreams.groups.default = [
         "https://dns.quad9.net/dns-query"
-        "https://dns.adguard-dns.com"
         "https://1.1.1.1/dns-query"
         "tcp-tls:1.1.1.1:853"
       ];
@@ -104,25 +113,17 @@ in
 
       conditional.mapping = {
         "${domain}" = "127.0.0.1:5453";
+        "." = "127.0.0.1:5453";
       };
 
       customDNS = {
         customTTL = "1h";
-        mapping = {
-          "router.arpa" = routerIp;
-        };
       };
       prometheus.enable = true;
       caching.prefetching = true;
       blocking = {
         denylists.ads = [
           "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/ultimate.txt"
-          "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
-          "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-          "https://mirror1.malwaredomains.com/files/justdomains"
-          "http://sysctl.org/cameleon/hosts"
-          "https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist"
-          "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
         ];
         clientGroupsBlock.default = [ "ads" ];
         blockType = "zeroIp";
@@ -133,7 +134,7 @@ in
         logRetentionDays = 90;
       };
       clientLookup = {
-        upstream = routerIp;
+        upstream = "127.0.0.1:5453";
         singleNameOrder = [ 1 ];
       };
     };

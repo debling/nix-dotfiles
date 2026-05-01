@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   hardware.graphics.enable = true;
 
@@ -7,6 +7,7 @@
 
   hardware.nvidia = {
     open = false;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580; # 1050 ti
   };
 
   programs.nix-ld.libraries = with pkgs; [

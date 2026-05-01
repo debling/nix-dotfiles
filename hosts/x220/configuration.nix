@@ -119,7 +119,7 @@ in
     };
     certs."home.debling.com.br" = {
       dnsProvider = "hostinger";
-      credentialsFile = config.age.secrets.acme_hostinger.path;
+      environmentFile = config.age.secrets.acme_hostinger.path;
       extraDomainNames = [ "*.home.debling.com.br" ];
       group = config.services.nginx.group;
     };
@@ -215,26 +215,26 @@ in
     '';
   };
 
-  systemd.services.dhcp-db-init = {
-    requires = [ "postgresql.service" ];
-    after = [ "postgresql.service" ];
-    wantedBy = [ "multi-user.target" ];
-    path = [ config.services.postgresql.package ];
-    serviceConfig = {
-      Type = "oneshot";
-      User = "dhcp";
-      ExecStart = "${config.services.postgresql.package}/bin/psql -d dhcp -f ${./dhcp-schema.sql}";
-      RemainAfterExit = true;
-    };
-  };
+  # systemd.services.dhcp-db-init = {
+  #   requires = [ "postgresql.service" ];
+  #   after = [ "postgresql.service" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   path = [ config.services.postgresql.package ];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     User = "dhcp";
+  #     ExecStart = "${config.services.postgresql.package}/bin/psql -d dhcp -f ${./dhcp-schema.sql}";
+  #     RemainAfterExit = true;
+  #   };
+  # };
 
-  systemd.services.dnsmasq = {
-    requires = [ "dhcp-db-init.service" ];
-    after = [ "dhcp-db-init.service" ];
-  };
+  # systemd.services.dnsmasq = {
+  #   requires = [ "dhcp-db-init.service" ];
+  #   after = [ "dhcp-db-init.service" ];
+  # };
 
   services.glauth = {
-    enable = true;
+    enable = false;
     group = "nginx";
     settings = {
       ldaps = {

@@ -2,7 +2,6 @@
 
 {
   networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
-  networking.networkmanager.wifi.backend = "iwd";
 
   # Use networkd instead of the pile of shell scripts
   networking.useNetworkd = lib.mkDefault true;
@@ -30,11 +29,10 @@
   systemd.services.NetworkManager-wait-online.enable = false;
   systemd.network.wait-online.enable = false;
 
-  systemd.network.networks."10-wan" = {
+  systemd.network.networks."10-search-domain" = {
     matchConfig.Name = "!tailscale0";
-    networkConfig = {
-      DHCP = "ipv4";
-      IPv6AcceptRA = false;
+    dhcpV4Config = {
+        UseDomains = "yes";
     };
   };
 }

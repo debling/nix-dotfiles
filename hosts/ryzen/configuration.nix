@@ -56,20 +56,8 @@
   networking = {
     hostName = "ryzen"; # Define your hostname.
     interfaces.enp37s0 = {
-      ipv4.addresses = [
-        {
-          address = "192.168.0.20";
-          prefixLength = 24;
-        }
-      ];
-      useDHCP = false;
       wakeOnLan.enable = true;
     };
-    defaultGateway = {
-      address = "192.168.0.1";
-      interface = "enp37s0";
-    };
-    nameservers = [ "192.168.0.254" ];
   };
 
   # Configure keymap in X11
