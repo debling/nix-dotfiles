@@ -1,9 +1,12 @@
+{ pkgs, ...}:
 {
   # Locale and timezone
   time.timeZone = "America/Sao_Paulo";
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
-    font = "Lat2-Terminus16";
+    packages = [ pkgs.terminus_font ];
+    font = "ter-v14n"; # Change 'v32n' to your preferred size/style
+    earlySetup = true; # Applies font as early as possible during boot
     useXkbConfig = true;
   };
 
@@ -27,7 +30,7 @@
 
   # X11 keyboard configuration (applies only if X server is enabled)
   services.xserver.xkb = {
-    layout = "br";
+    layout = "us";
     options = "caps:escape";
   };
   services.xserver.wacom.enable = true;

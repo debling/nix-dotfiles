@@ -11,7 +11,7 @@
 
 let
   myDomain = "x220";
-  myIp = "192.168.0.254";
+  myIp = "10.0.10.1";
   makeNginxLocalProxy = port: {
     forceSSL = true;
     http3 = true;
@@ -36,6 +36,7 @@ in
     ../../modules/nixos/home-assistant.nix
     ./speedtest.nix
     ./observability.nix
+    ./networking.nix
   ];
 
   documentation.enable = false;
@@ -103,38 +104,6 @@ in
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   services.openssh.enable = true;
-  networking = {
-    useNetworkd = true;
-    firewall = {
-      enable = true;
-      allowPing = true;
-      allowedTCPPorts = [
-        80
-        443
-        53
-        22
-      ];
-      allowedUDPPorts = [ 53 ];
-    };
-    hostName = "x220";
-    useDHCP = false;
-    enableIPv6 = false;
-    interfaces.enp0s25 = {
-      ipv4.addresses = [
-        {
-          address = myIp;
-          prefixLength = 24;
-        }
-      ];
-      useDHCP = false;
-      wakeOnLan.enable = true;
-    };
-    defaultGateway = {
-      address = "192.168.0.1";
-      interface = "enp0s25";
-    };
-    nameservers = [ "127.0.0.1" ];
-  };
 
   /*
     secret on /etc/secrets/hostinger like:
@@ -150,13 +119,12 @@ in
     };
     certs."home.debling.com.br" = {
       dnsProvider = "hostinger";
-      credentialsFile = config.age.secrets.acme_hostinger.path;
+      environmentFile = config.age.secrets.acme_hostinger.path;
       extraDomainNames = [ "*.home.debling.com.br" ];
       group = config.services.nginx.group;
     };
   };
 
-  services.resolved.settings.Resolve.DNSStubListener = "no"; # Disable the resolved dns server on port
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -176,55 +144,6 @@ in
     virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
   };
 
-  services.blocky = {
-    enable = true;
-    settings = {
-      ports.http = 4000;
-      upstreams.groups.default = [
-        "https://dns.quad9.net/dns-query"
-        "https://dns.adguard-dns.com"
-        "https://1.1.1.1/dns-query"
-        "tcp-tls:1.1.1.1:853"
-        # "tcp-tls://dns.adguard-dns.com"
-      ];
-      bootstrapDns = "9.9.9.9";
-
-      customDNS = {
-        customTTL = "1h";
-        mapping = {
-          "home.debling.com.br" = "${myIp},100.83.30.120";
-          "router.arpa" = "192.168.0.1";
-        };
-      };
-      prometheus.enable = true;
-      caching.prefetching = true;
-      blocking = {
-        denylists.ads = [
-          "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/ultimate.txt"
-          "https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt"
-          "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
-          "https://mirror1.malwaredomains.com/files/justdomains"
-          "http://sysctl.org/cameleon/hosts"
-          "https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist"
-          "https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt"
-        ];
-        clientGroupsBlock.default = [ "ads" ];
-        blockType = "zeroIp";
-      };
-      queryLog = {
-        type = "postgresql";
-        target = "postgres://blocky@localhost:5432/blocky";
-        logRetentionDays = 90;
-      };
-      clientLookup = {
-        upstream = "192.168.0.1";
-        singleNameOrder = [ 1 ];
-      };
-
-      # dnssec.validate = true;
-    };
-  };
-
   services.postgresql = {
     enable = true;
     package = pkgs.postgresql_17;
@@ -240,6 +159,7 @@ in
       "lidarr"
       "prowlarr"
       "readarr"
+      "dhcp"
     ];
     ensureUsers = [
       {
@@ -282,6 +202,10 @@ in
         name = "authelia";
         ensureDBOwnership = true;
       }
+      {
+        name = "dhcp";
+        ensureDBOwnership = true;
+      }
     ];
     authentication = pkgs.lib.mkOverride 10 ''
       #type database  DBuser  auth-method
@@ -291,8 +215,26 @@ in
     '';
   };
 
+  # systemd.services.dhcp-db-init = {
+  #   requires = [ "postgresql.service" ];
+  #   after = [ "postgresql.service" ];
+  #   wantedBy = [ "multi-user.target" ];
+  #   path = [ config.services.postgresql.package ];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     User = "dhcp";
+  #     ExecStart = "${config.services.postgresql.package}/bin/psql -d dhcp -f ${./dhcp-schema.sql}";
+  #     RemainAfterExit = true;
+  #   };
+  # };
+
+  # systemd.services.dnsmasq = {
+  #   requires = [ "dhcp-db-init.service" ];
+  #   after = [ "dhcp-db-init.service" ];
+  # };
+
   services.glauth = {
-    enable = true;
+    enable = false;
     group = "nginx";
     settings = {
       ldaps = {

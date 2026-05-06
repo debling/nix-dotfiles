@@ -14,11 +14,11 @@ in
 {
   imports = [
     ../../modules/home/common-packages.nix
-    ../../modules/home/gtk-qt.nix
+    #../../modules/home/gtk-qt.nix
     ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
-    ../../modules/nixos/foot.nix
+    #../../modules/nixos/foot.nix
 
     android-nixpkgs.hmModule
   ];
