@@ -65,6 +65,7 @@ in
     enable = true;
     resolveLocalQueries = false;
     settings = {
+      dns-forward-max = 1000;
       port = 5453;
       listen-address = [
         "127.0.0.1"

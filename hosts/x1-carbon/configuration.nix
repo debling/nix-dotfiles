@@ -38,7 +38,7 @@
     # disable libadwaita theming for Firefox
     "widget.gtk.libadwaita-colors.enabled" = false;
   };
-  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+  #environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   hardware.facter.reportPath = ./facter.json;
 
