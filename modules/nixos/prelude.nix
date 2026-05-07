@@ -1,4 +1,4 @@
-{ pkgs, ...}:
+{ pkgs, ... }:
 {
   # Locale and timezone
   time.timeZone = "America/Sao_Paulo";

@@ -98,12 +98,12 @@ in
     enable = true;
     group = "media";
     settings = {
-    auth = {
-      Enabled = false;
-      Method = "External";
-      Required = false;
+      auth = {
+        Enabled = false;
+        Method = "External";
+        Required = false;
+      };
     };
-    }; 
   };
   services.nginx.virtualHosts."readarr.home.debling.com.br" =
     makeNginxLocalProxy config.services.readarr.settings.server.port;
@@ -118,15 +118,15 @@ in
     enable = true;
     group = "media";
     hardwareAcceleration = {
-        enable = true;
-        type = "vaapi";
-        device = "/dev/dri/renderD12";
+      enable = true;
+      type = "vaapi";
+      device = "/dev/dri/renderD12";
     };
   };
 
-    nixpkgs.config.packageOverrides = pkgs: {
-        intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-    };
+  nixpkgs.config.packageOverrides = pkgs: {
+    intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  };
 
   environment.systemPackages = [
     pkgs.jellyfin
@@ -142,14 +142,16 @@ in
     };
   };
   systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "i965";
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "i965"; };
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "i965";
+  };
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-        intel-ocl
-        intel-vaapi-driver
-        libva-vdpau-driver
-        intel-compute-runtime-legacy1
+      intel-ocl
+      intel-vaapi-driver
+      libva-vdpau-driver
+      intel-compute-runtime-legacy1
     ];
   };
   users.users.jellyfin.extraGroups = [ "video" ];

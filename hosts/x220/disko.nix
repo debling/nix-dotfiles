@@ -66,15 +66,20 @@
                       ];
                     };
 
-                      "@samba" = {
-                          mountpoint = "/srv/samba";
-                          mountOptions = [ "compress=zstd" "noatime" ];
-                      };
+                    "@samba" = {
+                      mountpoint = "/srv/samba";
+                      mountOptions = [
+                        "compress=zstd"
+                        "noatime"
+                      ];
+                    };
 
-                      "@media" = {
-                          mountpoint = "/srv/media";
-                          mountOptions = [ "compress=no" "noatime" ];
-                      };
+                    "@media" = {
+                      mountpoint = "/srv/media";
+                      mountOptions = [
+                        "compress=no"
+                        "noatime"
+                      ];
                     };
                   };
                 };
@@ -83,6 +88,7 @@
           };
         };
       };
-
     };
+
+  };
 }

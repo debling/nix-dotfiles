@@ -32,10 +32,10 @@
   systemd.network.networks."10-search-domain" = {
     matchConfig.Name = "!tailscale0";
     networkConfig = {
-        DHCP = "ipv4";
+      DHCP = "ipv4";
     };
     dhcpV4Config = {
-        UseDomains = "yes";
+      UseDomains = "yes";
     };
   };
 }

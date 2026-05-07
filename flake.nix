@@ -118,7 +118,7 @@
             zls = inputs.zls.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
 
-            cosmic-clipboard-manager = prev.callPackage ./cosmic-clipboard-manager.nix {};
+            cosmic-clipboard-manager = prev.callPackage ./cosmic-clipboard-manager.nix { };
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {

@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 let
   makeNginxLocalProxy = port: {
     forceSSL = true;
@@ -209,16 +209,16 @@ in
       ];
       storage_config.filesystem.directory = "/var/lib/loki/chunks";
       pattern_ingester.enabled = true;
-    limits_config = {
-    # Allow logs older than 1 hour (e.g., 7 days or 168h)
-    reject_old_samples = false;
-    # Increase the window for 'out of order' logs which often happens with CloudWatch
-    creation_grace_period = "10m";
-    reject_old_samples_max_age = "8760h";
-    # Prevent old logs from being immediately deleted
-    retention_period = "8760h"; 
-    max_line_size = 1048576; 
-  };
+      limits_config = {
+        # Allow logs older than 1 hour (e.g., 7 days or 168h)
+        reject_old_samples = false;
+        # Increase the window for 'out of order' logs which often happens with CloudWatch
+        creation_grace_period = "10m";
+        reject_old_samples_max_age = "8760h";
+        # Prevent old logs from being immediately deleted
+        retention_period = "8760h";
+        max_line_size = 1048576;
+      };
 
     };
   };
@@ -244,14 +244,15 @@ in
     };
   };
 
-
-
   services.alloy = {
     enable = true;
-    extraFlags = [ "--server.http.listen-addr=127.0.0.1:${toString ports.alloy}" "--stability.level=experimental" ];
+    extraFlags = [
+      "--server.http.listen-addr=127.0.0.1:${toString ports.alloy}"
+      "--stability.level=experimental"
+    ];
   };
 
-  environment.etc."alloy/config.alloy".text =  /* hcl */ ''
+  environment.etc."alloy/config.alloy".text = /* hcl */ ''
     livedebugging {
       enabled = true
     }
@@ -330,4 +331,4 @@ in
       relabel_rules = loki.relabel.journald_labels.rules
     }
   '';
-    }
+}

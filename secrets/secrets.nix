@@ -5,5 +5,5 @@ let
   ];
 in
 {
-    "acme_hostinger.age".publicKeys = keys;
+  "acme_hostinger.age".publicKeys = keys;
 }

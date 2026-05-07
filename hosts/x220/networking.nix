@@ -19,11 +19,11 @@ let
 in
 {
   networking = {
-      domain = domain;
-      search = [domain];
-      hosts = {
-          "127.0.0.2" = lib.mkForce [];
-      };
+    domain = domain;
+    search = [ domain ];
+    hosts = {
+      "127.0.0.2" = lib.mkForce [ ];
+    };
     useNetworkd = true;
     firewall = {
       enable = true;
@@ -89,7 +89,7 @@ in
         "30:9c:23:02:e9:b6,10.0.10.2,ryzen"
       ];
 
-     address = "/home.debling.com.br/${myIp}";
+      address = "/home.debling.com.br/${myIp}";
 
       host-record = [
         "x220,${myIp}"
