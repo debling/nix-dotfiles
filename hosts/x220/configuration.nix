@@ -36,6 +36,7 @@ in
     ../../modules/nixos/home-assistant.nix
     ./speedtest.nix
     ./observability.nix
+    ./paperless.nix
     ./networking.nix
   ];
 
