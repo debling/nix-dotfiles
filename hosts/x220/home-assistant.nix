@@ -1,35 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, serverUtils, ... }:
 
-let
-
-  makeNginxLocalProxy = port: {
-    forceSSL = true;
-    http3 = true;
-    quic = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${builtins.toString port}";
-      proxyWebsockets = true;
-    };
-  };
-
-in
 {
-
-  services.nginx.virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
+  services.nginx.virtualHosts."assistant.home.debling.com.br" = serverUtils.makeNginxLocalProxy 8123;
   services.home-assistant = {
     enable = true;
     openFirewall = true;
-    #extraPackages =
-    #  python3packages: with python3packages; [
-    #    gtts
-    #    zlib-ng
-    #    isal
-    #    caldav
-    #    python-otbr-api
-    #    pychromecast
-    #    radios
-    #  ];
     extraComponents = [
       "default_config"
       "moon"

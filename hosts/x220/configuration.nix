@@ -6,22 +6,13 @@
   config,
   pkgs,
   mainUser,
+  serverUtils,
   ...
 }:
 
 let
   myDomain = "x220";
   myIp = "10.0.10.1";
-  makeNginxLocalProxy = port: {
-    forceSSL = true;
-    http3 = true;
-    quic = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString port}";
-      proxyWebsockets = true;
-    };
-  };
 in
 {
   imports = [
@@ -30,10 +21,11 @@ in
     ../../modules/common/containers.nix
     ../../modules/common/nix.nix
     ../../modules/nixos/glauth.nix
+    ./serverUtils.nix
     ./arr.nix
     #./samba.nix
     # ./sso.nix
-    ../../modules/nixos/home-assistant.nix
+    ./home-assistant.nix
     ./speedtest.nix
     ./observability.nix
     ./paperless.nix
@@ -142,7 +134,7 @@ in
         proxyPass = "http://127.0.0.1:4000/";
       };
     };
-    virtualHosts."assistant.home.debling.com.br" = makeNginxLocalProxy 8123;
+    virtualHosts."home.debling.com.br" = serverUtils.makeNginxLocalProxy 8082;
   };
 
   services.postgresql = {
@@ -334,7 +326,6 @@ in
 
   environment.etc."nextcloud-admin-pass".text = "changeme";
 
-  services.nginx.virtualHosts."home.debling.com.br" = makeNginxLocalProxy 8082;
   services.homepage-dashboard = {
     enable = true;
     allowedHosts = "${myDomain},${myIp},home.debling.com.br,x220,x220.fable-ph.ts.net";

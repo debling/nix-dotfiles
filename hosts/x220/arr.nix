@@ -2,21 +2,11 @@
   config,
   lib,
   pkgs,
+  serverUtils,
   ...
 }:
 
 let
-  makeNginxLocalProxy = port: {
-    forceSSL = true;
-    http3 = true;
-    quic = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString port}";
-      proxyWebsockets = true;
-    };
-  };
-
   commonSettingsFor = name: {
     auth = {
       Enabled = false;
@@ -49,7 +39,7 @@ in
   };
 
   services.nginx.virtualHosts."transmission.home.debling.com.br" =
-    makeNginxLocalProxy config.services.transmission.settings.rpc-port;
+    serverUtils.makeNginxLocalProxy config.services.transmission.settings.rpc-port;
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
 
@@ -60,7 +50,7 @@ in
   };
 
   services.nginx.virtualHosts."bazarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.bazarr.listenPort;
+    serverUtils.makeNginxLocalProxy config.services.bazarr.listenPort;
 
   services.sonarr = {
     enable = true;
@@ -69,14 +59,14 @@ in
   };
 
   services.nginx.virtualHosts."sonarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.sonarr.settings.server.port;
+    serverUtils.makeNginxLocalProxy config.services.sonarr.settings.server.port;
 
   services.prowlarr = {
     enable = true;
     settings = commonSettingsFor "prowlarr";
   };
   services.nginx.virtualHosts."prowlarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.prowlarr.settings.server.port;
+    serverUtils.makeNginxLocalProxy config.services.prowlarr.settings.server.port;
 
   services.lidarr = {
     enable = true;
@@ -84,7 +74,7 @@ in
     settings = commonSettingsFor "lidarr";
   };
   services.nginx.virtualHosts."lidarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.lidarr.settings.server.port;
+    serverUtils.makeNginxLocalProxy config.services.lidarr.settings.server.port;
 
   services.radarr = {
     enable = true;
@@ -92,7 +82,7 @@ in
     settings = commonSettingsFor "radarr";
   };
   services.nginx.virtualHosts."radarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.radarr.settings.server.port;
+    serverUtils.makeNginxLocalProxy config.services.radarr.settings.server.port;
 
   services.readarr = {
     enable = true;
@@ -106,13 +96,13 @@ in
     };
   };
   services.nginx.virtualHosts."readarr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.readarr.settings.server.port;
+    serverUtils.makeNginxLocalProxy config.services.readarr.settings.server.port;
 
   services.seerr = {
     enable = true;
   };
   services.nginx.virtualHosts."seerr.home.debling.com.br" =
-    makeNginxLocalProxy config.services.seerr.port;
+    serverUtils.makeNginxLocalProxy config.services.seerr.port;
 
   services.jellyfin = {
     enable = true;

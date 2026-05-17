@@ -1,16 +1,5 @@
-{ config, pkgs, ... }:
+{ config, pkgs, serverUtils, ... }:
 let
-  makeNginxLocalProxy = port: {
-    forceSSL = true;
-    http3 = true;
-    quic = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString port}";
-      proxyWebsockets = true;
-    };
-  };
-
   # Define ports as variables for consistency
   ports = {
     grafana = 3100;
@@ -29,7 +18,7 @@ in
 {
 
   services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} =
-    makeNginxLocalProxy 3000;
+    serverUtils.makeNginxLocalProxy 3000;
   services.grafana = {
     enable = true;
     declarativePlugins = with pkgs.grafanaPlugins; [

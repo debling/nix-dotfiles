@@ -1,17 +1,4 @@
-{ config, pkgs, ... }:
-
-let
-  makeNginxLocalProxy = port: {
-    forceSSL = true;
-    http3 = true;
-    quic = true;
-    useACMEHost = "home.debling.com.br";
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:${toString port}";
-      proxyWebsockets = true;
-    };
-  };
-in
+{ config, pkgs, serverUtils, ... }:
 {
   services.paperless = {
     enable = true;
@@ -24,7 +11,7 @@ in
   };
 
   services.nginx.virtualHosts."paperless.home.debling.com.br" =
-    makeNginxLocalProxy config.services.paperless.port;
+    serverUtils.makeNginxLocalProxy config.services.paperless.port;
 
   services.postgresql = {
     ensureDatabases = [ "paperless" ];
