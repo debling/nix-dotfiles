@@ -378,6 +378,25 @@ in
             };
           }
 
+          {
+            Paperless-ngx = {
+              href = "https://paperless.home.debling.com.br";
+              icon = "paperless-ngx";
+            };
+          }
+        ];
+      }
+      {
+        Media = [
+          { Sonarr = { href = "https://sonarr.home.debling.com.br"; icon = "sonarr"; }; }
+          { Bazarr = { href = "https://bazarr.home.debling.com.br"; icon = "bazarr"; }; }
+          { Radarr = { href = "https://radarr.home.debling.com.br"; icon = "radarr"; }; }
+          { Prowlarr = { href = "https://prowlarr.home.debling.com.br"; icon = "prowlarr"; }; }
+          { Transmission = { href = "https://transmission.home.debling.com.br"; icon = "transmission"; }; }
+          { Jellyfin = { href = "https://jellyfin.home.debling.com.br"; icon = "jellyfin"; }; }
+          { Lidarr = { href = "https://lidarr.home.debling.com.br"; icon = "lidarr"; }; }
+          { Seerr = { href = "https://seerr.home.debling.com.br"; icon = "seerr"; }; }
+          { Readarr = { href = "https://readarr.home.debling.com.br"; icon = "readarr"; }; }
         ];
       }
     ];

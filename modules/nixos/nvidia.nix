@@ -6,7 +6,7 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
-    open = false;
+    open = true;
     package = config.boot.kernelPackages.nvidiaPackages.legacy_580; # 1050 ti
   };
 

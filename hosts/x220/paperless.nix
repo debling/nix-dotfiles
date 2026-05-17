@@ -11,7 +11,9 @@
   };
 
   services.nginx.virtualHosts."paperless.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.paperless.port;
+    serverUtils.localProxyWith config.services.paperless.port {
+      extraConfig = "client_max_body_size 100M;";
+    };
 
   services.postgresql = {
     ensureDatabases = [ "paperless" ];
@@ -22,12 +24,4 @@
       }
     ];
   };
-
-  services.homepage-dashboard.services = [
-    {
-      Geral = [
-        { Paperless-ngx = { href = "https://paperless.home.debling.com.br"; icon = "paperless-ngx"; }; }
-      ];
-    }
-  ];
 }

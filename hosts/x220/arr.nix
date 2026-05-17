@@ -156,29 +156,4 @@ in
     "d /srv/media/books 2775 root media -"
   ];
 
-  services.homepage-dashboard.services = [
-    {
-      Media =
-        let
-          services = [
-            "sonarr"
-            "bazarr"
-            "radarr"
-            "prowlarr"
-            "transmission"
-            "jellyfin"
-            "lidarr"
-            "seerr"
-            "readarr"
-          ];
-        in
-        map (s: ({
-          ${s} = {
-            href = "https://${s}.home.debling.com.br";
-            icon = s;
-          };
-        })) services;
-    }
-  ];
-
 }
