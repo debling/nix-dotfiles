@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   android-nixpkgs,
   mainUser,
@@ -14,15 +12,12 @@
     ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
-    ../../modules/nixos/foot.nix
-    ../../modules/nixos_and_darwin/alacritty.nix
+    ../../modules/home/foot.nix
 
     android-nixpkgs.hmModule
   ];
 
   debling.editors.neovim.enable = true;
-
-  debling.alacritty.enable = true;
 
   news.display = "show";
 

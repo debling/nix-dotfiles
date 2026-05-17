@@ -6,8 +6,23 @@
 }:
 
 {
+  systemd.user.services.foot.Service.Environment =
+    let
+      paths = lib.makeBinPath [
+        # necessary for ctrl+shit+n to work (spawn a new instance on the current dir)
+        pkgs.foot
+        #  for desktop notification via OSC 777 and OSC 99 to work
+        pkgs.libnotify
+        # for openning links using xdg-open
+        pkgs.xdg-utils
+      ];
+    in
+    [
+      "PATH=${paths}"
+    ];
+
   programs.foot = {
-    enable = pkgs.stdenv.isLinux;
+    enable = true;
     server.enable = true;
     settings = {
       main = {
@@ -17,7 +32,6 @@
       };
       desktop-notifications.inhibit-when-focused = false;
       colors-dark = with colorscheme.palette; {
-        alpha = 0.95;
         foreground = base05;
         background = base00;
         regular0 = base00; # black

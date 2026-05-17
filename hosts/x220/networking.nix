@@ -33,6 +33,7 @@ in
         443
         53
         22
+        9090
       ];
       allowedUDPPorts = [
         53

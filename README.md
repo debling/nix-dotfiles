@@ -79,9 +79,8 @@ This allows you to have a consistent development environment on your Android dev
 Things that I always use (and recommend), regardless of the machine:
 
 - [Neovim](https://neovim.io/) text editor, you can check my configuration [here](./modules/home/neovim/)
-- [Foot](https://codeberg.org/dnkl/foot), a fast, lightweight terminal with server mode for instant startup, [link to the config](./modules/nixos/foot.nix)
+- [Foot](https://codeberg.org/dnkl/foot), a fast, lightweight terminal with server mode for instant startup, [link to the config](./modules/home/foot.nix)
 - [River](https://github.com/riverwm/river), a fast and easy-to-setup dynamic tiling Wayland compositor, [link to the config](./modules/nixos/desktop/river.nix)
-- [Alacritty](https://alacritty.org/), a fast, not bloated terminal, [link to the config](./modules/nixos_and_darwin/alacritty.nix)
 
 You can check the home-manager configuration [here](./modules/home/). It defines
 packages and setups that are available on all machines.

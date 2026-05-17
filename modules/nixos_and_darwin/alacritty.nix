@@ -1,21 +1,12 @@
 {
-  config,
-  lib,
   pkgs,
   alacritty-themes,
   colorscheme,
   ...
 }:
 
-let
-  cfg = config.debling.alacritty;
-in
 {
-  options.debling.alacritty = {
-    enable = lib.mkEnableOption "Enable alacritty program with custom settings";
-  };
-
-  config.programs.alacritty = lib.mkIf cfg.enable {
+  config.programs.alacritty = {
     enable = true;
     settings =
       let
