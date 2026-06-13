@@ -19,12 +19,14 @@
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
     # ../../modules/nixos/desktop/river.nix
-    ../../modules/nixos/nvidia.nix
+    ../../modules/nixos/nouveau.nix
+    # ../../modules/nixos/nvidia.nix
     ../../modules/nixos/bluetooth.nix
     ./alloy.nix
   ];
   programs.mosh.enable = true;
   programs.mosh.openFirewall = true;
+  programs.bash.enable = true;
 
   home-manager.users.${mainUser} = import ./home.nix;
 
@@ -38,6 +40,20 @@
   documentation.dev.enable = true;
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.kernelParams = [ "ip=dhcp" ];
+  boot.initrd = {
+    availableKernelModules = [ "r8169" ];
+    network = {
+      enable = true;
+      ssh = {
+        enable = true;
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
+        ];
+        hostKeys = [ "/etc/secrets/initrd/ssh_host_key" ];
+      };
+    };
+  };
 
   # hardware.opentabletdriver.enable = true;
   services.tailscale = {

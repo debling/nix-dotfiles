@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   serverUtils,
   ...
@@ -14,7 +13,7 @@ let
       Required = false;
     };
     postgres = {
-      host = "localhost";
+      host = "127.0.0.1";
       user = name;
       password = name;
       maindb = name;

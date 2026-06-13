@@ -132,7 +132,7 @@ in
       };
       queryLog = {
         type = "postgresql";
-        target = "postgres://blocky@localhost:5432/blocky";
+        target = "postgres://blocky@127.0.0.1:5432/blocky";
         logRetentionDays = 90;
       };
       clientLookup = {

@@ -29,6 +29,7 @@ in
     ./speedtest.nix
     ./observability.nix
     ./paperless.nix
+    # ./onlyoffice.nix
     ./networking.nix
   ];
 
@@ -300,7 +301,7 @@ in
     configureRedis = true;
     config = {
       dbtype = "pgsql";
-      dbhost = "localhost";
+      dbhost = "127.0.0.1";
       dbname = "nextcloud";
       dbuser = "nextcloud";
       adminpassFile = "/etc/nextcloud-admin-pass";
@@ -384,19 +385,71 @@ in
               icon = "paperless-ngx";
             };
           }
+
+          {
+            OnlyOffice = {
+              href = "https://office.home.debling.com.br";
+              icon = "onlyoffice";
+            };
+          }
         ];
       }
       {
         Media = [
-          { Sonarr = { href = "https://sonarr.home.debling.com.br"; icon = "sonarr"; }; }
-          { Bazarr = { href = "https://bazarr.home.debling.com.br"; icon = "bazarr"; }; }
-          { Radarr = { href = "https://radarr.home.debling.com.br"; icon = "radarr"; }; }
-          { Prowlarr = { href = "https://prowlarr.home.debling.com.br"; icon = "prowlarr"; }; }
-          { Transmission = { href = "https://transmission.home.debling.com.br"; icon = "transmission"; }; }
-          { Jellyfin = { href = "https://jellyfin.home.debling.com.br"; icon = "jellyfin"; }; }
-          { Lidarr = { href = "https://lidarr.home.debling.com.br"; icon = "lidarr"; }; }
-          { Seerr = { href = "https://seerr.home.debling.com.br"; icon = "seerr"; }; }
-          { Readarr = { href = "https://readarr.home.debling.com.br"; icon = "readarr"; }; }
+          {
+            Sonarr = {
+              href = "https://sonarr.home.debling.com.br";
+              icon = "sonarr";
+            };
+          }
+          {
+            Bazarr = {
+              href = "https://bazarr.home.debling.com.br";
+              icon = "bazarr";
+            };
+          }
+          {
+            Radarr = {
+              href = "https://radarr.home.debling.com.br";
+              icon = "radarr";
+            };
+          }
+          {
+            Prowlarr = {
+              href = "https://prowlarr.home.debling.com.br";
+              icon = "prowlarr";
+            };
+          }
+          {
+            Transmission = {
+              href = "https://transmission.home.debling.com.br";
+              icon = "transmission";
+            };
+          }
+          {
+            Jellyfin = {
+              href = "https://jellyfin.home.debling.com.br";
+              icon = "jellyfin";
+            };
+          }
+          {
+            Lidarr = {
+              href = "https://lidarr.home.debling.com.br";
+              icon = "lidarr";
+            };
+          }
+          {
+            Seerr = {
+              href = "https://seerr.home.debling.com.br";
+              icon = "seerr";
+            };
+          }
+          {
+            Readarr = {
+              href = "https://readarr.home.debling.com.br";
+              icon = "readarr";
+            };
+          }
         ];
       }
     ];

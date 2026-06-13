@@ -111,7 +111,7 @@ in
       unzip
       pinentry-tty
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-      silver-searcher # A faster and more convenient grep. Executable is called `ag`
+      
       tree
       wget
       taskwarrior-tui

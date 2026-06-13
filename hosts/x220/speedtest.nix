@@ -11,7 +11,7 @@
       job_name = "speedtest";
       scrape_interval = "15m";
       scrape_timeout = "1m";
-      static_configs = [ { targets = [ "localhost:9798" ]; } ];
+      static_configs = [ { targets = [ "127.0.0.1:9798" ]; } ];
     }
   ];
 

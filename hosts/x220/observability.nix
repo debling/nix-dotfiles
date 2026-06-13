@@ -1,4 +1,9 @@
-{ config, pkgs, serverUtils, ... }:
+{
+  config,
+  pkgs,
+  serverUtils,
+  ...
+}:
 let
   # Define ports as variables for consistency
   ports = {
@@ -47,7 +52,7 @@ in
           name = "Prometheus";
           uid = "prometheus";
           type = "prometheus";
-          url = "http://localhost:9090";
+          url = "http://127.0.0.1:9090";
           access = "proxy";
           isDefault = true;
           editable = false;
@@ -59,7 +64,7 @@ in
           name = "Blocky PostgreSQL";
           type = "postgres";
           uid = "blocky-postgresql";
-          url = "localhost:5432";
+          url = "127.0.0.1:5432";
           database = "blocky";
           user = "blocky";
           jsonData = {
@@ -73,7 +78,7 @@ in
         {
           name = "Loki";
           type = "loki";
-          url = "http://localhost:${toString ports.loki}";
+          url = "http://127.0.0.1:${toString ports.loki}";
         }
       ];
 
@@ -150,21 +155,21 @@ in
         job_name = "blocky";
         scrape_interval = "15s";
         static_configs = [
-          { targets = [ "localhost:4000" ]; }
+          { targets = [ "127.0.0.1:4000" ]; }
         ];
       }
       {
         job_name = "node";
         scrape_interval = "15s";
         static_configs = [
-          { targets = [ "localhost:9100" ]; }
+          { targets = [ "127.0.0.1:9100" ]; }
         ];
       }
       {
         job_name = "postgres";
         scrape_interval = "15s";
         static_configs = [
-          { targets = [ "localhost:9187" ]; }
+          { targets = [ "127.0.0.1:9187" ]; }
         ];
       }
     ];
