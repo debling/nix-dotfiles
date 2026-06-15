@@ -111,7 +111,7 @@ in
       unzip
       pinentry-tty
       rlwrap # Utility to have Readline features, like scrollback in REPLs that don`t use the lib
-      
+
       tree
       wget
       taskwarrior-tui
@@ -376,6 +376,7 @@ in
 
   programs.tmux = {
     enable = true;
+    shell = lib.getExe pkgs.fish;
     escapeTime = 0;
     historyLimit = 10000;
     terminal = "tmux";

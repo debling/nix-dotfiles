@@ -29,7 +29,7 @@
     ];
 
     shellAliases = {
-      e = "emacs -nw";
+      e = "emacsclient -nw";
     };
   };
 
@@ -37,37 +37,24 @@
     # The true OS
     emacs = {
       enable = true;
-      package =
-        let
-          emacsPkg = pkgs.emacs30-pgtk.overrideAttrs (old: {
-            patches =
-              (old.patches or [ ])
-              ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
-                # Fix OS window role (needed for window managers like yabai)
-                (pkgs.fetchpatch {
-                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-28/fix-window-role.patch";
-                  sha256 = "sha256-+z/KfsBm1lvZTZNiMbxzXQGRTjkCFO4QPlEK35upjsE=";
-                })
-                # Enable rounded window with no decoration
-                (pkgs.fetchpatch {
-                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-30/round-undecorated-frame.patch";
-                  sha256 = "sha256-uYIxNTyfbprx5mCqMNFVrBcLeo+8e21qmBE3lpcnd+4=";
-                })
-                # Make Emacs aware of OS-level light/dark mode
-                (pkgs.fetchpatch {
-                  url = "https://raw.githubusercontent.com/d12frosted/homebrew-emacs-plus/3e95d573d5f13aba7808193b66312b38a7c66851/patches/emacs-30/system-appearance.patch";
-                  sha256 = "sha256-3QLq91AQ6E921/W9nfDjdOUWR8YVsqBAT/W9c1woqAw=";
-                })
-              ];
-
-          });
-        in
-        (pkgs.emacsPackagesFor emacsPkg).emacsWithPackages (
-          epkgs: with epkgs; [
-            mu4e
-            treesit-grammars.with-all-grammars
-          ]
-        );
+      package = pkgs.emacs31-pgtk;
+      extraPackages =
+        epkgs: with epkgs; [
+          evil
+          evil-collection
+          magit
+          mu4e
+          treesit-grammars.with-all-grammars
+          zig-ts-mode
+          nix-ts-mode
+          terraform-mode
+          org-cliplink
+          org-roam
+          org-alert
+          doom-themes
+          vterm
+          tramp-rpc
+        ];
     };
 
     mbsync.enable = true;
@@ -360,14 +347,18 @@
       };
   };
 
-  services.git-sync = {
-    enable = true;
-    repositories = {
-      orgfiles = {
-        path = "${config.home.homeDirectory}/Workspace/debling/orgfiles";
-        uri = "git@github.com:debling/orgfiles.git";
-        interval = 600;
+  services = {
+      emacs.enable = true;
+
+      git-sync = {
+          enable = true;
+          repositories = {
+              orgfiles = {
+                  path = "${config.home.homeDirectory}/Workspace/debling/orgfiles";
+                  uri = "git@github.com:debling/orgfiles.git";
+                  interval = 600;
+              };
+          };
       };
-    };
   };
 }

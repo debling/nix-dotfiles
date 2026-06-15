@@ -131,9 +131,9 @@ in
         blockType = "zeroIp";
       };
       queryLog = {
-        type = "postgresql";
+        type = "timescale";
         target = "postgres://blocky@127.0.0.1:5432/blocky";
-        logRetentionDays = 90;
+        logRetentionDays = 30;
       };
       clientLookup = {
         upstream = "127.0.0.1:5453";

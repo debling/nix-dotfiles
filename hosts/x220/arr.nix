@@ -12,6 +12,7 @@ let
       Method = "External";
       Required = false;
     };
+    log.dbenabled = false;
     postgres = {
       host = "127.0.0.1";
       user = name;

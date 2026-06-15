@@ -8,8 +8,8 @@
   hardware.nvidia = {
     open = false;
     package = config.boot.kernelPackages.nvidiaPackages.legacy_580; # 1050 ti
-        powerManagement.enable = false;
-            powerManagement.finegrained = false;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
 
     # Force modesetting initialization
     modesetting.enable = true;
@@ -27,7 +27,7 @@
 
   nixpkgs.config.cudaSupport = true;
 
-    # Manually run the persistence daemon to keep the GPU initialized 
+  # Manually run the persistence daemon to keep the GPU initialized
   # without relying on the broken powerManagement configuration block.
   systemd.services."nvidia-persistenced" = {
     description = "NVIDIA Persistence Daemon";

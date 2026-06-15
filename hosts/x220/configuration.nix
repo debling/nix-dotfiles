@@ -140,8 +140,12 @@ in
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_17;
-    extensions = ps: [ ps.postgis ];
+    package = pkgs.postgresql_18;
+    extensions = ps: [
+      ps.postgis
+      ps.timescaledb
+    ];
+    settings.shared_preload_libraries = "timescaledb";
     ensureDatabases = [
       "grafana"
       "nextcloud"

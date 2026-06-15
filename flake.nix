@@ -81,15 +81,12 @@
       };
     };
 
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-alien = {
       url = "github:thiagokokada/nix-alien";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    emacs-tramp-rpc.url = "github:ArthurHeymans/emacs-tramp-rpc";
   };
 
   outputs =
@@ -104,15 +101,12 @@
     let
       # Configuration for `nixpkgs`
       nixpkgsConfig = {
-        config = {
-          allowBroken = true;
-          allowUnfree = true;
-        };
+        config.allowUnfree = true;
         overlays = [
           inputs.android-nixpkgs.overlays.default
-          inputs.nixpkgs-wayland.overlays.default
           inputs.zig-overlay.overlays.default
           inputs.nix-alien.overlays.default
+          inputs.emacs-tramp-rpc.overlays.default
 
           (final: prev: {
             zls = inputs.zls.packages.${prev.system}.default;

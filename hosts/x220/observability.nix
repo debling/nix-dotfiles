@@ -93,7 +93,7 @@ in
                 sha256 = "sha256-j/YHpgly0qFj+hE2XzRXx04HOM3GxSvKVI6UNMq7Vtk";
               };
               configuredBlockyQueryDashboard = pkgs.writeText "blocky-query-grafana-postgres.json" (
-                builtins.replaceStrings [ "\${DS_POSTGRES}" ] [ "Blocky PostgreSQL" ] (
+                builtins.replaceStrings [ "\${DS_POSTGRES}" ] [ "blocky-postgresql" ] (
                   builtins.readFile blockyQueryDashboardRaw
                 )
               );
