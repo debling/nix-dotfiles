@@ -1,5 +1,4 @@
 ;; -*- lexical-binding: t; -*-
-
 (require 'org)
 
 ;; Global Document Resolution Setting
@@ -54,8 +53,8 @@ org-capture-templates
                                                          (plantuml . t)))
 
 (require 'org-cliplink)
-(with-eval-after-load 'org
-  (evil-define-key 'normal org-mode-map (kbd "SPC l p") 'org-cliplink))
+(require'evil)
+(evil-define-key 'normal org-mode-map (kbd "SPC l p") 'org-cliplink)
 
 
 (require 'org-roam)
