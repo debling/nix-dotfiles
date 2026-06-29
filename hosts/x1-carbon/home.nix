@@ -8,6 +8,7 @@
 {
   imports = [
     ../../modules/home/common-packages.nix
+    ../../modules/home/desktop.nix
     # ../../modules/home/gtk-qt.nix
     ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
@@ -26,8 +27,6 @@
 
     packages = with pkgs; [
       kmonad
-
-      anydesk
 
       babashka
       gh

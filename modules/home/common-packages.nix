@@ -13,7 +13,7 @@ in
 {
   imports = [
     nix-index-database.homeModules.nix-index
-    ./emacs.nix
+    ./mail.nix
     ./helix.nix
     ./java
     ./opencode
@@ -86,11 +86,8 @@ in
 
   home = {
     packages = with pkgs; [
-      libnotify
       agenix-cli
       age
-      zathura
-      kicad
       opencode
       # spelling
       (hunspell.withDicts (d: [
@@ -134,7 +131,6 @@ in
 
       hledger
       hledger-ui
-      hledger-web
       hledger-interest
       ledger-autosync
 
@@ -142,7 +138,6 @@ in
       #ssm-session-manager-plugin
 
       mosh
-      jellyfin-media-player
     ];
 
     sessionPath = [
@@ -209,7 +204,7 @@ in
       enable = true;
       settings = {
         email = "d.ebling8@gmail.com";
-        pinentry = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+        pinentry = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-tty;
       };
     };
 
@@ -222,34 +217,6 @@ in
     };
 
     dircolors.enable = true;
-
-    vscode = {
-      enable = true;
-      mutableExtensionsDir = true;
-      package = pkgs.vscodium;
-      profiles.default = {
-        enableUpdateCheck = false;
-        userSettings = {
-          "files.autoSave" = "afterDelay";
-          "vim.enableNeovim" = true;
-          "editor.fontFamily" = "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
-          "editor.fontSize" = 14;
-          "editor.fontLigatures" = true;
-          "workbench.colorTheme" = "Solarized Light";
-          "vim.easymotion" = true;
-          "vim.incsearch" = true;
-          "vim.useSystemClipboard" = true;
-          "vim.useCtrlKeys" = true;
-          "vim.hlsearch" = true;
-          "vim.leader" = "<space>";
-          "extensions.experimental.affinity" = {
-            "vscodevim.vim" = 1;
-          };
-          "zig.path" = "zig";
-          "zig.zls.path" = "zig";
-        };
-      };
-    };
 
     irssi = {
       enable = true;
@@ -352,7 +319,7 @@ in
   programs.gpg.enable = true;
   home.file.".gnupg/gpg-agent.conf".text =
     let
-      pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-gnome3;
+      pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-tty;
     in
     ''
       allow-preset-passphrase
@@ -433,5 +400,4 @@ in
     };
   };
 
-  services.kdeconnect.enable = true;
-}
+  }

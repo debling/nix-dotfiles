@@ -13,15 +13,8 @@
     ../../modules/nixos/prelude.nix
     ../../modules/nixos/users.nix
     ../../modules/common/containers.nix
-    ../../modules/common/fonts.nix
     ../../modules/common/networking.nix
     ../../modules/common/nix.nix
-    ../../modules/common/pipewire.nix
-    ../../modules/common/steam.nix
-    # ../../modules/nixos/desktop/river.nix
-    ../../modules/nixos/nouveau.nix
-    # ../../modules/nixos/nvidia.nix
-    ../../modules/nixos/bluetooth.nix
     ./alloy.nix
   ];
   programs.mosh.enable = true;
@@ -78,25 +71,13 @@
 
   # Configure keymap in X11
   services = {
-    kmonad = {
-      enable = false;
-      keyboards = {
-        k6Out = {
-          defcfg.enable = false;
-          device = "/dev/input/by-id/usb-Keychron_Keychron_K6-event-kbd";
-          config = builtins.readFile ../../modules/keyboard/keyboard.kbd;
-        };
-      };
-    };
     # Enable CUPS to print documents.
-    printing.enable = true;
+    printing.enable = false;
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    rose-pine-icon-theme
-    zen-browser
     man-pages
     man-pages-posix
   ];

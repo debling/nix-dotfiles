@@ -10,7 +10,6 @@
   imports = [
     ../../modules/home/common-packages.nix
     ../../modules/home/neovim
-    ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
 
     android-nixpkgs.hmModule
@@ -44,8 +43,6 @@
 
     packages = with pkgs; [
       kmonad
-
-      anydesk
 
       babashka
       gh
