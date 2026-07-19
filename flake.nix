@@ -86,7 +86,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    emacs-tramp-rpc.url = "github:ArthurHeymans/emacs-tramp-rpc";
+    emacs-tramp-rpc = {
+      url = "github:ArthurHeymans/emacs-tramp-rpc";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -111,8 +114,41 @@
           (final: prev: {
             zls = inputs.zls.packages.${prev.system}.default;
             zen-browser = inputs.zen-browser.packages.${prev.system}.default;
+            emacs-tramp-rpc-server = inputs.emacs-tramp-rpc.packages.${prev.system}.tramp-rpc-server;
 
             cosmic-clipboard-manager = prev.callPackage ./cosmic-clipboard-manager.nix { };
+
+            emacsPackagesFor =
+              emacs:
+              ((prev.emacsPackagesFor emacs).overrideScope (
+                eself: eprev: {
+                  msgpack = eprev.msgpack.overrideAttrs {
+                    src = final.fetchFromGitHub {
+                      owner = "xuchunyang";
+                      repo = "msgpack.el";
+                      rev = "5353a7b2da854c843cbec4536996242001f63471";
+                      hash = "sha256-XMNaHjNx3E/HbqNyqSfotIq5YpUMydUX6d9et2VE+SI=";
+                    };
+                  };
+                }
+              ));
+
+            # emacsPackages = prev.emacsPackages // {
+            #   tramp-rpc =
+            #     let
+            #       msgpack = prev.emacsPackages.msgpack.overrrideAttrs {
+            #         src = final.fetchFromGitHub {
+            #           owner = "xuchunyang";
+            #           repo = "msgpack.el";
+            #           rev = "5353a7b2da854c843cbec4536996242001f63471";
+            #           hash = "sha256-AMNaHjNx3E/HbqNyqSfotIq5YpUMydUX6d9et2VE+SI=";
+            #         };
+            #       };
+            #     in
+            #     (inputs.emacs-tramp-rpc.packages.${prev.system}.default.override {
+            #       msgpack = msgpack;
+            #     });
+            # };
 
             wbg = prev.wbg.overrideAttrs {
               src = prev.fetchFromGitea {

@@ -317,16 +317,15 @@ in
   };
 
   programs.gpg.enable = true;
-  home.file.".gnupg/gpg-agent.conf".text =
-    let
-      pinentryPkgs = if pkgs.stdenv.isDarwin then pkgs.pinentry_mac else pkgs.pinentry-tty;
-    in
-    ''
+  services.gpg-agent = {
+    defaultCacheTtl = 60480000;
+    maxCacheTtl = 60480000;
+    extraConfig = ''
+      allow-emacs-pinentry
+      allow-loopback-pinentry
       allow-preset-passphrase
-      max-cache-ttl 60480000
-      default-cache-ttl 60480000
-      pinentry-program ${lib.getExe pinentryPkgs}
     '';
+  };
 
   home.file.".clojure/deps.edn".text = /* clojure */ ''
     {:aliases
@@ -400,4 +399,4 @@ in
     };
   };
 
-  }
+}

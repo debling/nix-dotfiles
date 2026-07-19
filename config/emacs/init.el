@@ -84,6 +84,9 @@
         evil-undo-system        'undo-redo
         org-return-follows-link t)
 (require 'evil)
+(require 'evil-collection)
+(evil-collection-init)
+(evil-set-initial-state 'eshell-mode 'emacs)
 (evil-define-key 'normal 'global
   (kbd "SPC f f") #'find-file
   (kbd "SPC m") #'mu4e
@@ -101,9 +104,6 @@
   (kbd "SPC g g") #'magit-status)
 
 (evil-mode 1)
-
-(require 'evil-collection)
-(evil-collection-init)
 
 (require 'magit)
 

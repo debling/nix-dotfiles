@@ -6,9 +6,16 @@
     enable = true;
     openFirewall = true;
     extraComponents = [
+      "analytics"
+      "google_translate"
+      "met"
+      "radio_browser"
+      "shopping_list"
+      # Recommended for fast zlib compression
+      # https://www.home-assistant.io/integrations/isal
+      "isal"
+
       "default_config"
-      "moon"
-      "sun"
       "mobile_app"
       "tuya"
       "cast"
@@ -16,6 +23,7 @@
       "jellyfin"
       "lg_netcast"
       "transmission"
+      "spotify"
     ];
     customComponents = with pkgs.home-assistant-custom-components; [ localtuya ];
     config = {

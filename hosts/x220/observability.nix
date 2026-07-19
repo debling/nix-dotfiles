@@ -217,7 +217,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."otlp.internal.zeit.com.br" = {
+  services.nginx.virtualHosts."otlp.home.debling.com.br" = {
     enableACME = true;
     forceSSL = true;
     http2 = true;

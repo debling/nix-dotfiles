@@ -124,10 +124,19 @@ in
       prometheus.enable = true;
       caching.prefetching = true;
       blocking = {
-        denylists.ads = [
-          "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/ultimate.txt"
+        denylists = {
+          ads = [ "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/ultimate.txt" ];
+          fake = [ "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/fake.txt" ];
+          threats = [ "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/tif.txt" ];
+        };
+        allowlists.ads = [ ''
+            *.graph.whatsapp.com
+        ''];
+        clientGroupsBlock.default = [
+          "ads"
+          "fake"
+          "threats"
         ];
-        clientGroupsBlock.default = [ "ads" ];
         blockType = "zeroIp";
       };
       queryLog = {

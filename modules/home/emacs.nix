@@ -1,5 +1,4 @@
 {
-  config,
   pkgs,
   lib,
   ...
@@ -33,7 +32,7 @@
     # The true OS
     emacs = {
       enable = true;
-      package = pkgs.emacs31-pgtk;
+      package = lib.mkDefault pkgs.emacs31-pgtk;
       extraPackages =
         epkgs: with epkgs; [
           evil
@@ -48,7 +47,6 @@
           org-roam
           org-alert
           doom-themes
-          vterm
           tramp-rpc
           eat
           hl-todo

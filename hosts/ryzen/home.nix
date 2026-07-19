@@ -10,10 +10,12 @@
   imports = [
     ../../modules/home/common-packages.nix
     ../../modules/home/neovim
+    ../../modules/home/emacs.nix
     ../../modules/home/version-control.nix
 
     android-nixpkgs.hmModule
   ];
+  programs.emacs.package = pkgs.emacs31-nox;
 
   debling.editors.neovim.enable = true;
 
