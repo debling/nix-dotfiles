@@ -80,6 +80,7 @@
   environment.systemPackages = with pkgs; [
     man-pages
     man-pages-posix
+    wezterm
   ];
   environment.localBinInPath = true;
 
