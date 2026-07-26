@@ -112,9 +112,9 @@
           inputs.emacs-tramp-rpc.overlays.default
 
           (final: prev: {
-            zls = inputs.zls.packages.${prev.system}.default;
-            zen-browser = inputs.zen-browser.packages.${prev.system}.default;
-            emacs-tramp-rpc-server = inputs.emacs-tramp-rpc.packages.${prev.system}.tramp-rpc-server;
+            zls = inputs.zls.packages.${prev.stdenv.hostPlatform.system}.default;
+            zen-browser = inputs.zen-browser.packages.${prev.stdenv.hostPlatform.system}.default;
+            emacs-tramp-rpc-server = inputs.emacs-tramp-rpc.packages.${prev.stdenv.hostPlatform.system}.tramp-rpc-server;
 
             cosmic-clipboard-manager = prev.callPackage ./cosmic-clipboard-manager.nix { };
 
@@ -145,7 +145,7 @@
             #         };
             #       };
             #     in
-            #     (inputs.emacs-tramp-rpc.packages.${prev.system}.default.override {
+            #     (inputs.emacs-tramp-rpc.packages.${prev.stdenv.hostPlatform.system}.default.override {
             #       msgpack = msgpack;
             #     });
             # };

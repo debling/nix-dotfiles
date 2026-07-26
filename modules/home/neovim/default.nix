@@ -154,7 +154,7 @@ in
 
       programs.neovim = {
         enable = true;
-        package = neovim-nightly-overlay.packages.${pkgs.system}.default;
+        package = neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
         viAlias = true;
         vimAlias = true;
         vimdiffAlias = true;

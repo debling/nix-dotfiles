@@ -289,13 +289,14 @@ in
     fzf = {
       enable = true;
       enableZshIntegration = true;
-      changeDirWidgetOptions = [ "--preview 'tree -C {} | head -n 100'" ];
-      fileWidgetCommand = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
+      changeDirWidget.options = [ "--preview 'tree -C {} | head -n 100'" ];
+      fileWidget.command = "fd --type f --hidden --strip-cwd-prefix --exclude .git";
     };
 
     yazi = {
       enable = true;
       enableFishIntegration = true;
+      shellWrapperName = "y";
     };
 
     # JSON query tool, but its mainly used for pretty-printing
@@ -304,14 +305,15 @@ in
     ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         "*" = {
-          controlMaster = "auto";
-          controlPersist = "15m";
-          controlPath = "~/.ssh/%r@%h:%p";
+          ControlMaster = "auto";
+          ControlPersist = "15m";
+          ControlPath = "~/.ssh/%r@%h:%p";
         };
-        "i-*".proxyCommand =
-          "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";
+        "i-*" = {
+          ProxyCommand = "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";
+        };
       };
     };
   };
