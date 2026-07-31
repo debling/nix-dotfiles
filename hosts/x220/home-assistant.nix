@@ -4,7 +4,6 @@
   services.nginx.virtualHosts."assistant.home.debling.com.br" = serverUtils.makeNginxLocalProxy 8123;
   services.home-assistant = {
     enable = true;
-    openFirewall = true;
     extraComponents = [
       "analytics"
       "google_translate"

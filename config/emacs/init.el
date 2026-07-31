@@ -129,7 +129,7 @@
 ;(eat-eshell-mode)
 ;(eat-eshell-visual-command-mode)
 
-(setq treesit-font-lock-level 3)
+(setq treesit-font-lock-level '((bash-ts-mode . 4) (markdown-ts-mode . 3) (nix-ts-mode . 3) (t . 3)))
 
 (add-to-list 'auto-mode-alist '("\\.py\\'"   . python-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.zig\\'"  . zig-ts-mode))
@@ -190,6 +190,9 @@
           ("DEPRECATED" font-lock-doc-face bold)))
 (add-hook 'prog-mode-hook #'hl-todo-mode)
 
-(when (string= (system-name) "x1-carbon")
+(when (display-graphic-p)
+  (require 'tramp-rpc)
+  (require 'eat)
+
   (require 'org-setup)
   (require 'mu4e-setup))

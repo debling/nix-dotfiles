@@ -90,8 +90,8 @@ in
           systemPkgs = with pkgs; [
             pyright
             ruff
-            python312Packages.black
-            python312Packages.isort
+            black
+            isort
           ];
         };
 

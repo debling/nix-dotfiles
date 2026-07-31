@@ -18,6 +18,7 @@
       ];
     in
     [
+      "NIXOS_XDG_OPEN_USE_PORTAL=1"
       "PATH=${paths}"
     ];
 

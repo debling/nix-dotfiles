@@ -65,7 +65,7 @@
       pnpm
       pipenv
 
-      (python312.withPackages (
+      (python314.withPackages (
         ps: with ps; [
           pandas
           numpy
@@ -73,7 +73,6 @@
           matplotlib
           seaborn
           # jupyterlab
-          pudb
           # torch
           boto3
           scikit-learn

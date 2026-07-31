@@ -74,11 +74,11 @@
         };
         git = {
           overrideGpg = true;
-          pagers = [
+          diffRenderers = [
 
             {
               colorArg = "always";
-              pager = "delta --syntax-theme=gruvbox-dark --paging=never";
+              command = "delta --syntax-theme=gruvbox-dark --paging=never";
             }
 
           ];

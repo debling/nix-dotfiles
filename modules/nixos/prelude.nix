@@ -19,6 +19,10 @@
       enable = true;
       enableSSHSupport = true;
     };
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
   };
 
   # Avahi (mDNS)
@@ -35,4 +39,5 @@
   };
   services.xserver.wacom.enable = true;
   services.libinput.enable = true;
+
 }

@@ -299,7 +299,7 @@ in
     useACMEHost = "home.debling.com.br";
   };
   services.nextcloud = {
-    enable = true;
+    enable = false;
     hostName = "nextcloud.home.debling.com.br";
     https = true;
     configureRedis = true;

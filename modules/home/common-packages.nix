@@ -138,6 +138,9 @@ in
       #ssm-session-manager-plugin
 
       mosh
+
+      tuicr
+      devenv
     ];
 
     sessionPath = [
@@ -306,13 +309,23 @@ in
       enable = true;
       enableDefaultConfig = false;
       settings = {
-        "*" = {
+        "Host *" = {
           ControlMaster = "auto";
           ControlPersist = "15m";
           ControlPath = "~/.ssh/%r@%h:%p";
         };
-        "i-*" = {
+        "Host i-*" = {
           ProxyCommand = "sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\"";
+        };
+        "Host ryzen" = {
+          LocalForward = [
+            "8080 127.0.0.1:8080"
+            "4200 127.0.0.1:4200"
+            "9090 127.0.0.1:9090"
+            "3000 127.0.0.1:3000"
+            "8025 127.0.0.1:8025"
+            "5000 127.0.0.1:5000"
+          ];
         };
       };
     };

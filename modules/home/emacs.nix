@@ -35,21 +35,23 @@
       package = lib.mkDefault pkgs.emacs31-pgtk;
       extraPackages =
         epkgs: with epkgs; [
+          clojure-ts-mode
+          doom-themes
+          eat
           evil
           evil-collection
+          hl-todo
           magit
           mu4e
-          treesit-grammars.with-all-grammars
-          zig-ts-mode
           nix-ts-mode
-          terraform-mode
+          org-alert
           org-cliplink
           org-roam
-          org-alert
-          doom-themes
+          terraform-mode
           tramp-rpc
-          eat
-          hl-todo
+          treesit-grammars.with-all-grammars
+          zig-ts-mode
+          agent-shell
         ];
     };
   };

@@ -87,7 +87,7 @@
     };
 
     emacs-tramp-rpc = {
-      url = "github:ArthurHeymans/emacs-tramp-rpc";
+      url = "github:Ramblurr/emacs-tramp-rpc/8fa3c23257a35706d5a6b5e2b980f8df6dcc9ee0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

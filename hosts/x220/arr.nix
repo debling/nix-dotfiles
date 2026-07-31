@@ -131,20 +131,32 @@ in
       proxyPass = "http://127.0.0.1:8096";
     };
   };
-  systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "i965";
-  environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "i965";
-  };
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-ocl
       intel-vaapi-driver
-      libva-vdpau-driver
-      intel-compute-runtime-legacy1
+      libva-utils
     ];
   };
-  users.users.jellyfin.extraGroups = [ "video" ];
+  users.users.jellyfin.extraGroups = [ "video"  "render" ];
+
+
+  services.nginx.virtualHosts."tdarr.home.debling.com.br" =
+    serverUtils.makeNginxLocalProxy config.services.tdarr.server.webUIPort;
+
+  services.tdarr = {
+    enable = true;
+    group =  "media";
+
+    nodes.main = {
+      workers = {
+        transcodeCPU = 1;
+        transcodeGPU = 0;
+        healthcheckCPU = 1;
+        healthcheckGPU = 0;
+      };
+    };
+  };
 
   systemd.tmpfiles.rules = [
     "d /srv/media 2775 root media -"
