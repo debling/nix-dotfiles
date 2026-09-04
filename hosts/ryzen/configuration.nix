@@ -16,6 +16,7 @@
     ../../modules/common/networking.nix
     ../../modules/common/nix.nix
     ./alloy.nix
+    ./steam-headless.nix
   ];
   programs.mosh.enable = true;
   programs.mosh.openFirewall = true;

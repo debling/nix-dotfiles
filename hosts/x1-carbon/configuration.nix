@@ -18,6 +18,7 @@
     ../../modules/common/networking.nix
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
+    ../../modules/common/steam.nix
     # ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
@@ -144,6 +145,8 @@
     uv
 
     android-tools
+
+    moonlight-qt
   ];
   environment.localBinInPath = true;
 
