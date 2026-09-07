@@ -164,31 +164,17 @@ in
 
         rules = [
           {
-            domain = "paperless.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "sonarr.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "radarr.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "lidarr.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "prowlarr.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "bazarr.home.debling.com.br";
-            policy = "one_factor";
-          }
-          {
-            domain = "seerr.home.debling.com.br";
+            domain = [
+              "paperless.home.debling.com.br"
+              "sonarr.home.debling.com.br"
+              "radarr.home.debling.com.br"
+              "lidarr.home.debling.com.br"
+              "prowlarr.home.debling.com.br"
+              "bazarr.home.debling.com.br"
+              "seerr.home.debling.com.br"
+              "transmission.home.debling.com.br"
+              "tdarr.home.debling.com.br"
+            ];
             policy = "one_factor";
           }
         ];

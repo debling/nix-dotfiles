@@ -28,7 +28,6 @@ in
     enable = true;
     group = "media";
     package = pkgs.transmission_4;
-    openRPCPort = true;
     settings = {
       rpc-host-whitelist-enabled = false;
       download-dir = "/srv/media/downloads";
@@ -39,7 +38,7 @@ in
   };
 
   services.nginx.virtualHosts."transmission.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.transmission.settings.rpc-port;
+    serverUtils.makeNginxAuthProxy config.services.transmission.settings.rpc-port;
   # networking.firewall.allowedTCPPorts = [ 51413 ];
   # services.transmission.settings.peer-port = 51413;
 
@@ -142,7 +141,7 @@ in
 
 
   services.nginx.virtualHosts."tdarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.tdarr.server.webUIPort;
+    serverUtils.makeNginxAuthProxy config.services.tdarr.server.webUIPort;
 
   services.tdarr = {
     enable = true;
