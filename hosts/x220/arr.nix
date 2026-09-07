@@ -102,7 +102,7 @@ in
     enable = true;
   };
   services.nginx.virtualHosts."seerr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.seerr.port;
+    serverUtils.makeNginxAuthProxy config.services.seerr.port;
 
   services.jellyfin = {
     enable = true;

@@ -99,6 +99,10 @@ in
             domain = "bazarr.home.debling.com.br";
             policy = "one_factor";
           }
+          {
+            domain = "seerr.home.debling.com.br";
+            policy = "one_factor";
+          }
         ];
       };
 
