@@ -79,6 +79,26 @@ in
             domain = "paperless.home.debling.com.br";
             policy = "one_factor";
           }
+          {
+            domain = "sonarr.home.debling.com.br";
+            policy = "one_factor";
+          }
+          {
+            domain = "radarr.home.debling.com.br";
+            policy = "one_factor";
+          }
+          {
+            domain = "lidarr.home.debling.com.br";
+            policy = "one_factor";
+          }
+          {
+            domain = "prowlarr.home.debling.com.br";
+            policy = "one_factor";
+          }
+          {
+            domain = "bazarr.home.debling.com.br";
+            policy = "one_factor";
+          }
         ];
       };
 

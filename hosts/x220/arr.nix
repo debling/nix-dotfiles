@@ -50,7 +50,7 @@ in
   };
 
   services.nginx.virtualHosts."bazarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.bazarr.listenPort;
+    serverUtils.makeNginxAuthProxy config.services.bazarr.listenPort;
 
   services.sonarr = {
     enable = true;
@@ -59,14 +59,14 @@ in
   };
 
   services.nginx.virtualHosts."sonarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.sonarr.settings.server.port;
+    serverUtils.makeNginxAuthProxy config.services.sonarr.settings.server.port;
 
   services.prowlarr = {
     enable = true;
     settings = commonSettingsFor "prowlarr";
   };
   services.nginx.virtualHosts."prowlarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.prowlarr.settings.server.port;
+    serverUtils.makeNginxAuthProxy config.services.prowlarr.settings.server.port;
 
   services.lidarr = {
     enable = true;
@@ -74,7 +74,7 @@ in
     settings = commonSettingsFor "lidarr";
   };
   services.nginx.virtualHosts."lidarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.lidarr.settings.server.port;
+    serverUtils.makeNginxAuthProxy config.services.lidarr.settings.server.port;
 
   services.radarr = {
     enable = true;
@@ -82,7 +82,7 @@ in
     settings = commonSettingsFor "radarr";
   };
   services.nginx.virtualHosts."radarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.radarr.settings.server.port;
+    serverUtils.makeNginxAuthProxy config.services.radarr.settings.server.port;
 
   services.readarr = {
     enable = true;
