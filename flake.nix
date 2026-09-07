@@ -16,6 +16,8 @@
 
     agenix.url = "github:ryantm/agenix";
 
+    nix-penpot.url = "path:/home/debling/Workspace/debling/nix-penpot";
+
     # Environment/system management
     darwin = {
       url = "github:LnL7/nix-darwin";
@@ -248,8 +250,13 @@
           ./hosts/x220/configuration.nix
           ./modules/nixos/glauth.nix
 
+          inputs.nix-penpot.nixosModules.default
+
           {
             nixpkgs = nixpkgsConfig;
+          }
+          {
+            nixpkgs.overlays = [ inputs.nix-penpot.overlays.default ];
           }
         ];
       };

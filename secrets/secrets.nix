@@ -6,4 +6,5 @@ let
 in
 {
   "acme_hostinger.age".publicKeys = keys;
+  "penpot-secret-key.age".publicKeys = keys;
 }

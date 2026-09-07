@@ -29,6 +29,7 @@ in
     ./speedtest.nix
     ./observability.nix
     ./paperless.nix
+    ./penpot.nix
     # ./onlyoffice.nix
     ./networking.nix
   ];
@@ -394,6 +395,13 @@ in
             OnlyOffice = {
               href = "https://office.home.debling.com.br";
               icon = "onlyoffice";
+            };
+          }
+
+          {
+            Penpot = {
+              href = "https://penpot.home.debling.com.br";
+              icon = "penpot";
             };
           }
         ];
