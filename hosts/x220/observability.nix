@@ -21,9 +21,14 @@ let
 
 in
 {
+  age.secrets.grafana-oidc.file = ../../secrets/grafana-oidc.age;
 
   services.nginx.virtualHosts.${config.services.grafana.settings.server.domain} =
     serverUtils.makeNginxLocalProxy 3000;
+
+  systemd.services.grafana.serviceConfig.EnvironmentFile =
+    config.age.secrets.grafana-oidc.path;
+
   services.grafana = {
     enable = true;
     declarativePlugins = with pkgs.grafanaPlugins; [
@@ -33,9 +38,27 @@ in
       security.secret_key = "dfda4e08b850eacfb5bcda8aa51c0b1bb0236cfeea274990880d6c90e3d3a726";
       server = {
         domain = "grafana.home.debling.com.br";
-        root_url = "%(protocol)s://%(domain)s";
+        root_url = "https://grafana.home.debling.com.br";
       };
       panels.disable_sanitize_html = true;
+      auth.disable_login_form = true;
+      "auth.generic_oauth" = {
+        enabled = true;
+        name = "Authelia";
+        icon = "signin";
+        client_id = "grafana";
+        auth_url = "https://authelia.home.debling.com.br/api/oidc/authorization";
+        token_url = "https://authelia.home.debling.com.br/api/oidc/token";
+        api_url = "https://authelia.home.debling.com.br/api/oidc/userinfo";
+        scopes = "openid profile email groups";
+        use_pkce = true;
+        allow_sign_up = true;
+        auto_login = true;
+        login_attribute_path = "preferred_username";
+        groups_attribute_path = "groups";
+        name_attribute_path = "name";
+        role_attribute_path = "contains(groups[], 'admins') && 'Admin' || 'Viewer'";
+      };
       database = {
         type = "postgres";
         host = "127.0.0.1:5432";

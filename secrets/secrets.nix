@@ -13,4 +13,5 @@ in
   "authelia-oidc-hmac.age".publicKeys = keys;
   "authelia-oidc-jwks.age".publicKeys = keys;
   "paperless-oidc.age".publicKeys = keys;
+  "grafana-oidc.age".publicKeys = keys;
 }

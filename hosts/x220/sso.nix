@@ -103,6 +103,34 @@ in
           consent_mode = "implicit";
           token_endpoint_auth_method = "client_secret_post";
         }
+        {
+          client_id = "grafana";
+          client_name = "Grafana";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$OKZO+OHeWy7uKlsYtZcj4w$C8QQgmxNZ9YGBUeEV8RLCuX72l6BBumL1kHcXCl6idA";
+          redirect_uris = [
+            "https://grafana.home.debling.com.br/login/generic_oauth"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
+          require_pkce = true;
+          pkce_challenge_method = "S256";
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          access_token_signed_response_alg = "none";
+          userinfo_signed_response_alg = "none";
+          claims_policy = "grafana";
+        }
+      ];
+
+      identity_providers.oidc.claims_policies.grafana.id_token = [
+        "email"
+        "name"
+        "groups"
+        "preferred_username"
       ];
     };
   };
