@@ -1,0 +1,5 @@
+users:
+  debling:
+    displayname: "Denílson Ebling"
+    email: "denilson@debling.com.br"
+    password: "$argon2id$v=19$m=65536,t=3,p=4$YqxCy+dnW1iS8udsx21TBg$rN7+OGPlDq2GiVcC2emHiwa2GJcwwv8Jznnv3+d2YBM"

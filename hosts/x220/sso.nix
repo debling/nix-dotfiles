@@ -1,7 +1,39 @@
-{ config, pkgs, ... }:
-
 {
-  services.nginx.virtualHosts."authelia.home.debling.com.br" = {
+  config,
+  pkgs,
+  ...
+}:
+let
+  portalDomain = "authelia.home.debling.com.br";
+in
+{
+  age.secrets.authelia-jwt = {
+    file = ../../secrets/authelia-jwt.age;
+    owner = "authelia-main";
+    group = "authelia-main";
+  };
+  age.secrets.authelia-storage-key = {
+    file = ../../secrets/authelia-storage-key.age;
+    owner = "authelia-main";
+    group = "authelia-main";
+  };
+  age.secrets.authelia-session-secret = {
+    file = ../../secrets/authelia-session-secret.age;
+    owner = "authelia-main";
+    group = "authelia-main";
+  };
+  age.secrets.authelia-oidc-hmac = {
+    file = ../../secrets/authelia-oidc-hmac.age;
+    owner = "authelia-main";
+    group = "authelia-main";
+  };
+  age.secrets.authelia-oidc-jwks = {
+    file = ../../secrets/authelia-oidc-jwks.age;
+    owner = "authelia-main";
+    group = "authelia-main";
+  };
+
+  services.nginx.virtualHosts.${portalDomain} = {
     forceSSL = true;
     http3 = true;
     quic = true;
@@ -16,74 +48,62 @@
   services.authelia.instances.main = {
     enable = true;
 
-    secrets =
-      let
-        jwtSecretFile = pkgs.writeText "authelia-jwt-secret" "CHANGE_ME_SUPER_RANDOM_JWT_SECRET";
-        storageKeyFile = pkgs.writeText "authelia-storage-key" "CHANGE_ME_32+_BYTE_RANDOM_KEY";
-      in
-      {
-        jwtSecretFile = jwtSecretFile;
-        storageEncryptionKeyFile = storageKeyFile;
-      };
+    secrets = {
+      jwtSecretFile = config.age.secrets.authelia-jwt.path;
+      storageEncryptionKeyFile = config.age.secrets.authelia-storage-key.path;
+      sessionSecretFile = config.age.secrets.authelia-session-secret.path;
+      oidcHmacSecretFile = config.age.secrets.authelia-oidc-hmac.path;
+      oidcIssuerPrivateKeyFile = config.age.secrets.authelia-oidc-jwks.path;
+    };
 
     settings = {
-      server = {
-        address = "tcp://127.0.0.1:9991";
-      };
-
+      server.address = "tcp://127.0.0.1:9991";
       log.level = "info";
 
-      authentication_backend = {
-        ldap = {
-          url = "ldaps://home.debling.com.br";
-          base_dn = "dc=home,dc=debling,dc=com,br";
-          username_attribute = "cn";
-          additional_users_dn = "";
-          users_filter = "(&({username_attribute}={input})(objectClass=person))";
-          additional_groups_dn = "";
-          groups_filter = "(&(member={dn})(objectClass=groupOfNames))";
-          group_name_attribute = "cn";
-          mail_attribute = "mail";
-          display_name_attribute = "displayName";
-          user = "cn=admin,dc=home,dc=debling,dc=com,br";
-          password = "test";
-        };
-      };
+      authentication_backend.file.path = ./authelia-users.yaml;
 
-      storage = {
-        postgres = {
-          address = "tcp://127.0.0.1:5432";
-          database = "authelia";
-          username = "authelia";
-          password = "STRONG_PASSWORD";
-        };
-      };
+      storage.local.path = "/var/lib/authelia-main/storage.sqlite3";
 
-      session = {
-        name = "authelia_session";
-        secret = "SESSION_SECRET";
-        expiration = "1h";
-        inactivity = "5m";
-        domain = "home.debling.com.br";
-      };
+      session.cookies = [
+        {
+          domain = "home.debling.com.br";
+          authelia_url = "https://${portalDomain}";
+        }
+      ];
 
       access_control = {
         default_policy = "deny";
 
         rules = [
           {
-            domain = "*.home.debling.com.br";
+            domain = "paperless.home.debling.com.br";
             policy = "one_factor";
           }
         ];
       };
 
-      notifier = {
-        filesystem = {
-          filename = "/tmp/authelia/notification.txt";
-        };
-      };
+      notifier.filesystem.filename = "/var/lib/authelia-main/notification.txt";
+
+      identity_providers.oidc.clients = [
+        {
+          client_id = "paperless";
+          client_name = "Paperless";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$21Nt3JOB5tHvFSS//l2bCw$elVYh9fo8anVQU8kLA158XbwW4dl3TAg6fhIdUr9ePc";
+          redirect_uris = [
+            "https://paperless.home.debling.com.br/accounts/oidc/authelia/login/callback/"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
+          require_pkce = true;
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          token_endpoint_auth_method = "client_secret_post";
+        }
+      ];
     };
   };
-
 }

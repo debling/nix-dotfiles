@@ -24,7 +24,7 @@ in
     ./serverUtils.nix
     ./arr.nix
     #./samba.nix
-    # ./sso.nix
+    ./sso.nix
     ./home-assistant.nix
     ./speedtest.nix
     ./observability.nix

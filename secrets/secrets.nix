@@ -7,4 +7,10 @@ in
 {
   "acme_hostinger.age".publicKeys = keys;
   "penpot-secret-key.age".publicKeys = keys;
+  "authelia-jwt.age".publicKeys = keys;
+  "authelia-storage-key.age".publicKeys = keys;
+  "authelia-session-secret.age".publicKeys = keys;
+  "authelia-oidc-hmac.age".publicKeys = keys;
+  "authelia-oidc-jwks.age".publicKeys = keys;
+  "paperless-oidc.age".publicKeys = keys;
 }
