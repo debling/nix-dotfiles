@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -7,6 +8,93 @@ let
   portalDomain = "authelia.home.debling.com.br";
 in
 {
+  age.secrets.jellyfin-sso.file = ../../secrets/jellyfin-sso.age;
+
+  systemd.services.jellyfin = {
+    serviceConfig.EnvironmentFile = config.age.secrets.jellyfin-sso.path;
+
+    preStart =
+      let
+        plugin = pkgs.stdenv.mkDerivation {
+          pname = "jellyfin-plugin-sso";
+          version = "4.3.0.61";
+          src = pkgs.fetchurl {
+            url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/4.3.0-beta.61/community-sso-for-jellyfin_4.3.0.61.zip";
+            hash = "sha256-h7JkOorDHq01Yt/Am7q8K7gulvJJsTh/FcSxskmYoKo=";
+          };
+          nativeBuildInputs = [ pkgs.unzip ];
+          buildCommand = ''
+            mkdir -p $out
+            unzip -q $src -d $out
+          '';
+        };
+        pluginConfig = pkgs.writeText "SSO-Auth-template.xml" ''
+          <?xml version="1.0" encoding="utf-8"?>
+          <PluginConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <SamlConfigs />
+            <OidConfigs>
+              <item>
+                <key>
+                  <string>authelia</string>
+                </key>
+                <value>
+                  <PluginConfiguration>
+                    <OidEndpoint>https://authelia.home.debling.com.br</OidEndpoint>
+                    <OidClientId>jellyfin</OidClientId>
+                    <OidSecret>@OID_SECRET@</OidSecret>
+                    <Enabled>true</Enabled>
+                    <EnableAuthorization>true</EnableAuthorization>
+                    <EnableAllFolders>true</EnableAllFolders>
+                    <EnabledFolders />
+                    <AdminRoles>
+                      <string>admins</string>
+                    </AdminRoles>
+                    <Roles>
+                      <string>admins</string>
+                    </Roles>
+                    <EnableFolderRoles>false</EnableFolderRoles>
+                    <EnableLiveTvRoles>false</EnableLiveTvRoles>
+                    <EnableLiveTv>false</EnableLiveTv>
+                    <EnableLiveTvManagement>false</EnableLiveTvManagement>
+                    <LiveTvRoles />
+                    <LiveTvManagementRoles />
+                    <FolderRoleMappings />
+                    <RoleClaim>groups</RoleClaim>
+                    <OidScopes>
+                      <string>groups</string>
+                    </OidScopes>
+                    <CanonicalLinks />
+                    <DisableHttps>false</DisableHttps>
+                    <DoNotValidateEndpoints>false</DoNotValidateEndpoints>
+                    <DoNotValidateIssuerName>false</DoNotValidateIssuerName>
+                    <AllowPrivateNetworkAddresses>true</AllowPrivateNetworkAddresses>
+                    <DisablePushedAuthorization>true</DisablePushedAuthorization>
+                    <SchemeOverride>https</SchemeOverride>
+                  </PluginConfiguration>
+                </value>
+              </item>
+            </OidConfigs>
+            <ProvisioningProfiles />
+            <EnableRateLimit>false</EnableRateLimit>
+            <RateLimitMaxAttempts>30</RateLimitMaxAttempts>
+            <RateLimitWindowSeconds>60</RateLimitWindowSeconds>
+            <ManageLoginPageButtons>true</ManageLoginPageButtons>
+            <EnableSingleLogout>false</EnableSingleLogout>
+            <DisablePasswordLogin>false</DisablePasswordLogin>
+            <SsoOnlyRepointedUserIds />
+            <LogoutSessions />
+          </PluginConfiguration>
+        '';
+        jellyfinDataDir = config.services.jellyfin.dataDir;
+      in
+      ''
+        install -d "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61"
+        cp -rf ${plugin}/. "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61/"
+        chmod -R u+w "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61/"
+        install -d "${jellyfinDataDir}/plugins/configurations"
+        sed "s|@OID_SECRET@|$JELLYFIN_OID_SECRET|" ${pluginConfig} > "${jellyfinDataDir}/plugins/configurations/SSO-Auth.xml"
+      '';
+  };
   age.secrets.authelia-jwt = {
     file = ../../secrets/authelia-jwt.age;
     owner = "authelia-main";
@@ -148,6 +236,26 @@ in
           userinfo_signed_response_alg = "none";
           claims_policy = "grafana";
         }
+        {
+          client_id = "jellyfin";
+          client_name = "Jellyfin";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$tLhfFmduBfw9WQvA7RhqHQ$9ZOIQuZfpSs4fQybHc5RJdNAr1s7CB+7Um/m48oru7w";
+          redirect_uris = [
+            "https://jellyfin.home.debling.com.br/sso/OID/redirect/authelia"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "groups"
+          ];
+          require_pkce = true;
+          pkce_challenge_method = "S256";
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          access_token_signed_response_alg = "none";
+          userinfo_signed_response_alg = "none";
+          token_endpoint_auth_method = "client_secret_post";
+        }
       ];
 
       identity_providers.oidc.claims_policies.grafana.id_token = [
@@ -155,6 +263,13 @@ in
         "name"
         "groups"
         "preferred_username"
+      ];
+
+      identity_providers.oidc.claims_policies.jellyfin.id_token = [
+        "groups"
+        "preferred_username"
+        "email"
+        "name"
       ];
     };
   };

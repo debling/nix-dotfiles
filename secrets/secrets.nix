@@ -14,4 +14,5 @@ in
   "authelia-oidc-jwks.age".publicKeys = keys;
   "paperless-oidc.age".publicKeys = keys;
   "grafana-oidc.age".publicKeys = keys;
+  "jellyfin-sso.age".publicKeys = keys;
 }
