@@ -108,8 +108,7 @@ in
   services.blocky = {
     enable = true;
     settings = {
-      ports.http = 4000;
-      upstreams.groups.default = [
+      ports.http = 4000;      upstreams.groups.default = [
         "https://dns.quad9.net/dns-query"
         "https://1.1.1.1/dns-query"
         "tcp-tls:1.1.1.1:853"

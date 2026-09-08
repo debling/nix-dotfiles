@@ -360,23 +360,20 @@ in
           }
 
           {
-            Blocky = {
-              href = "https://blocky.home.debling.com.br"; # Blocky WebUI or metrics
-              icon = "blocky";
+            Authelia = {
+              href = "https://authelia.home.debling.com.br";
+              icon = "authelia";
+              description = "SSO / Login";
             };
           }
-
+        ];
+      }
+      {
+        Documentos = [
           {
             Nextcloud = {
               href = "https://nextcloud.home.debling.com.br";
               icon = "nextcloud";
-            };
-          }
-
-          {
-            HomeAssistant = {
-              href = "https://assistant.home.debling.com.br";
-              icon = "home-assistant";
             };
           }
 
@@ -393,39 +390,20 @@ in
               icon = "onlyoffice";
             };
           }
-
-          {
-            Penpot = {
-              href = "https://penpot.home.debling.com.br";
-              icon = "penpot";
-            };
-          }
         ];
       }
       {
         Media = [
           {
-            Sonarr = {
-              href = "https://sonarr.home.debling.com.br";
-              icon = "sonarr";
+            Jellyfin = {
+              href = "https://jellyfin.home.debling.com.br";
+              icon = "jellyfin";
             };
           }
           {
-            Bazarr = {
-              href = "https://bazarr.home.debling.com.br";
-              icon = "bazarr";
-            };
-          }
-          {
-            Radarr = {
-              href = "https://radarr.home.debling.com.br";
-              icon = "radarr";
-            };
-          }
-          {
-            Prowlarr = {
-              href = "https://prowlarr.home.debling.com.br";
-              icon = "prowlarr";
+            Seerr = {
+              href = "https://seerr.home.debling.com.br";
+              icon = "seerr";
             };
           }
           {
@@ -435,9 +413,25 @@ in
             };
           }
           {
-            Jellyfin = {
-              href = "https://jellyfin.home.debling.com.br";
-              icon = "jellyfin";
+            Tdarr = {
+              href = "https://tdarr.home.debling.com.br";
+              icon = "tdarr";
+            };
+          }
+        ];
+      }
+      {
+        Arr = [
+          {
+            Sonarr = {
+              href = "https://sonarr.home.debling.com.br";
+              icon = "sonarr";
+            };
+          }
+          {
+            Radarr = {
+              href = "https://radarr.home.debling.com.br";
+              icon = "radarr";
             };
           }
           {
@@ -447,9 +441,35 @@ in
             };
           }
           {
-            Seerr = {
-              href = "https://seerr.home.debling.com.br";
-              icon = "seerr";
+            Prowlarr = {
+              href = "https://prowlarr.home.debling.com.br";
+              icon = "prowlarr";
+            };
+          }
+          {
+            Bazarr = {
+              href = "https://bazarr.home.debling.com.br";
+              icon = "bazarr";
+            };
+          }
+        ];
+      }
+      {
+        Criativo = [
+          {
+            Penpot = {
+              href = "https://penpot.home.debling.com.br";
+              icon = "penpot";
+            };
+          }
+        ];
+      }
+      {
+        Casa = [
+          {
+            HomeAssistant = {
+              href = "https://assistant.home.debling.com.br";
+              icon = "home-assistant";
             };
           }
         ];
