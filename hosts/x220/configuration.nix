@@ -319,6 +319,7 @@ in
         whiteboard
         onlyoffice
         notes
+        user_oidc
         ;
     };
     extraAppsEnable = true;

@@ -18,4 +18,5 @@ in
   "onlyoffice-jwt.age".publicKeys = keys;
   "onlyoffice-nonce.age".publicKeys = keys;
   "penpot-oidc.age".publicKeys = keys;
+  "nextcloud-oidc.age".publicKeys = keys;
 }

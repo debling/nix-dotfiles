@@ -272,6 +272,33 @@ in
           token_endpoint_auth_method = "client_secret_post";
           claims_policy = "penpot";
         }
+        {
+          client_id = "nextcloud";
+          client_name = "Nextcloud";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$LYtbawZRz5M472f8GuzkMA$TjM8fCL9S4gvQku4+yFUIpWTxMUmD6pu7UCKWooqSaU";
+          redirect_uris = [
+            "https://nextcloud.home.debling.com.br/apps/user_oidc/code"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
+          require_pkce = true;
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          claims_policy = "nextcloud";
+          token_endpoint_auth_method = "client_secret_post";
+        }
+      ];
+
+      identity_providers.oidc.claims_policies.nextcloud.id_token = [
+        "email"
+        "email_verified"
+        "name"
+        "preferred_username"
+        "groups"
       ];
 
       identity_providers.oidc.claims_policies.penpot.id_token = [
@@ -295,5 +322,35 @@ in
         "name"
       ];
     };
+  };
+
+  age.secrets.nextcloud-oidc.file = ../../secrets/nextcloud-oidc.age;
+
+  systemd.services.nextcloud-oidc-setup = {
+    requires = [ "nextcloud-setup.service" ];
+    after = [ "nextcloud-setup.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      User = "nextcloud";
+      LoadCredential = [
+        "nextcloud-oidc:${config.age.secrets.nextcloud-oidc.path}"
+      ];
+    };
+    script = ''
+      ${config.services.nextcloud.occ}/bin/nextcloud-occ config:system:set allow_local_remote_servers --value=true --type=boolean
+      ${config.services.nextcloud.occ}/bin/nextcloud-occ user_oidc:provider authelia \
+        --clientid="nextcloud" \
+        --clientsecret-file="$CREDENTIALS_DIRECTORY/nextcloud-oidc" \
+        --discoveryuri="https://authelia.home.debling.com.br/.well-known/openid-configuration" \
+        --scope="openid profile email" \
+        --mapping-uid="preferred_username" \
+        --mapping-display-name="name" \
+        --mapping-email="email" \
+        --unique-uid=0 \
+        --check-bearer=0
+      ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set user_oidc allow_multiple_user_backends --value 0
+    '';
   };
 }
