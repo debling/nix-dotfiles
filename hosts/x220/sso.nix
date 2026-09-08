@@ -46,6 +46,7 @@ in
                     <EnableAuthorization>true</EnableAuthorization>
                     <EnableAllFolders>true</EnableAllFolders>
                     <EnabledFolders />
+                    <AllowExistingAccountLink>true</AllowExistingAccountLink>
                     <AdminRoles>
                       <string>admins</string>
                     </AdminRoles>
