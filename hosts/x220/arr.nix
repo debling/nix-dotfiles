@@ -83,20 +83,6 @@ in
   services.nginx.virtualHosts."radarr.home.debling.com.br" =
     serverUtils.makeNginxAuthProxy config.services.radarr.settings.server.port;
 
-  services.readarr = {
-    enable = true;
-    group = "media";
-    settings = {
-      auth = {
-        Enabled = false;
-        Method = "External";
-        Required = false;
-      };
-    };
-  };
-  services.nginx.virtualHosts."readarr.home.debling.com.br" =
-    serverUtils.makeNginxLocalProxy config.services.readarr.settings.server.port;
-
   services.seerr = {
     enable = true;
   };

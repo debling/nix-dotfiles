@@ -157,14 +157,9 @@ in
       "sonarr"
       "lidarr"
       "prowlarr"
-      "readarr"
       "dhcp"
     ];
     ensureUsers = [
-      {
-        name = "readarr";
-        ensureDBOwnership = true;
-      }
       {
         name = "prowlarr";
         ensureDBOwnership = true;
@@ -454,12 +449,6 @@ in
             Seerr = {
               href = "https://seerr.home.debling.com.br";
               icon = "seerr";
-            };
-          }
-          {
-            Readarr = {
-              href = "https://readarr.home.debling.com.br";
-              icon = "readarr";
             };
           }
         ];
