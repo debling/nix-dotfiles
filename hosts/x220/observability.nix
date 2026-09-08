@@ -138,6 +138,15 @@ in
                   builtins.readFile postgresDashboardRaw
                 )
               );
+              autheliaDashboardRaw = pkgs.fetchurl {
+                url = "https://raw.githubusercontent.com/authelia/authelia/master/examples/grafana-dashboards/simple.json";
+                sha256 = "sha256-y+WbEev4ezdJyorjnnZi37CL1Pd9PxYAvl5N0hsFJnk=";
+              };
+              configuredAutheliaDashboard = pkgs.writeText "authelia-simple.json" (
+                builtins.replaceStrings [ "\${DS_PROMETHEUS}" ] [ "Prometheus" ] (
+                  builtins.readFile autheliaDashboardRaw
+                )
+              );
               dashboardDir = pkgs.linkFarm "grafana-dashboards" [
                 {
                   name = "blocky-query-grafana-postgres.json";
@@ -154,6 +163,10 @@ in
                 {
                   name = "postgres-exporter.json";
                   path = configuredPostgresDashboard;
+                }
+                {
+                  name = "authelia-simple.json";
+                  path = configuredAutheliaDashboard;
                 }
               ];
             in
@@ -193,6 +206,13 @@ in
         scrape_interval = "15s";
         static_configs = [
           { targets = [ "127.0.0.1:9187" ]; }
+        ];
+      }
+      {
+        job_name = "authelia";
+        scrape_interval = "15s";
+        static_configs = [
+          { targets = [ "127.0.0.1:9959" ]; }
         ];
       }
     ];

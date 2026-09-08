@@ -150,7 +150,19 @@ in
 
       authentication_backend.file.path = ./authelia-users.yaml;
 
-      storage.local.path = "/var/lib/authelia-main/storage.sqlite3";
+      storage = {
+        postgres = {
+          address = "tcp://127.0.0.1:5432";
+          database = "authelia";
+          username = "authelia";
+          password = "";
+        };
+      };
+
+      telemetry.metrics = {
+        enabled = true;
+        address = "tcp://127.0.0.1:9959";
+      };
 
       session.cookies = [
         {
