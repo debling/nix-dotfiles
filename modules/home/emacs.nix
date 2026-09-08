@@ -32,7 +32,7 @@
     # The true OS
     emacs = {
       enable = true;
-      package = lib.mkDefault pkgs.emacs31-pgtk;
+      package = lib.mkDefault pkgs.emacs31;
       extraPackages =
         epkgs: with epkgs; [
           clojure-ts-mode

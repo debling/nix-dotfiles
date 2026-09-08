@@ -20,27 +20,21 @@
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
     # ../../modules/nixos/desktop/river.nix
+    ../../modules/nixos/desktop/dwm
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
-  # Enable the COSMIC login manager
-  services.displayManager.cosmic-greeter.enable = true;
-
-  # Enable the COSMIC desktop environment
-  services.desktopManager.cosmic.enable = true;
-
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = mainUser;
-  };
+  # COSMIC was removed; the dwm module now brings greetd with an
+  # initial_session so the machine boots straight into dwm (autologin),
+  # falling back to a tuigreet picker after logout.
+  # services.desktopManager.cosmic.enable = true;
+  # environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   services.system76-scheduler.enable = true;
   programs.firefox.preferences = {
     # disable libadwaita theming for Firefox
     "widget.gtk.libadwaita-colors.enabled" = false;
   };
-  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
-
   hardware.facter.reportPath = ./facter.json;
 
   networking.firewall.allowedTCPPorts = [

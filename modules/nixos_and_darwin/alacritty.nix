@@ -29,7 +29,7 @@
               family = "JetBrainsMono Nerd Font";
               style = "Light";
             };
-            size = 14;
+            size = 12;
           };
 
           # colors.primary.foreground = "#556b72";
