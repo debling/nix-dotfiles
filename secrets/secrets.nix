@@ -17,4 +17,5 @@ in
   "jellyfin-sso.age".publicKeys = keys;
   "onlyoffice-jwt.age".publicKeys = keys;
   "onlyoffice-nonce.age".publicKeys = keys;
+  "penpot-oidc.age".publicKeys = keys;
 }

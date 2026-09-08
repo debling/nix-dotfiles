@@ -255,6 +255,30 @@ in
           userinfo_signed_response_alg = "none";
           token_endpoint_auth_method = "client_secret_post";
         }
+        {
+          client_id = "penpot";
+          client_name = "Penpot";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$n7mgdpTjjDFLbdP307uZRQ$NfJvQiPfQtlSZE55KSARcU2Hi+AGnzcaTgqAMKO3+ZA";
+          redirect_uris = [
+            "https://penpot.home.debling.com.br/api/auth/oidc/callback"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          token_endpoint_auth_method = "client_secret_post";
+          claims_policy = "penpot";
+        }
+      ];
+
+      identity_providers.oidc.claims_policies.penpot.id_token = [
+        "email"
+        "email_verified"
+        "name"
+        "preferred_username"
       ];
 
       identity_providers.oidc.claims_policies.grafana.id_token = [
