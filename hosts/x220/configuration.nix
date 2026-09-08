@@ -31,6 +31,7 @@ in
     ./paperless.nix
     ./penpot.nix
     # ./onlyoffice.nix
+    ./onlyoffice.nix
     ./networking.nix
   ];
 
@@ -295,7 +296,7 @@ in
     useACMEHost = "home.debling.com.br";
   };
   services.nextcloud = {
-    enable = false;
+    enable = true;
     hostName = "nextcloud.home.debling.com.br";
     https = true;
     configureRedis = true;

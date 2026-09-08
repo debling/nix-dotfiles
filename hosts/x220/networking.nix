@@ -41,6 +41,9 @@ in
       ];
     };
     hostName = "x220";
+    hosts = {
+      "127.0.0.1" = [ "x220" ];
+    };
     useDHCP = false;
     enableIPv6 = false;
     interfaces.enp0s25 = {

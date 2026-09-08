@@ -15,4 +15,6 @@ in
   "paperless-oidc.age".publicKeys = keys;
   "grafana-oidc.age".publicKeys = keys;
   "jellyfin-sso.age".publicKeys = keys;
+  "onlyoffice-jwt.age".publicKeys = keys;
+  "onlyoffice-nonce.age".publicKeys = keys;
 }
