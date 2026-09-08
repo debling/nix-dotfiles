@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -286,6 +285,7 @@ in
             "groups"
           ];
           require_pkce = true;
+          pkce_challenge_method = "S256";
           authorization_policy = "one_factor";
           consent_mode = "implicit";
           claims_policy = "nextcloud";
@@ -370,13 +370,13 @@ in
         --clientid="nextcloud" \
         --clientsecret-file="$CREDENTIALS_DIRECTORY/nextcloud-oidc" \
         --discoveryuri="https://authelia.home.debling.com.br/.well-known/openid-configuration" \
-        --scope="openid profile email" \
+        --scope="openid profile email groups" \
         --mapping-uid="preferred_username" \
         --mapping-display-name="name" \
         --mapping-email="email" \
         --unique-uid=0 \
         --check-bearer=0
-      ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set user_oidc allow_multiple_user_backends --value 0
+      echo yes | ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set --value 0 --lazy user_oidc allow_multiple_user_backends
     '';
   };
 }
