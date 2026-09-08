@@ -291,6 +291,32 @@ in
           claims_policy = "nextcloud";
           token_endpoint_auth_method = "client_secret_post";
         }
+        {
+          client_id = "home-assistant";
+          client_name = "Home Assistant";
+          public = true;
+          require_pkce = true;
+          pkce_challenge_method = "S256";
+          redirect_uris = [
+            "https://assistant.home.debling.com.br/auth/oidc/callback"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          claims_policy = "home-assistant";
+        }
+      ];
+
+      identity_providers.oidc.claims_policies.home-assistant.id_token = [
+        "groups"
+        "email"
+        "name"
+        "preferred_username"
       ];
 
       identity_providers.oidc.claims_policies.nextcloud.id_token = [

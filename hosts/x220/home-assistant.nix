@@ -24,7 +24,7 @@
       "transmission"
       "spotify"
     ];
-    customComponents = with pkgs.home-assistant-custom-components; [ localtuya ];
+    customComponents = with pkgs.home-assistant-custom-components; [ localtuya auth_oidc ];
     config = {
       mobile_app = { };
 
@@ -41,6 +41,18 @@
         unit_system = "metric";
         latitude = 29.6895;
         longitude = 53.7923;
+      };
+
+      auth_oidc = {
+        client_id = "home-assistant";
+        discovery_url = "https://authelia.home.debling.com.br/.well-known/openid-configuration";
+        display_name = "Authelia";
+        roles = {
+          admin = "admins";
+        };
+        features = {
+          default_redirect = true;
+        };
       };
     };
   };
