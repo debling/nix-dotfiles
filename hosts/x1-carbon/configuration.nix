@@ -67,6 +67,7 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
+    extraUpFlags = [ "--accept-routes" ];
   };
   zramSwap = {
     enable = true;

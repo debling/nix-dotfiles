@@ -482,5 +482,10 @@ in
     enable = true;
     useRoutingFeatures = "server";
     openFirewall = true;
+    extraUpFlags = [
+      "--advertise-exit-node"
+      "--advertise-routes=10.0.10.1/32"
+      "--accept-dns=false"
+    ];
   };
 }
