@@ -145,8 +145,6 @@
     uv
 
     android-tools
-
-    moonlight-qt
   ];
   environment.localBinInPath = true;
 

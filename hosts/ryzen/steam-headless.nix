@@ -8,40 +8,60 @@ let
   width = 1920;
   height = 1080;
 
-  swayConfig = pkgs.writeText "steam-headless-sway.conf" ''
-    output HEADLESS-1 mode ${toString width}x${toString height}@60Hz
-    default_border none
-    for_window [class="^steam$"] fullscreen enable
-    bar {
-      mode invisible
-    }
+  steamSession = pkgs.writeShellScriptBin "steam-headless-session" ''
+    ${pkgs.xorg.xset}/bin/xset s off
+    ${pkgs.xorg.xset}/bin/xset -dpms
+    ${config.programs.steam.package}/bin/steam -gamepadui &
+    steam_pid=$!
+    while kill -0 $steam_pid 2>/dev/null; do
+      wid_hex=$(${pkgs.xorg.xwininfo}/bin/xwininfo -root -tree 2>/dev/null | grep '"Steam Big Picture Mode"' | grep -oE '0x[0-9a-f]+' | head -1)
+      if [ -n "$wid_hex" ]; then
+        wid=$((wid_hex))
+        ${pkgs.xdotool}/bin/xdotool windowsize "$wid" ${toString width} ${toString height} 2>/dev/null
+        ${pkgs.xdotool}/bin/xdotool windowmove "$wid" 0 0 2>/dev/null
+      fi
+      sleep 5
+    done
+    wait $steam_pid
   '';
 
-  sessionScript = pkgs.writeShellScriptBin "steam-headless-session" ''
-    export WLR_BACKENDS=headless,libinput
-    export WLR_LIBINPUT_NO_DEVICES=1
-    ${pkgs.sway}/bin/sway -c ${swayConfig} &
-    sway_pid=$!
-    for i in $(seq 1 60); do
-      [ -S "''${XDG_RUNTIME_DIR}/wayland-1" ] && break
-      sleep 0.5
-    done
-    for i in $(seq 1 60); do
-      DISPLAY=:0 ${pkgs.xorg.xset}/bin/xset q >/dev/null 2>&1 && break
-      sleep 0.5
-    done
-    export DISPLAY=:0
-    systemctl --user restart sunshine
-    while kill -0 $sway_pid 2>/dev/null; do
-      ${config.programs.steam.package}/bin/steam -gamepadui < /dev/null
-      sleep 2
-    done
-    systemctl --user stop sunshine
-    kill $sway_pid 2>/dev/null
-  '';
+  steamHeadlessSession =
+    pkgs.runCommand "steam-headless-session"
+      {
+        passthru.providedSessions = [ "steam-headless" ];
+      }
+      ''
+        mkdir -p $out/bin $out/share/xsessions
+        install -Dm755 ${steamSession}/bin/steam-headless-session $out/bin/steam-headless-session
+        {
+          echo '[Desktop Entry]'
+          echo 'Type=Application'
+          echo 'Name=Steam Headless'
+          echo 'Comment=Headless Steam Remote Play host'
+          echo 'Exec='"$out"'/bin/steam-headless-session'
+        } > $out/share/xsessions/steam-headless.desktop
+      '';
 in
 {
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+
+    deviceSection = ''
+      Option "AllowEmptyInitialConfiguration" "true"
+      Option "ConnectedMonitor" "DFP-0"
+    '';
+
+    monitorSection = ''
+      HorizSync 30-80
+      VertRefresh 50-75
+      Modeline "1920x1080_60" 148.50 1920 2008 2052 2200 1080 1084 1089 1125 +hsync +vsync
+    '';
+
+    screenSection = ''
+      Option "MetaModes" "DFP-0: 1920x1080_60 +0+0"
+    '';
+  };
 
   hardware.nvidia = {
     open = false;
@@ -50,40 +70,18 @@ in
     nvidiaSettings = false;
   };
 
-  services.greetd = {
-    enable = true;
-    restart = true;
-    settings = {
-      initial_session = {
-        user = mainUser;
-        command = "${sessionScript}/bin/steam-headless-session";
-      };
-      default_session = {
-        user = "greeter";
-        command = "${pkgs.tuigreet}/bin/tuigreet --time";
-      };
-    };
-  };
-
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-  };
-
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
   };
 
-  services.sunshine = {
-    enable = true;
-    openFirewall = true;
-    settings.capture = "wlr";
+  services.displayManager = {
+    sessionPackages = [ steamHeadlessSession ];
+    defaultSession = "steam-headless";
+    autoLogin.user = mainUser;
+    sddm = {
+      enable = true;
+      autoLogin.relogin = true;
+    };
   };
-
-  systemd.user.services.sunshine.serviceConfig.Environment = [
-    "LD_LIBRARY_PATH=/run/opengl-driver/lib:/run/opengl-driver-32/lib"
-    "WAYLAND_DISPLAY=wayland-1"
-  ];
 }
