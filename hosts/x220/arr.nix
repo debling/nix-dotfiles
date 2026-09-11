@@ -23,6 +23,18 @@ let
   };
 in
 {
+  virtualisation.oci-containers.containers.byparr = {
+    image = "ghcr.io/thephaseless/byparr:latest";
+    autoStart = true;
+    environment = {
+      TZ = "America/Sao_Paulo";
+      LOG_LEVEL = "info";
+      HOST = "127.0.0.1";
+      PORT = "8191";
+    };
+    extraOptions = [ "--network=host" "--shm-size=2g" ];
+  };
+
   users.groups.media = { };
   services.transmission = {
     enable = true;

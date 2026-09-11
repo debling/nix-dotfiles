@@ -5,3 +5,9 @@ users:
     password: "$argon2id$v=19$m=65536,t=3,p=4$YqxCy+dnW1iS8udsx21TBg$rN7+OGPlDq2GiVcC2emHiwa2GJcwwv8Jznnv3+d2YBM"
     groups:
       - admins
+  vivianedzn:
+    displayname: "Viviane Diniz Ebling"
+    email: "viviane@ebling.com.br"
+    password: $argon2id$v=19$m=65536,t=3,p=4$+Iota1Sv7++xiZb06U/vLQ$ejYrkpEktU58+gPMUJskuT1En2jSoeSsSFwfROGLLb8
+    groups:
+      - admins
