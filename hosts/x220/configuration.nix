@@ -123,6 +123,8 @@ in
 
   services.nginx = {
     enable = true;
+    # Angie: drop-in nginx fork (same config syntax, same NixOS module).
+    package = pkgs.angie;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
     recommendedOptimisation = true;
