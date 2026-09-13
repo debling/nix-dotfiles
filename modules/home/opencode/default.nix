@@ -2,6 +2,10 @@
 
   programs.opencode = {
     enable = true;
+    settings = {
+      lsp = true;
+    };
+
     agents = {
       documentation-engineer = ./agent-documentation-engineer.md;
       mobile-developer = ./agent-mobile-developer.md;
