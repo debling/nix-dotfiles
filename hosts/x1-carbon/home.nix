@@ -13,7 +13,6 @@
     ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
-    ../../modules/home/foot.nix
     ../../modules/nixos_and_darwin/alacritty.nix
 
     android-nixpkgs.hmModule

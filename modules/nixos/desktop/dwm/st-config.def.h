@@ -191,7 +191,7 @@ static MouseShortcut mshortcuts[] = {
 /* externalpipe: pipe the visible screen + scrollback through dmenu and
  * open the picked URL in the browser */
 static const char *urlopencmd[] = { "/bin/sh", "-c",
-	"grep -aEo 'https?://[a-zA-Z0-9./?=_%:&#~+-]+' | dmenu -i -l 10 | xargs -r -n1 zen-beta",
+	"grep -aEo 'https?://[a-zA-Z0-9./?=_%:&#~+-]+' | rofi -dmenu -i -l 10 | xargs -r -n1 zen-beta",
 	NULL };
 
 static Shortcut shortcuts[] = {
@@ -209,7 +209,7 @@ static Shortcut shortcuts[] = {
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
-	{ TERMMOD,              XK_U,           externalpipe,   {.v = urlopencmd } },
+	{ TERMMOD,              XK_O,           externalpipe,   {.v = urlopencmd } },
 };
 
 /*

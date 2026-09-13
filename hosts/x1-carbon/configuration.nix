@@ -11,6 +11,7 @@
 
 {
   imports = [
+    ./displays.nix
     ../../modules/nixos/prelude.nix
     ../../modules/nixos/users.nix
     ../../modules/common/containers.nix
@@ -29,8 +30,8 @@
   # falling back to a tuigreet picker after logout.
   # services.desktopManager.cosmic.enable = true;
   # environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+  #services.system76-scheduler.enable = true;
 
-  services.system76-scheduler.enable = true;
   programs.firefox.preferences = {
     # disable libadwaita theming for Firefox
     "widget.gtk.libadwaita-colors.enabled" = false;
@@ -165,7 +166,8 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
 
-  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
+  # Lid/display policy lives in ./displays.nix (logind suspend rules,
+  # autorandr profiles, lid + hotplug triggers).
   services.fprintd.enable = true;
 
   programs.kdeconnect.enable = true;
