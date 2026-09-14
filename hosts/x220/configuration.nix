@@ -32,6 +32,7 @@ in
     ./penpot.nix
     # ./onlyoffice.nix
     ./onlyoffice.nix
+    ./forgejo.nix
     ./networking.nix
   ];
 
