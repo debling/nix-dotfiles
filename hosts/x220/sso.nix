@@ -292,6 +292,28 @@ in
           token_endpoint_auth_method = "client_secret_post";
         }
         {
+          client_id = "forgejo";
+          client_name = "Forgejo";
+          client_secret = "$argon2id$v=19$m=65536,t=3,p=4$C82dlSeg7MrcUCjs95/kAg$1HUVHiIijdK0Sa33uaNHJPuKj8nk0WzkFzRjL+LLr/Q";
+          redirect_uris = [
+            "https://forgejo.home.debling.com.br/user/oauth2/authelia/callback"
+          ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+            "groups"
+          ];
+          # NOTE: no require_pkce on purpose — Forgejo as OIDC *client*
+          # sends no code_challenge (unlike paperless/nextcloud), so
+          # requiring it would break login. client_secret_post matches
+          # this repo's other confidential clients (live-verified working).
+          authorization_policy = "one_factor";
+          consent_mode = "implicit";
+          claims_policy = "forgejo";
+          token_endpoint_auth_method = "client_secret_post";
+        }
+        {
           client_id = "home-assistant";
           client_name = "Home Assistant";
           public = true;
@@ -342,6 +364,13 @@ in
       ];
 
       identity_providers.oidc.claims_policies.jellyfin.id_token = [
+        "groups"
+        "preferred_username"
+        "email"
+        "name"
+      ];
+
+      identity_providers.oidc.claims_policies.forgejo.id_token = [
         "groups"
         "preferred_username"
         "email"

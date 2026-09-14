@@ -19,4 +19,5 @@ in
   "onlyoffice-nonce.age".publicKeys = keys;
   "penpot-oidc.age".publicKeys = keys;
   "nextcloud-oidc.age".publicKeys = keys;
+  "forgejo-oidc.age".publicKeys = keys;
 }

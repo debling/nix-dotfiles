@@ -469,6 +469,17 @@ in
         ];
       }
       {
+        "Código" = [
+          {
+            Forgejo = {
+              href = "https://forgejo.home.debling.com.br";
+              icon = "forgejo";
+              description = "Git";
+            };
+          }
+        ];
+      }
+      {
         Casa = [
           {
             HomeAssistant = {
