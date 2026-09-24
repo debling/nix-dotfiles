@@ -128,7 +128,6 @@ in
       hledger
       hledger-ui
       hledger-interest
-      ledger-autosync
 
       #awscli2
       #ssm-session-manager-plugin
