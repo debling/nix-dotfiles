@@ -1,0 +1,61 @@
+--- a/dwm.c	2026-09-08 19:51:13.012224981 -0300
++++ b/dwm.c	2026-09-08 19:50:43.623750591 -0300
+@@ -236,6 +236,7 @@
+ static void tagmon(const Arg *arg);
+ static void tile(Monitor *m);
+ static void togglebar(const Arg *arg);
++static void setfloatinghint(Client *c);
+ static void togglefloating(const Arg *arg);
+ static void toggletag(const Arg *arg);
+ static void toggleview(const Arg *arg);
+@@ -294,6 +295,7 @@
+ 	[UnmapNotify] = unmapnotify
+ };
+ static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];
++static Atom dwmtiledatom;
+ static int running = 1;
+ static Cur *cursor[CurLast];
+ static Clr **scheme;
+@@ -1205,6 +1207,7 @@
+ 	if (c->mon == selmon)
+ 		unfocus(selmon->sel, 0);
+ 	c->mon->sel = c;
++	setfloatinghint(c);
+ 	arrange(c->mon);
+ 	XMapWindow(dpy, c->win);
+ 	focus(NULL);
+@@ -1764,6 +1767,7 @@
+ 
+ 	/* init atoms */
+ 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);
++	dwmtiledatom = XInternAtom(dpy, "_DWM_TILED", False);
+ 	wmatom[WMProtocols] = XInternAtom(dpy, "WM_PROTOCOLS", False);
+ 	wmatom[WMDelete] = XInternAtom(dpy, "WM_DELETE_WINDOW", False);
+ 	wmatom[WMState] = XInternAtom(dpy, "WM_STATE", False);
+@@ -1936,6 +1940,18 @@
+ }
+ 
+ void
++setfloatinghint(Client *c)
++{
++	if (c->isfloating)
++		XDeleteProperty(dpy, c->win, dwmtiledatom);
++	else {
++		long v = 1;
++		XChangeProperty(dpy, c->win, dwmtiledatom, XA_CARDINAL, 32,
++			PropModeReplace, (unsigned char *)&v, 1);
++	}
++}
++
++void
+ togglefloating(const Arg *arg)
+ {
+ 	if (!selmon->sel)
+@@ -1946,6 +1962,7 @@
+ 	if (selmon->sel->isfloating)
+ 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
+ 			selmon->sel->w, selmon->sel->h, 0);
++	setfloatinghint(selmon->sel);
+ 	arrange(selmon);
+ }
+ 

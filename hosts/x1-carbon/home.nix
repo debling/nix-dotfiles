@@ -9,11 +9,11 @@
   imports = [
     ../../modules/home/common-packages.nix
     ../../modules/home/desktop.nix
-    # ../../modules/home/gtk-qt.nix
+    ../../modules/home/gtk-qt.nix
     ../../modules/home/neovim
     ../../modules/home/nixos-common-pkgs.nix
     ../../modules/home/version-control.nix
-    ../../modules/home/foot.nix
+    ../../modules/nixos_and_darwin/alacritty.nix
 
     android-nixpkgs.hmModule
   ];
