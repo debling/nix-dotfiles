@@ -98,8 +98,12 @@ in
   services.seerr = {
     enable = true;
   };
+  # Plain local proxy, NOT the Authelia barrier: seerr has no OIDC or
+  # forward-auth support upstream (seerr-team/seerr #183), so behind the
+  # barrier every login showed Authelia + seerr's own Jellyfin-backed login.
+  # Protection is seerr's own login (Jellyfin credentials / Quick Connect).
   services.nginx.virtualHosts."seerr.home.debling.com.br" =
-    serverUtils.makeNginxAuthProxy config.services.seerr.port;
+    serverUtils.makeNginxLocalProxy config.services.seerr.port;
 
   services.jellyfin = {
     enable = true;

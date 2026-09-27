@@ -183,7 +183,6 @@ in
               "lidarr.home.debling.com.br"
               "prowlarr.home.debling.com.br"
               "bazarr.home.debling.com.br"
-              "seerr.home.debling.com.br"
               "transmission.home.debling.com.br"
               "tdarr.home.debling.com.br"
             ];
