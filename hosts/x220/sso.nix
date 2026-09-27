@@ -175,6 +175,9 @@ in
         default_policy = "deny";
 
         rules = [
+          # NOTE: seerr is intentionally absent — it is served by a plain local
+          # proxy (hosts/x220/arr.nix) because it has no OIDC/forward-auth
+          # support upstream, so the Authelia barrier would double-login.
           {
             domain = [
               "paperless.home.debling.com.br"

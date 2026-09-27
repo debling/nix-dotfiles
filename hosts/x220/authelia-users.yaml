@@ -8,6 +8,6 @@ users:
   vivianedn:
     displayname: "Viviane Diniz Ebling"
     email: "viviane@ebling.com.br"
-    password: $argon2id$v=19$m=65536,t=3,p=4$ZJLIP3FodYZTj6lSjw4ajA$5H5FgjT8XeZ0VOhNQecGtq3aauc6U3+6lw0/BF5IArk
+    password: "$argon2id$v=19$m=65536,t=3,p=4$ZJLIP3FodYZTj6lSjw4ajA$5H5FgjT8XeZ0VOhNQecGtq3aauc6U3+6lw0/BF5IArk"
     groups:
       - admins
