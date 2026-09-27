@@ -2,12 +2,12 @@ users:
   debling:
     displayname: "Denílson Ebling"
     email: "denilson@debling.com.br"
-    password: "$argon2id$v=19$m=65536,t=3,p=4$YqxCy+dnW1iS8udsx21TBg$rN7+OGPlDq2GiVcC2emHiwa2GJcwwv8Jznnv3+d2YBM"
+    password: "$argon2id$v=19$m=65536,t=3,p=4$HPZm5UVV05zUPOPf7r6XBg$bVHJIUWFdJ/AnGyT4ISqfHptjDqMuD/dOjBoO0Q1qxg"
     groups:
       - admins
-  vivianedzn:
+  vivianedn:
     displayname: "Viviane Diniz Ebling"
     email: "viviane@ebling.com.br"
-    password: $argon2id$v=19$m=65536,t=3,p=4$+Iota1Sv7++xiZb06U/vLQ$ejYrkpEktU58+gPMUJskuT1En2jSoeSsSFwfROGLLb8
+    password: $argon2id$v=19$m=65536,t=3,p=4$ZJLIP3FodYZTj6lSjw4ajA$5H5FgjT8XeZ0VOhNQecGtq3aauc6U3+6lw0/BF5IArk
     groups:
       - admins
