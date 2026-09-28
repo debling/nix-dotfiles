@@ -86,6 +86,9 @@ let
 
   # st patch stack (one official patch per file; see each file's header for
   # provenance and any local rebases):
+  # - config-shell (vendored, not upstream): makes the config.def.h `shell`
+  #   authoritative so st execs it instead of the session's $SHELL / passwd
+  #   shell (needed because the login shell is bash, but st should be fish)
   # - anysize: fill the full space allocated by the tiling WM
   # - fontmetrics: cell height + underline/strikethrough geometry from the
   #   font's OS/2 table
@@ -102,6 +105,7 @@ let
     (pkgs.st.override {
       conf = st-conf;
       patches = [
+        ./st-config-shell-0.9.3.diff
         ./st-anysize-20220718-baa9357.diff
         ./st-fontmetrics-0.9.3.diff
         ./st-boxdraw-0.9.3-nixpkgs.diff

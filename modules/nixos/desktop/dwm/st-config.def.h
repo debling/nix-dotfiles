@@ -28,7 +28,13 @@ static float linespacing = 1.0;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static char *shell = "/bin/sh";
+/*
+ * NOTE (vendored st-config-shell-0.9.3.diff): the patch below removes
+ * rules 3 and 4, making the value here authoritative -- st always execs
+ * this shell (fish), regardless of the session's SHELL env or passwd
+ * shell. Without it, the bash login shell would win over this setting.
+ */
+static char *shell = "/run/current-system/sw/bin/fish";
 char *utmp = NULL;
 /* scroll program: to enable use a string like "scroll" */
 char *scroll = NULL;

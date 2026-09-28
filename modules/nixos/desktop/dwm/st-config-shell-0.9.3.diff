@@ -1,0 +1,25 @@
+# Vendored local patch (not upstream): makes the config.def.h `shell`
+# authoritative. st 0.9.3's execsh prefers $SHELL, then the passwd shell,
+# and only falls back to the value from config.h -- so the session's
+# SHELL (the bash login shell) silently overrides whatever
+# st-config.def.h sets. This patch makes st always exec the shell from
+# config.h (fish) regardless of the session environment; see the note
+# added above the `shell` definition in st-config.def.h.
+# Based on st 0.9.3, generated against a pristine st-0.9.3/st.c
+# (`git diff` of execsh's shell-selection lines).
+diff --git a/st.c b/st.c
+index 8e57991..7dd95ee 100644
+--- a/st.c
++++ b/st.c
+@@ -671,8 +671,9 @@ execsh(char *cmd, char **args)
+ 			die("who are you?\n");
+ 	}
+
+-	if ((sh = getenv("SHELL")) == NULL)
+-		sh = (pw->pw_shell[0]) ? pw->pw_shell : cmd;
++	/* config.def.h `shell` is authoritative: st always execs the shell set
++	 * in config.h, ignoring $SHELL and the passwd shell. */
++	sh = cmd;
+
+ 	if (args) {
+ 		prog = args[0];
