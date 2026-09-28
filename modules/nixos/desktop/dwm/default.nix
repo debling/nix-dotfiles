@@ -84,17 +84,43 @@ let
       n: palette.${lib.removePrefix "@" (lib.removeSuffix "@" n)}
     ) placeholders) (builtins.readFile ./st-config.def.h);
 
-  # st with anysize, externalpipe (+ eternal ringbuffer) and newterm:
-  # the vendored combined patch merges the three upstream patches
-  # (st-externalpipe-0.8.5 adds externalpipe; the
-  # st-externalpipe-eternal-ringbuffer-0.9.3 add-on rewrites its output
-  # loop, and needs the whitespace differences vs nixpkgs' 0.9.3 tarball
-  # re-applied; newterm's st.h declaration hunk is repositioned to sit
-  # after externalpipe's declaration)
-  st = pkgs.st.override {
-    conf = st-conf;
-    patches = [ ./st-0.9.3-nixpkgs-combined.diff ];
-  };
+  # st patch stack (one official patch per file; see each file's header for
+  # provenance and any local rebases):
+  # - anysize: fill the full space allocated by the tiling WM
+  # - fontmetrics: cell height + underline/strikethrough geometry from the
+  #   font's OS/2 table
+  # - boxdraw: render lines/blocks/braille for gapless alignment (enabled in
+  #   st-config.def.h)
+  # - newterm: Ctrl+Shift+Return spawns a new st in the current directory.
+  #   Note: the old combined patch carried two extra hunks from the 0.8.5
+  #   variant (OpenBSD-only pledge + a sigchld zombie-reaping tweak made
+  #   redundant by SA_RESTART); the official 0.9 patch omits them.
+  # - open_selected_text: Ctrl+Middle-click opens the selected text with
+  #   xdg-open (zen-beta is the xdg default browser). Replaces the old
+  #   externalpipe/urlopencmd screen-scan flow.
+  st =
+    (pkgs.st.override {
+      conf = st-conf;
+      patches = [
+        ./st-anysize-20220718-baa9357.diff
+        ./st-fontmetrics-0.9.3.diff
+        ./st-boxdraw-0.9.3-nixpkgs.diff
+        ./st-newterm-0.9.diff
+        ./st-open-selected-0.9.2-nixpkgs.diff
+      ];
+    }).overrideAttrs
+      (old: {
+        # nixpkgs st packaging bug (present in the locked rev and still in
+        # master): postPatch concatenates the `cp <conf> config.def.h` fragment
+        # with the `substituteInPlace config.mk ...` fragment without any
+        # separator when `conf` is set, so the shell runs
+        # `cp <conf> config.def.hsubstituteInPlace ...` and fails with
+        # "cp: unrecognized option '--replace-fail'". Restore the missing
+        # newline; becomes a harmless no-op once upstream fixes the recipe.
+        postPatch =
+          lib.replaceStrings [ "config.def.hsubstituteInPlace" ] [ "config.def.h\nsubstituteInPlace" ]
+            old.postPatch;
+      });
 
   # The xinit client: startx brings the X server up (via the NixOS-generated
   # xserverrc) and runs this with DISPLAY set
@@ -172,6 +198,7 @@ in
     brightnessctl # brightness keybinds
     playerctl # media keybinds
     feh # wallpaper setter
+    xdg-utils # xdg-open for st's selopen (Ctrl+Middle-click)
   ]);
 
   # Rofi launcher themed like nix-community/stylix modules/rofi/hm.nix with
@@ -245,7 +272,7 @@ in
       fade = true;
       fadeDelta = 5;
       activeOpacity = 1.0;
-      inactiveOpacity = 0.95;
+      inactiveOpacity = 1.0;
       shadow = true;
       shadowOffsets = [
         (-7)

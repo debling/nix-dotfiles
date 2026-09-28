@@ -8,6 +8,18 @@
 static char *font = "monospace:size=12:antialias=true:autohint=true";
 static int borderpx = 2;
 
+/* "OS/2" OpenType tables give more accurate typographic metrics for some fonts,
+ * which may or may not improve rendering of box-drawing elements.
+ * (fontmetrics patch)
+ */
+static int ignoreOS2metrics = 0;
+
+/* Multiplier applied to the distance between baselines.
+ * Increasing this value can misalign block or line-drawing characters.
+ * (fontmetrics patch)
+ */
+static float linespacing = 1.0;
+
 /*
  * What program is execed by st depends of these precedence rules:
  * 1: program passed with -e
@@ -66,6 +78,18 @@ static unsigned int blinktimeout = 800;
  * thickness of underline and bar cursors
  */
 static unsigned int cursorthickness = 2;
+
+/*
+ * 1: render most of the lines/blocks characters without using the font for
+ *    perfect alignment between cells (U2500 - U259F except dashes/diagonals).
+ *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
+ * 0: disable (render all U25XX glyphs normally from the font).
+ * 1: render braille (U28XX) as adjacent "pixels", 0: use the font.
+ * (boxdraw patch)
+ */
+const int boxdraw = 1;
+const int boxdraw_bold = 1;
+const int boxdraw_braille = 1;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -177,6 +201,7 @@ static uint forcemousemod = ShiftMask;
  */
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
+	{ ControlMask,          Button2, selopen,        {.i = 0},      1 },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
@@ -188,11 +213,9 @@ static MouseShortcut mshortcuts[] = {
 #define MODKEY Mod1Mask
 #define TERMMOD (ControlMask|ShiftMask)
 
-/* externalpipe: pipe the visible screen + scrollback through dmenu and
- * open the picked URL in the browser */
-static const char *urlopencmd[] = { "/bin/sh", "-c",
-	"grep -aEo 'https?://[a-zA-Z0-9./?=_%:&#~+-]+' | rofi -dmenu -i -l 10 | xargs -r -n1 zen-beta",
-	NULL };
+/* Internal keyboard shortcuts. */
+#define MODKEY Mod1Mask
+#define TERMMOD (ControlMask|ShiftMask)
 
 static Shortcut shortcuts[] = {
 	/* mask                 keysym          function        argument */
@@ -209,7 +232,6 @@ static Shortcut shortcuts[] = {
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
 	{ TERMMOD,              XK_Return,      newterm,        {.i =  0} },
-	{ TERMMOD,              XK_O,           externalpipe,   {.v = urlopencmd } },
 };
 
 /*

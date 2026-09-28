@@ -136,6 +136,8 @@ in
 
       tuicr
       devenv
+
+      scrcpy # mirror/control avd running headless on ryzen
     ];
 
     sessionPath = [
@@ -320,6 +322,9 @@ in
             "3000 127.0.0.1:3000"
             "8025 127.0.0.1:8025"
             "5000 127.0.0.1:5000"
+            # avd on ryzen (headless emulator)
+            "5555 127.0.0.1:5555"
+            "5554 127.0.0.1:5554"
           ];
         };
       };
