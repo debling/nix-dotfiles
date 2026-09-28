@@ -406,6 +406,13 @@ in
       enable = true;
       interactiveShellInit = ''
         set fish_greeting # Disable greeting
+        # devenv auto-activation on cd into devenv projects (devenv 2.x
+        # native hook, not direnv). devenv's Nix package only ships fish
+        # completions, so the hook must be sourced explicitly; per-project
+        # trust is granted with `devenv allow`.
+        if type -q devenv
+          devenv hook fish | source
+        end
       '';
       plugins = [
         {
