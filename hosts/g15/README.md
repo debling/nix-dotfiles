@@ -25,7 +25,10 @@ Configuration: `nixosConfigurations.g15` in `flake.nix` → `hosts/g15/`.
 
 ## Install
 
-Run from the repo root (this worktree path or `main` after merging):
+Run from the **main checkout** (merge the `g15` branch first), not from this
+worktree: this machine's Nix cannot evaluate flakes inside linked worktrees
+(`git worktree`) — it fails with `getting Git object … object not found
+(libgit2 error code = 9)`. Alternatively pass a git URL instead of `.#g15`:
 
 ```sh
 # LUKS passphrase for the fresh install (used by disko/--disk-encryption-keys)
@@ -49,5 +52,8 @@ from the target machine, so remember to commit it after a successful install.
 - Verify the config evaluates from the repo before installing:
 
   ```sh
-  nix build .#nixosConfigurations.g15.config.system.build.toplevel --no-link
+  nix build --no-write-lock-file \
+    'git+file:///home/debling/Workspace/debling/nix-dotfiles?ref=g15&shallow=1#nixosConfigurations.g15.config.system.build.toplevel' --no-link
   ```
+
+  (From a normal checkout `nix build .#nixosConfigurations.g15.config.system.build.toplevel --no-link` works the same.)
