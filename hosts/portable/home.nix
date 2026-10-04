@@ -90,7 +90,6 @@
       timewarrior
 
       # vagrant
-      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
       # https://github.com/mic92/nix-update
       # nix-init # https://github.com/nix-community/nix-init
       oha # HTTP load generator https://github.com/hatoo/oha

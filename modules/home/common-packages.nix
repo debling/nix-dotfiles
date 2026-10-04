@@ -208,8 +208,6 @@ in
       };
     };
 
-    htop.enable = true;
-
     taskwarrior = {
       enable = true;
       colorTheme = "dark-16";
@@ -400,8 +398,6 @@ in
   };
 
   programs = {
-    nushell.enable = true;
-
     fish = {
       enable = true;
       interactiveShellInit = ''

@@ -67,17 +67,13 @@
       # unrar
       postgresql_17
 
-      taskwarrior-tui
-      timewarrior
+      timewarrior 
 
       # vagrant
-      ouch # Painless compression and decompression for your terminal https://github.com/ouch-org/ouch
       # https://github.com/mic92/nix-update
       # nix-init # https://github.com/nix-community/nix-init
       oha # HTTP load generator https://github.com/hatoo/oha
 
-      trivy
-      cht-sh # https://github.com/chubin/cheat.sh
       # nix-du
 
       # https://magic-wormhole.readthedocs.io/en/latest/welcome.html#example
