@@ -1,11 +1,12 @@
 # Smart external-display + laptop-lid behavior for g15 (X11 + dwm), cloned
 # from x1-carbon.
 #
-# TODO for g15: the EDIDs/fingerprints below are the x1-carbon panel and the
-# LG UltraWide. Replace them for the G15's internal panel and any external
-# display actually used (connect the display, `autorandr --fingerprint`).
-# Until then unknown displays fall back to the `laptop-only` defaultTarget,
-# which is safe but assumes the x1-carbon internal EDID matches.
+# The eDP-1 fingerprint below is the g15's own internal panel. The external
+# (HDMI) fingerprint is the LG UltraWide from x1-carbon — the same monitor,
+# but since HDMI is wired to the NVIDIA dGPU here, verify the X output name
+# post-install with `xrandr` (with the nvidia driver it may show as
+# `HDMI-1-0`) and regenerate/adjust fingerprints with `autorandr
+# --fingerprint` once connected.
 #
 # Desired behavior:
 #   no HDMI + lid open    -> laptop-only (internal eDP-1 only)
@@ -51,15 +52,17 @@ let
   internal = "eDP-1";
   external = "HDMI-1";
 
-  # Fingerprints discovered on x1-carbon (do not guess these):
-  # - eDP-1: full EDID from `xrandr --verbose` (AUO B140HAN03.2, 1920x1080).
-  # - HDMI-1: full 256-byte EDID (base + CEA extension) reconstructed from the
-  #   Xorg log's EDID dump for the connected LG UltraWide (GSM 7714, 2022,
-  #   2560x1080, 80x34cm) at ~/.local/share/xorg/Xorg.0.log. Verify with
-  #   `autorandr --fingerprint` while the display is connected.
   edid = {
+    # Internal panel of the g15: BOE (8FNMF80) B156HAN, 1920x1080. Captured
+    # from /sys/class/drm/card1-eDP-1/edid on the factory Manjaro install
+    # before it was wiped.
     "eDP-1" =
-      "00ffffffffffff0006af3d3100000000001a0104a51f1178028d15a156529d280a505400000001010101010101010101010101010101143780b87038244010103e0035ae100000180000000f0000000000000000000000000020000000fe0041554f0a202020202020202020000000fe004231343048414e30332e31200a003b";
+      "00ffffffffffff0006af8fed00000000261d0104a5221378033e8591565991281f505400000001010101010101010101010101010101546f809c70383e406c30aa0058c11000001a000000fd0030788a8a1d010a202020202020000000fe0038464e4d46804231353648414e000000000002412d99001100000b010a202001777013790000030114dc3700047f079f006b002f0037043d000200040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000890";
+    # LG UltraWide (GSM 7714, 2560x1080) fingerprint from x1-carbon; the same
+    # monitor is expected on the g15. NOTE: on this machine HDMI-A-1 is wired
+    # to the NVIDIA dGPU (card0), so with the nvidia driver the X output name
+    # may become `HDMI-1-0` — confirm with `xrandr` post-install and rename
+    # the outputs below if so.
     "HDMI-1" =
       "00ffffffffffff001e6d1477847305000a20010380502278eaca95a6554ea1260f5054256b807140818081c0a9c0b300d1c08100d1cfcd4600a0a0381f4030203a001e4e3100001a023a801871382d40582c45001e4e3100001e000000fd00384b1e5a19000a202020202020000000fc004c472048445220574648440a20010a020337f1230907074c100403011f1359da125d5e5f830100006d030c002000b83c20006001020367d85dc4013c8000e305c000e3060501295900a0a038274030203a001e4e3100001a565e00a0a0a02950302035001e4e3100001a000000ff00323130415a4a5441483235320a00000000000000000000000000000000000074";
   };

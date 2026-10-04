@@ -1,15 +1,12 @@
-# Disko layout for g15 (cloned from x1-carbon).
-#
-# TODO before install: set `device` to the actual disk of the Dell G15. The
-# x1-carbon by-id path below is only a placeholder; find the target with
-# `ls -l /dev/disk/by-id/` (or let nixos-anywhere regenerate the config).
+# Disko layout for g15 (cloned from x1-carbon, device set for the Dell G15's
+# single NVMe; verify with `ls -l /dev/disk/by-id/`).
 {
   disko.devices = {
     disk = {
       nvme0 = {
         # NOTE: disko-install overwrites this value from the commandline when
-        # used directly; nixos-anywhere reads it verbatim, so confirm it first.
-        device = "/dev/disk/by-id/nvme-INTEL_SSDPEKKF256G8L_BTHH8455096S256B:0";
+        # used directly; nixos-anywhere reads it verbatim.
+        device = "/dev/disk/by-id/nvme-SM2P41C3_NVMe_ADATA_512GB_KO07291HDJHR";
         type = "disk";
         content = {
           type = "gpt";

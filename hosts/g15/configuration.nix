@@ -2,12 +2,15 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 #
-# Dell G15: cloned from hosts/x1-carbon. Hardware-specific items still to
-# confirm before/at install:
+# Dell G15 5530: cloned from hosts/x1-carbon.
+# Hardware specifics filled in from the machine itself (i5-13450HX, Intel UHD +
+# RTX 3050 hybrid, ADATA NVMe, BOE 1920x1080 panel); see ./displays.nix and
+# ./disko.nix. Still open:
 #   * ./facter.json is the x1-carbon report as a placeholder; nixos-anywhere
-#     regenerates it (`--generate-hardware-config nixos-facter ./hosts/g15/facter.json`).
-#   * ./disko.nix disk device + LUKS name.
-#   * ./displays.nix autorandr EDIDs/fingerprints (x1-carbon panel + LG monitor).
+#     regenerates it (`--generate-hardware-config nixos-facter
+#     ./hosts/g15/facter.json`) — commit the regenerated file post-install.
+#   * HDMI output name under the nvidia driver (maybe `HDMI-1-0`) — confirm
+#     with `xrandr` post-install and update ./displays.nix if needed.
 
 {
   lib,
@@ -44,6 +47,29 @@
     "widget.gtk.libadwaita-colors.enabled" = false;
   };
   hardware.facter.reportPath = ./facter.json;
+
+  # Hybrid graphics (Dell G15 5530): Intel UHD (Raptor Lake) drives the
+  # internal panel; the RTX 3050 6GB Laptop GPU is used on demand. The HDMI
+  # port is wired to the NVIDIA card, so the nvidia driver is required for
+  # external displays.
+  services.xserver.videoDrivers = [ "nvidia" ];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    # Rough + finegrained power management keep the dGPU off when idle on
+    # battery (finegrained implies hardware.nvidia.powerManagement.enable).
+    powerManagement.finegrained = true;
+
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      # from `cat /sys/bus/pci/devices/*/device | head` (iGPU 00:02.0, dGPU 01:00.0)
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
+  };
 
   networking.firewall.allowedTCPPorts = [
     5555 # Common port for ADB over Wi-Fi
