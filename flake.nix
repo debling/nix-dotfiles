@@ -224,6 +224,27 @@
         ];
       };
 
+      # Dell G15: cloned from x1-carbon; hardware-specific bits (facter report,
+      # disko device, display fingerprints) need to be regenerated/confirmed
+      # before installing. See hosts/g15/README.md.
+      nixosConfigurations.g15 = nixpkgs.lib.nixosSystem {
+        system = flake-utils.lib.system.x86_64-linux;
+        specialArgs = specialArgs;
+        modules = [
+          inputs.disko.nixosModules.disko
+          ./hosts/g15/disko.nix
+
+          ./hosts/g15/configuration.nix
+
+          home-manager.nixosModules.home-manager
+
+          {
+            nixpkgs = nixpkgsConfig;
+            home-manager = homeManagerConfiguration;
+          }
+        ];
+      };
+
       nixosConfigurations.ryzen = nixpkgs.lib.nixosSystem {
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
