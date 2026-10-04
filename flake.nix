@@ -16,7 +16,7 @@
 
     agenix.url = "github:ryantm/agenix";
 
-    nix-penpot.url = "path:/home/debling/Workspace/debling/nix-penpot";
+    nix-penpot.url = "github:debling/nix-penpot";
 
     # Environment/system management
     darwin = {

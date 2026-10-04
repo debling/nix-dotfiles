@@ -597,14 +597,17 @@
         "penpot-files": "penpot-files"
       },
       "locked": {
-        "lastModified": 1789699162,
-        "narHash": "sha256-X+BgaVmcDzuay4sh1gnpw0o8BOVet5+E7AMsu0wvsPo=",
-        "path": "/home/debling/Workspace/debling/nix-penpot",
-        "type": "path"
+        "lastModified": 1791070640,
+        "narHash": "sha256-jtS/uZlL3ghkZBuD6xAcq0E6jWlIISGB+3dPI2ZF/88=",
+        "owner": "debling",
+        "repo": "nix-penpot",
+        "rev": "c38a872417e0a701923cf83192c3eabb8e3fe33f",
+        "type": "github"
       },
       "original": {
-        "path": "/home/debling/Workspace/debling/nix-penpot",
-        "type": "path"
+        "owner": "debling",
+        "repo": "nix-penpot",
+        "type": "github"
       }
     },
     "nixpkgs": {
