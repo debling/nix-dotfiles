@@ -56,6 +56,9 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
+    # Drivers >= 560 require an explicit choice; RTX 3050 is Ampere (Turing+),
+    # so the open source kernel modules are the recommended pick.
+    open = true;
     # Rough + finegrained power management keep the dGPU off when idle on
     # battery (finegrained implies hardware.nvidia.powerManagement.enable).
     powerManagement.finegrained = true;
