@@ -34,6 +34,7 @@ in
     ./onlyoffice.nix
     ./forgejo.nix
     ./networking.nix
+    ./netboot.nix
   ];
 
   documentation.enable = false;
