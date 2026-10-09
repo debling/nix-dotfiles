@@ -30,22 +30,11 @@
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
-    # ../../modules/nixos/desktop/river.nix
     ../../modules/nixos/desktop/dwm
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
-  # COSMIC was removed; the dwm module now brings greetd with an
-  # initial_session so the machine boots straight into dwm (autologin),
-  # falling back to a tuigreet picker after logout.
-  # services.desktopManager.cosmic.enable = true;
-  # environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
-  #services.system76-scheduler.enable = true;
 
-  programs.firefox.preferences = {
-    # disable libadwaita theming for Firefox
-    "widget.gtk.libadwaita-colors.enabled" = false;
-  };
   hardware.facter.reportPath = ./facter.json;
 
   # Hybrid graphics (Dell G15 5530): Intel UHD (Raptor Lake) drives the
@@ -56,11 +45,8 @@
 
   hardware.nvidia = {
     modesetting.enable = true;
-    # Drivers >= 560 require an explicit choice; RTX 3050 is Ampere (Turing+),
-    # so the open source kernel modules are the recommended pick.
     open = true;
-    # Rough + finegrained power management keep the dGPU off when idle on
-    # battery (finegrained implies hardware.nvidia.powerManagement.enable).
+    powerManagement.enable = true;
     powerManagement.finegrained = true;
 
     prime = {
@@ -201,10 +187,6 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "24.11"; # Did you read the comment?
-
-  # Lid/display policy lives in ./displays.nix (logind suspend rules,
-  # autorandr profiles, lid + hotplug triggers).
-  services.fprintd.enable = true;
 
   programs.kdeconnect.enable = true;
 }
