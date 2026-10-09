@@ -10,6 +10,31 @@ let
   routerIp = "10.0.0.1";
   domain = "home.debling.com.br";
 
+  # Service names in this LAN domain. DNS records are generated explicitly
+  # from this list — there is no wildcard fallback, so unknown names
+  # (foo.home.debling.com.br) return NXDOMAIN. Adding a service here is
+  # required for it to resolve.
+  lanServices = [
+    "grafana"
+    "authelia"
+    "penpot"
+    "nextcloud"
+    "forgejo"
+    "paperless"
+    "office"
+    "jellyfin"
+    "seerr"
+    "transmission"
+    "tdarr"
+    "sonarr"
+    "prowlarr"
+    "radarr"
+    "lidarr"
+    "bazarr"
+    "otlp"
+    "assistant"
+  ];
+
   dhcp-event-hook = pkgs.buildGoModule {
     pname = "dhcp-event-hook";
     version = "0.1.0";
@@ -77,6 +102,11 @@ in
       ];
       domain = domain;
       local = "/${domain}/";
+      # Stop dnsmasq from serving x220's own /etc/hosts (which maps
+      # 127.0.0.1 to "x220") to the whole LAN, poisoning
+      # x220.home.debling.com.br for remote clients (e.g. ryzen's alloy
+      # remote_write). x220 itself still resolves it locally via NSS.
+      no-hosts = true;
       expand-hosts = true;
       dhcp-authoritative = true;
       log-dhcp = true;
@@ -93,12 +123,11 @@ in
         "30:9c:23:02:e9:b6,10.0.10.2,ryzen"
       ];
 
-      address = "/home.debling.com.br/${myIp}";
-
       host-record = [
-        "x220,${myIp}"
-        "router,${routerIp}"
-      ];
+        "router.${domain},${routerIp}"
+        "${domain},${myIp}" # apex (homepage)
+      ]
+      ++ map (s: "${s}.${domain},${myIp}") lanServices;
 
       #dhcp-script = "${dhcp-event-hook}/bin/dhcp-event-hook";
       #script-arp = true;

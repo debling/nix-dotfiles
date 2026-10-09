@@ -118,6 +118,11 @@ in
     certs."home.debling.com.br" = {
       dnsProvider = "hostinger";
       environmentFile = config.age.secrets.acme_hostinger.path;
+      # lego's propagation check must query the authoritative NS
+      # (ns{1,2}.dns-parking.com). Querying the local resolver
+      # (127.0.0.1: blocky->dnsmasq) never returns the TXT record and
+      # every renewal times out.
+      dnsResolver = "162.159.24.201:53,162.159.25.42:53";
       extraDomainNames = [ "*.home.debling.com.br" ];
       group = config.services.nginx.group;
     };
