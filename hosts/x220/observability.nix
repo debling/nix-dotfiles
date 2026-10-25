@@ -19,6 +19,15 @@ let
     alloyOTLPHttp = 4318; # OTLP HTTP receiver
   };
 
+  # Grafana 13.2 upstream stopped bundling the datasource plugin definitions
+  # (prometheus/loki/postgres vanish -> every dashboard shows "Datasource
+  # not found"). Stay on 13.1.4 from the proven Sep-5 snapshot until nixpkgs
+  # ships a fixed grafana build.
+  grafana13_1 = import (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/0af3d1402dec3fc7e93635e511d1f7428c89cebf.tar.gz";
+    sha256 = "sha256-RqeFOwW329f4i1f5QlJgQYwgEZvxIHJsUYlzIBxsKsY=";
+  }) { system = pkgs.system; };
+
 in
 {
   age.secrets.grafana-oidc.file = ../../secrets/grafana-oidc.age;
@@ -31,6 +40,8 @@ in
 
   services.grafana = {
     enable = true;
+    # See grafana13_1 note above.
+    package = grafana13_1.grafana;
     declarativePlugins = with pkgs.grafanaPlugins; [
       grafana-piechart-panel
     ];
