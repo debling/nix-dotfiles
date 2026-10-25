@@ -42,6 +42,14 @@ in
       };
       panels.disable_sanitize_html = true;
       auth.disable_login_form = true;
+      # Read-only anonymous access so the wall kiosk (see kiosk.nix) needs no
+      # login. Interactive users still get Authelia OIDC via generic_oauth.
+      "auth.anonymous" = {
+        enabled = true;
+        org_name = "Main Org.";
+        org_role = "Viewer";
+        hide_version = true;
+      };
       "auth.generic_oauth" = {
         enabled = true;
         name = "Authelia";

@@ -29,6 +29,7 @@ in
     ./home-assistant.nix
     ./speedtest.nix
     ./observability.nix
+    ./kiosk.nix
     ./paperless.nix
     ./penpot.nix
     # ./onlyoffice.nix
