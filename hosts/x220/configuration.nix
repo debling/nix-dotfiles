@@ -24,6 +24,7 @@ in
     ./serverUtils.nix
     ./arr.nix
     #./samba.nix
+    ./samba.nix
     ./sso.nix
     ./home-assistant.nix
     ./speedtest.nix
@@ -31,7 +32,6 @@ in
     ./paperless.nix
     ./penpot.nix
     # ./onlyoffice.nix
-    ./onlyoffice.nix
     ./forgejo.nix
     ./networking.nix
     ./netboot.nix
@@ -139,7 +139,7 @@ in
     recommendedBrotliSettings = true;
     virtualHosts.${myIp}.locations = {
       "/" = {
-        proxyPass = "http://127.0.0.1:8096"; # jellyfin
+        proxyPass = "http://10.0.10.2:8096"; # jellyfin (on ryzen)
       };
 
       "/blocky/" = {
@@ -304,37 +304,37 @@ in
     forceSSL = true;
     useACMEHost = "home.debling.com.br";
   };
-  services.nextcloud = {
-    enable = true;
-    hostName = "nextcloud.home.debling.com.br";
-    https = true;
-    configureRedis = true;
-    config = {
-      dbtype = "pgsql";
-      dbhost = "127.0.0.1";
-      dbname = "nextcloud";
-      dbuser = "nextcloud";
-      adminpassFile = "/etc/nextcloud-admin-pass";
-      adminuser = "admin";
-    };
-    extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps)
-        contacts
-        calendar
-        tasks
-        mail
-        forms
-        tables
-        whiteboard
-        onlyoffice
-        notes
-        user_oidc
-        ;
-    };
-    extraAppsEnable = true;
+  # services.nextcloud = {
+  #   enable = true;
+  #   hostName = "nextcloud.home.debling.com.br";
+  #   https = true;
+  #   configureRedis = true;
+  #   config = {
+  #     dbtype = "pgsql";
+  #     dbhost = "127.0.0.1";
+  #     dbname = "nextcloud";
+  #     dbuser = "nextcloud";
+  #     adminpassFile = "/etc/nextcloud-admin-pass";
+  #     adminuser = "admin";
+  #   };
+  #   extraApps = {
+  #     inherit (config.services.nextcloud.package.packages.apps)
+  #       contacts
+  #       calendar
+  #       tasks
+  #       mail
+  #       forms
+  #       tables
+  #       whiteboard
+  #       onlyoffice
+  #       notes
+  #       user_oidc
+  #       ;
+  #   };
+  #   extraAppsEnable = true;
 
-    package = pkgs.nextcloud33;
-  };
+  #   package = pkgs.nextcloud33;
+  # };
 
   environment.etc."nextcloud-admin-pass".text = "changeme";
 
@@ -502,10 +502,17 @@ in
     enable = true;
     useRoutingFeatures = "server";
     openFirewall = true;
+    # Subnet router for the whole LAN so tailscale peers can reach devices
+    # that are not in the tailnet even when those machines' tailscale is
+    # off (e.g. ryzen's 10.0.10.2, or IoT stuff).
+    # CAUTION: any LAN node that accepts this route tunnels its own LAN
+    # traffic through tailscale0 → replies blackhole (broke jellyfin
+    # upstreaming on 2026-10-21). LAN nodes must set
+    # tailscale --accept-routes=false (see ryzen's configuration.nix).
     extraUpFlags = [
       "--advertise-exit-node"
-      "--advertise-routes=10.0.10.1/32"
       "--accept-dns=false"
+      "--advertise-routes=10.0.10.0/24"
     ];
   };
 }

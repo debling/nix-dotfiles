@@ -35,7 +35,12 @@ in
     extraOptions = [ "--network=host" "--shm-size=2g" ];
   };
 
-  users.groups.media = { };
+  # Fixed gid: the ryzen CIFS mount (hosts/ryzen/media-share.nix) maps the
+  # share onto this group, and macOS's fruit/streams_xattr persists
+  # numeric uid/gid into the files' xattrs, so the numbers must be stable.
+  users.groups.media = {
+    gid = 1200;
+  };
   services.transmission = {
     enable = true;
     group = "media";
@@ -105,57 +110,15 @@ in
   services.nginx.virtualHosts."seerr.home.debling.com.br" =
     serverUtils.makeNginxLocalProxy config.services.seerr.port;
 
-  services.jellyfin = {
-    enable = true;
-    group = "media";
-    hardwareAcceleration = {
-      enable = true;
-      type = "vaapi";
-      device = "/dev/dri/renderD12";
-    };
-  };
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-  };
-
-  environment.systemPackages = [
-    pkgs.jellyfin
-    pkgs.jellyfin-web
-    pkgs.jellyfin-ffmpeg
-  ];
-
+  # NOTE: Jellyfin moved to the ryzen host (See hosts/ryzen/jellyfin.nix).
+  # x220 remains the ingress: nginx proxies jellyfin.home.debling.com.br to
+  # ryzen:8096, DNS still points the hostname here, and authelia's OIDC
+  # "jellyfin" client registration is unchanged (hosts/x220/sso.nix).
   services.nginx.virtualHosts."jellyfin.home.debling.com.br" = {
     forceSSL = true;
     useACMEHost = "home.debling.com.br";
     locations."/" = {
-      proxyPass = "http://127.0.0.1:8096";
-    };
-  };
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-vaapi-driver
-      libva-utils
-    ];
-  };
-  users.users.jellyfin.extraGroups = [ "video"  "render" ];
-
-
-  services.nginx.virtualHosts."tdarr.home.debling.com.br" =
-    serverUtils.makeNginxAuthProxy config.services.tdarr.server.webUIPort;
-
-  services.tdarr = {
-    enable = true;
-    group =  "media";
-
-    nodes.main = {
-      workers = {
-        transcodeCPU = 1;
-        transcodeGPU = 0;
-        healthcheckCPU = 1;
-        healthcheckGPU = 0;
-      };
+      proxyPass = "http://10.0.10.2:8096"; # ryzen
     };
   };
 

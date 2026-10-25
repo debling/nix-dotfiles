@@ -17,6 +17,8 @@
     ../../modules/common/nix.nix
     ./alloy.nix
     ./steam-headless.nix
+    ./jellyfin.nix
+    ./media-share.nix
   ];
   programs.mosh.enable = true;
   programs.mosh.openFirewall = true;
@@ -25,6 +27,13 @@
   home-manager.users.${mainUser} = import ./home.nix;
 
   hardware.facter.reportPath = ./facter.json;
+
+  # Deployments (nixos-rebuild --target-host root@ryzen) authenticate with
+  # the same key pair — the co-change to keep deploy access working across
+  # fresh installs.
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFJdyN9ifYpEHZI2jXe7YYKVfNQMuAmofsgg7Txf3YSq d.ebling8@gmail.com"
+  ];
 
   zramSwap = {
     enable = true;
@@ -53,6 +62,12 @@
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "client";
+    # x220 advertises 10.0.10.0/24 (subnet router). Accepting it here would
+    # route LAN traffic into tailscale0 and blackhole the direct
+    # x220→ryzen path — jellyfin hung with "upstream timed out" on
+    # 2026-10-21 because of exactly that. ryzen is physically on the
+    # LAN; it never needs a peer's subnet routes.
+    extraUpFlags = [ "--accept-routes=false" ];
   };
 
   boot = {

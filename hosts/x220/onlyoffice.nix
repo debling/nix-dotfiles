@@ -16,7 +16,7 @@
     mode = "0440";
   };
 
-  users.users.nextcloud.extraGroups = [ "onlyoffice" ];
+  # users.users.nextcloud.extraGroups = [ "onlyoffice" ];
   users.users.nginx.extraGroups = [ "onlyoffice" ];
 
   services.onlyoffice = {

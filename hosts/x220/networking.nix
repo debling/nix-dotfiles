@@ -25,7 +25,6 @@ let
     "jellyfin"
     "seerr"
     "transmission"
-    "tdarr"
     "sonarr"
     "prowlarr"
     "radarr"
@@ -33,6 +32,9 @@ let
     "bazarr"
     "otlp"
     "assistant"
+    # not a web service but used as the CIFS share host for
+    # //x220.home.debling.com.br/media (hosts/ryzen/media-share.nix)
+    "x220"
   ];
 
   dhcp-event-hook = pkgs.buildGoModule {

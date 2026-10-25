@@ -1,100 +1,18 @@
 {
   config,
-  pkgs,
   ...
 }:
+
 let
   portalDomain = "authelia.home.debling.com.br";
 in
 {
-  age.secrets.jellyfin-sso.file = ../../secrets/jellyfin-sso.age;
+  # NOTE:
+  # The Jellyfin SSO plugin deployment moved to modules/nixos/jellyfin-sso.nix
+  # (host-agnostic — Jellyfin itself moved to ryzen, reverse-proxied by the
+  # x220 nginx). The "jellyfin" OIDC *client* registration further below
+  # stays: the public URL https://jellyfin.home.debling.com.br is unchanged.
 
-  systemd.services.jellyfin = {
-    serviceConfig.EnvironmentFile = config.age.secrets.jellyfin-sso.path;
-
-    preStart =
-      let
-        plugin = pkgs.stdenv.mkDerivation {
-          pname = "jellyfin-plugin-sso";
-          version = "4.3.0.61";
-          src = pkgs.fetchurl {
-            url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/4.3.0-beta.61/community-sso-for-jellyfin_4.3.0.61.zip";
-            hash = "sha256-h7JkOorDHq01Yt/Am7q8K7gulvJJsTh/FcSxskmYoKo=";
-          };
-          nativeBuildInputs = [ pkgs.unzip ];
-          buildCommand = ''
-            mkdir -p $out
-            unzip -q $src -d $out
-          '';
-        };
-        pluginConfig = pkgs.writeText "SSO-Auth-template.xml" ''
-          <?xml version="1.0" encoding="utf-8"?>
-          <PluginConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-            <SamlConfigs />
-            <OidConfigs>
-              <item>
-                <key>
-                  <string>authelia</string>
-                </key>
-                <value>
-                  <PluginConfiguration>
-                    <OidEndpoint>https://authelia.home.debling.com.br</OidEndpoint>
-                    <OidClientId>jellyfin</OidClientId>
-                    <OidSecret>@OID_SECRET@</OidSecret>
-                    <Enabled>true</Enabled>
-                    <EnableAuthorization>true</EnableAuthorization>
-                    <EnableAllFolders>true</EnableAllFolders>
-                    <EnabledFolders />
-                    <AllowExistingAccountLink>true</AllowExistingAccountLink>
-                    <AdminRoles>
-                      <string>admins</string>
-                    </AdminRoles>
-                    <Roles>
-                      <string>admins</string>
-                    </Roles>
-                    <EnableFolderRoles>false</EnableFolderRoles>
-                    <EnableLiveTvRoles>false</EnableLiveTvRoles>
-                    <EnableLiveTv>false</EnableLiveTv>
-                    <EnableLiveTvManagement>false</EnableLiveTvManagement>
-                    <LiveTvRoles />
-                    <LiveTvManagementRoles />
-                    <FolderRoleMappings />
-                    <RoleClaim>groups</RoleClaim>
-                    <OidScopes>
-                      <string>groups</string>
-                    </OidScopes>
-                    <CanonicalLinks />
-                    <DisableHttps>false</DisableHttps>
-                    <DoNotValidateEndpoints>false</DoNotValidateEndpoints>
-                    <DoNotValidateIssuerName>false</DoNotValidateIssuerName>
-                    <AllowPrivateNetworkAddresses>true</AllowPrivateNetworkAddresses>
-                    <DisablePushedAuthorization>true</DisablePushedAuthorization>
-                    <SchemeOverride>https</SchemeOverride>
-                  </PluginConfiguration>
-                </value>
-              </item>
-            </OidConfigs>
-            <ProvisioningProfiles />
-            <EnableRateLimit>false</EnableRateLimit>
-            <RateLimitMaxAttempts>30</RateLimitMaxAttempts>
-            <RateLimitWindowSeconds>60</RateLimitWindowSeconds>
-            <ManageLoginPageButtons>true</ManageLoginPageButtons>
-            <EnableSingleLogout>false</EnableSingleLogout>
-            <DisablePasswordLogin>false</DisablePasswordLogin>
-            <SsoOnlyRepointedUserIds />
-            <LogoutSessions />
-          </PluginConfiguration>
-        '';
-        jellyfinDataDir = config.services.jellyfin.dataDir;
-      in
-      ''
-        install -d "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61"
-        cp -rf ${plugin}/. "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61/"
-        chmod -R u+w "${jellyfinDataDir}/plugins/SSO-Auth_4.3.0.61/"
-        install -d "${jellyfinDataDir}/plugins/configurations"
-        sed "s|@OID_SECRET@|$JELLYFIN_OID_SECRET|" ${pluginConfig} > "${jellyfinDataDir}/plugins/configurations/SSO-Auth.xml"
-      '';
-  };
   age.secrets.authelia-jwt = {
     file = ../../secrets/authelia-jwt.age;
     owner = "authelia-main";
@@ -383,31 +301,31 @@ in
 
   age.secrets.nextcloud-oidc.file = ../../secrets/nextcloud-oidc.age;
 
-  systemd.services.nextcloud-oidc-setup = {
-    requires = [ "nextcloud-setup.service" ];
-    after = [ "nextcloud-setup.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      User = "nextcloud";
-      LoadCredential = [
-        "nextcloud-oidc:${config.age.secrets.nextcloud-oidc.path}"
-      ];
-    };
-    script = ''
-      ${config.services.nextcloud.occ}/bin/nextcloud-occ config:system:set allow_local_remote_servers --value=true --type=boolean
-      ${config.services.nextcloud.occ}/bin/nextcloud-occ user_oidc:provider authelia \
-        --clientid="nextcloud" \
-        --clientsecret-file="$CREDENTIALS_DIRECTORY/nextcloud-oidc" \
-        --discoveryuri="https://authelia.home.debling.com.br/.well-known/openid-configuration" \
-        --scope="openid profile email groups" \
-        --mapping-uid="preferred_username" \
-        --mapping-display-name="name" \
-        --mapping-email="email" \
-        --unique-uid=0 \
-        --check-bearer=0
-      echo yes | ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set --value 0 --lazy user_oidc allow_multiple_user_backends
-    '';
-  };
+#  systemd.services.nextcloud-oidc-setup = {
+#    requires = [ "nextcloud-setup.service" ];
+#    after = [ "nextcloud-setup.service" ];
+#    wantedBy = [ "multi-user.target" ];
+#    serviceConfig = {
+#      Type = "oneshot";
+#      RemainAfterExit = true;
+#      User = "nextcloud";
+#      LoadCredential = [
+#        "nextcloud-oidc:${config.age.secrets.nextcloud-oidc.path}"
+#      ];
+#    };
+#    script = ''
+#      ${config.services.nextcloud.occ}/bin/nextcloud-occ config:system:set allow_local_remote_servers --value=true --type=boolean
+#      ${config.services.nextcloud.occ}/bin/nextcloud-occ user_oidc:provider authelia \
+#        --clientid="nextcloud" \
+#        --clientsecret-file="$CREDENTIALS_DIRECTORY/nextcloud-oidc" \
+#        --discoveryuri="https://authelia.home.debling.com.br/.well-known/openid-configuration" \
+#        --scope="openid profile email groups" \
+#        --mapping-uid="preferred_username" \
+#        --mapping-display-name="name" \
+#        --mapping-email="email" \
+#        --unique-uid=0 \
+#        --check-bearer=0
+#      echo yes | ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set --value 0 --lazy user_oidc allow_multiple_user_backends
+#    '';
+#  };
 }

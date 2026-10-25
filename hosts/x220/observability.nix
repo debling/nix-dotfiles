@@ -261,7 +261,13 @@ in
   };
 
   services.nginx.virtualHosts."otlp.home.debling.com.br" = {
-    enableACME = true;
+    # NOTE: use the wildcard cert, not enableACME: HTTP-01 requires a
+    # publicly resolvable DNS record and otlp.home... only resolves in the
+    # LAN via dnsmasq — a separate HTTP-01 lego run failed with NXDOMAIN
+    # every 15 minutes, wedging every nixos-rebuild switch with exit 4.
+    # The wildcard (home.debling.com.br) is renewed via DNS-01 (hostinger),
+    # which needs no A records, and covers this subdomain.
+    useACMEHost = "home.debling.com.br";
     forceSSL = true;
     http2 = true;
 

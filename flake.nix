@@ -249,6 +249,7 @@
         system = flake-utils.lib.system.x86_64-linux;
         specialArgs = specialArgs;
         modules = [
+          inputs.agenix.nixosModules.default
           inputs.disko.nixosModules.disko
           ./hosts/ryzen/disko.nix
           ./hosts/ryzen/configuration.nix

@@ -2,10 +2,16 @@
 
 {
   # 1. Create the dedicated netshare user
+  #
+  # netshare is the machine account for local-network service mounts — the
+  # ryzen CIFS mount of the media library (hosts/ryzen/media-share.nix)
+  # connects with its agenix-protected credential. It gets read access to
+  # /srv/media via the media group.
   users.users.netshare = {
     isSystemUser = true;
     group = "netshare";
     description = "Dedicated network share user";
+    extraGroups = [ "media" ];
   };
   users.groups.netshare = { };
 
@@ -33,10 +39,13 @@
         "workgroup" = "WORKGROUP";
         "server string" = "NixOS-HomeServer";
         "security" = "user";
+        "min protocol" = "SMB2";
+        "server signing" = "mandatory";
+        "smb encrypt" = "desired";
         # macOS Optimization
         "vfs objects" = "fruit streams_xattr";
         "fruit:metadata" = "stream";
-        "fruit:model" = "MacSamba";
+        "fruit:model" = "RackMac";
       };
 
       "public" = {
@@ -48,6 +57,20 @@
         "force group" = "netshare";
         "create mask" = "0666";
         "directory mask" = "0777";
+      };
+
+      # Whole media library, read-only: consumption for mac/win/linux
+      # machines and the ryzen jellyfin mount. Writing happens on x220
+      # itself (transmission/arrs/tdarr); re-enable a separate rw share
+      # if manual additions from the LAN are wanted.
+      "media" = {
+        "path" = "/srv/media";
+        "browseable" = "yes";
+        "read only" = "yes";
+        "guest ok" = "no";
+        "valid users" = "debling vivianedn netshare";
+        "force group" = "media";
+        "hide files" = "/.*/";
       };
 
       "debling" = {
