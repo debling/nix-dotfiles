@@ -31,7 +31,7 @@ in
     ./observability.nix
     ./kiosk.nix
     ./paperless.nix
-    ./penpot.nix
+    # ./penpot.nix
     # ./onlyoffice.nix
     ./forgejo.nix
     ./networking.nix
