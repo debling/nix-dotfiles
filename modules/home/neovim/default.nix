@@ -137,7 +137,7 @@ in
             ### Lua
             lua-language-server
             stylua
-            ltex-ls
+            ltex-ls-plus
             texlab
             ### nix
             nixd # language server

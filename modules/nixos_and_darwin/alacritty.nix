@@ -49,7 +49,7 @@
       in
       pkgs.lib.mkMerge (
         [ generic_setting ]
-        ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+        ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
           macos_specific
         ]
       );

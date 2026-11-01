@@ -1,19 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-#
-# Dell G15 5530: cloned from hosts/x1-carbon.
-# Hardware specifics filled in from the machine itself (i5-13450HX, Intel UHD +
-# RTX 3050 hybrid, ADATA NVMe, BOE 1920x1080 panel); see ./displays.nix and
-# ./disko.nix. Still open:
-#   * ./facter.json is the x1-carbon report as a placeholder; nixos-anywhere
-#     regenerates it (`--generate-hardware-config nixos-facter
-#     ./hosts/g15/facter.json`) — commit the regenerated file post-install.
-#   * HDMI output name under the nvidia driver (maybe `HDMI-1-0`) — confirm
-#     with `xrandr` post-install and update ./displays.nix if needed.
-
 {
-  lib,
   pkgs,
   mainUser,
   ...
@@ -30,7 +15,7 @@
     ../../modules/common/nix.nix
     ../../modules/common/pipewire.nix
     ../../modules/common/steam.nix
-    ../../modules/nixos/desktop/dwm
+    # ../../modules/nixos/desktop/dwm
     ../../modules/nixos/keyboard.nix
     ../../modules/nixos/bluetooth.nix
   ];
@@ -126,31 +111,27 @@
   };
 
   # Configure keymap in X11
-  services = {
-    udev = {
-      extraRules = ''
-        KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
-      '';
+  services.udev = {
+    extraRules = ''
+      KERNEL=="hidraw*", ATTRS{idVendor}=="0451", ATTRS{idProduct}=="4200", MODE="0666", SYMLINK+="nirscan_hidraw%n"
+    '';
 
-      packages = [
-        pkgs.platformio-core
-        pkgs.openocd
-        pkgs.flashrom
-      ];
-    };
-
-    xserver = {
-      # Enable the GNOME Desktop Environment.
-      # displayManager.gdm.enable = true;
-      # desktopManager.gnome.enable = true;
-    };
-
+    packages = [
+      pkgs.platformio-core
+      pkgs.openocd
+      pkgs.flashrom
+    ];
   };
+
+  services.displayManager.cosmic-greeter.enable = true;
+  services.desktopManager.cosmic.enable = true;
+  environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+  services.system76-scheduler.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    #cosmic-clipboard-manager
+    cosmic-clipboard-manager
     zen-browser
     man-pages
     man-pages-posix

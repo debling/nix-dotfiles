@@ -317,10 +317,10 @@ in
 
     programs.rofi = {
       enable = true;
-      terminal = "alacritty";
-      font = "monospace 10";
-      modes = [ "combi" ];
-      extraConfig = {
+      settings = {
+        terminal = "alacritty";
+        font = "monospace 10";
+        modes = [ "combi" ];
         show-icons = true;
         combi-modi = "window,drun,run";
       };

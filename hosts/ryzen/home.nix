@@ -105,7 +105,6 @@
   };
 
   programs = {
-    nushell.enable = true;
     bash.enable = true;
   };
 

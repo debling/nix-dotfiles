@@ -35,6 +35,18 @@ in
         ];
       };
     };
+    gtk4.theme = {
+      name = "Colloid-Green-Dark-Gruvbox";
+      package = pkgs.colloid-gtk-theme.override {
+        colorVariants = [ "dark" ];
+        themeVariants = [ "green" ];
+        tweaks = [
+          "gruvbox"
+          "rimless"
+          "float"
+        ];
+      };
+    };
     iconTheme = {
       name = "Papirus-Dark";
       package = iconPkg;

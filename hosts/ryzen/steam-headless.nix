@@ -9,12 +9,12 @@ let
   height = 1080;
 
   steamSession = pkgs.writeShellScriptBin "steam-headless-session" ''
-    ${pkgs.xorg.xset}/bin/xset s off
-    ${pkgs.xorg.xset}/bin/xset -dpms
+    ${pkgs.xset}/bin/xset s off
+    ${pkgs.xset}/bin/xset -dpms
     ${config.programs.steam.package}/bin/steam -gamepadui &
     steam_pid=$!
     while kill -0 $steam_pid 2>/dev/null; do
-      wid_hex=$(${pkgs.xorg.xwininfo}/bin/xwininfo -root -tree 2>/dev/null | grep '"Steam Big Picture Mode"' | grep -oE '0x[0-9a-f]+' | head -1)
+      wid_hex=$(${pkgs.xwininfo}/bin/xwininfo -root -tree 2>/dev/null | grep '"Steam Big Picture Mode"' | grep -oE '0x[0-9a-f]+' | head -1)
       if [ -n "$wid_hex" ]; then
         wid=$((wid_hex))
         ${pkgs.xdotool}/bin/xdotool windowsize "$wid" ${toString width} ${toString height} 2>/dev/null

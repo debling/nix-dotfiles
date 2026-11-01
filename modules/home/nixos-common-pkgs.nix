@@ -18,5 +18,6 @@
 
     slack
     discord
+    element-desktop
   ];
 }

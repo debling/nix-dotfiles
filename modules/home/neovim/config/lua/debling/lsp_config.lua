@@ -81,6 +81,7 @@ vim.lsp.config('yamlls', {
 vim.lsp.enable('yamlls')
 
 vim.lsp.config('ltex', {
+  cmd = { 'ltex-ls-plus' },
   -- removed html and xhtml for now, since the support for it isnt great,
   -- currently, its trying the spellcheck the xml tags it self, ending up
   -- reporting a lot of errors

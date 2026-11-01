@@ -116,10 +116,6 @@
 
   };
 
-  programs = {
-    nushell.enable = true;
-  };
-
   systemd.user.startServices = "sd-switch";
 
   ####

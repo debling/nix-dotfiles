@@ -18,7 +18,7 @@
   };
 
   programs = {
-    rbw = lib.mkIf pkgs.stdenv.isLinux {
+    rbw = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       settings.pinentry = lib.mkForce pkgs.pinentry-gnome3;
     };
   };
